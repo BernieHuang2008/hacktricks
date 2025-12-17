@@ -1,6 +1,6 @@
 # Windows Artifacts
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 ## Generic Windows Artifacts
 
@@ -27,10 +27,10 @@ Files downloaded may contain the **ADS Zone.Identifier** indicating **how** it w
 In Vista/Win7/Win8/Win10 the **Recycle Bin** can be found in the folder **`$Recycle.bin`** in the root of the drive (`C:\$Recycle.bin`).\
 When a file is deleted in this folder 2 specific files are created:
 
-- `$I{id}`: File information (date of when it was deleted}
-- `$R{id}`: Content of the file
+* `$I{id}`: File information (date of when it was deleted}
+* `$R{id}`: Content of the file
 
-![](<../../../images/image (1029).png>)
+![](<../../../../.gitbook/assets/image (1029).png>)
 
 Having these files you can use the tool [**Rifiuti**](https://github.com/abelcheung/rifiuti2) to get the original address of the deleted files and the date it was deleted (use `rifiuti-vista.exe` for Vista – Win10).
 
@@ -38,7 +38,7 @@ Having these files you can use the tool [**Rifiuti**](https://github.com/abelche
 .\rifiuti-vista.exe C:\Users\student\Desktop\Recycle
 ```
 
-![](<../../../images/image (495) (1) (1) (1).png>)
+![](<../../../../.gitbook/assets/image (495) (1) (1) (1).png>)
 
 ### Volume Shadow Copies
 
@@ -46,15 +46,15 @@ Shadow Copy is a technology included in Microsoft Windows that can create **back
 
 These backups are usually located in the `\System Volume Information` from the root of the file system and the name is composed of **UIDs** shown in the following image:
 
-![](<../../../images/image (94).png>)
+![](<../../../../.gitbook/assets/image (94).png>)
 
 Mounting the forensics image with the **ArsenalImageMounter**, the tool [**ShadowCopyView**](https://www.nirsoft.net/utils/shadow_copy_view.html) can be used to inspect a shadow copy and even **extract the files** from the shadow copy backups.
 
-![](<../../../images/image (576).png>)
+![](<../../../../.gitbook/assets/image (576).png>)
 
 The registry entry `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\BackupRestore` contains the files and keys **to not backup**:
 
-![](<../../../images/image (254).png>)
+![](<../../../../.gitbook/assets/image (254).png>)
 
 The registry `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\VSS` also contains configuration information about the `Volume Shadow Copies`.
 
@@ -70,8 +70,8 @@ A shell item is an item that contains information about how to access another fi
 
 Windows **automatically** **creates** these **shortcuts** when the user **open, uses or creates a file** in:
 
-- Win7-Win10: `C:\Users\\AppData\Roaming\Microsoft\Windows\Recent\`
-- Office: `C:\Users\\AppData\Roaming\Microsoft\Office\Recent\`
+* Win7-Win10: `C:\Users\\AppData\Roaming\Microsoft\Windows\Recent\`
+* Office: `C:\Users\\AppData\Roaming\Microsoft\Office\Recent\`
 
 When a folder is created, a link to the folder, to the parent folder, and the grandparent folder is also created.
 
@@ -83,11 +83,11 @@ To inspect these files you can use [**LinkParser**](http://4discovery.com/our-to
 
 In this tools you will find **2 sets** of timestamps:
 
-- **First Set:**
+* **First Set:**
   1. FileModifiedDate
   2. FileAccessDate
   3. FileCreationDate
-- **Second Set:**
+* **Second Set:**
   1. LinkModifiedDate
   2. LinkAccessDate
   3. LinkCreationDate.
@@ -114,7 +114,7 @@ The **created time** of any jumplist indicates the **the first time the file was
 
 You can inspect the jumplists using [**JumplistExplorer**](https://ericzimmerman.github.io/#!index.md).
 
-![](<../../../images/image (168).png>)
+![](<../../../../.gitbook/assets/image (168).png>)
 
 (_Note that the timestamps provided by JumplistExplorer are related to the jumplist file itself_)
 
@@ -126,13 +126,13 @@ You can inspect the jumplists using [**JumplistExplorer**](https://ericzimmerman
 
 It's possible to identify that a USB device was used thanks to the creation of:
 
-- Windows Recent Folder
-- Microsoft Office Recent Folder
-- Jumplists
+* Windows Recent Folder
+* Microsoft Office Recent Folder
+* Jumplists
 
 Note that some LNK file instead of pointing to the original path, points to the WPDNSE folder:
 
-![](<../../../images/image (218).png>)
+![](<../../../../.gitbook/assets/image (218).png>)
 
 The files in the folder WPDNSE are a copy of the original ones, then won't survive a restart of the PC and the GUID is taken from a shellbag.
 
@@ -144,13 +144,13 @@ The files in the folder WPDNSE are a copy of the original ones, then won't survi
 
 Check the file `C:\Windows\inf\setupapi.dev.log` to get the timestamps about when the USB connection was produced (search for `Section start`).
 
-![](<../../../images/image (477) (2) (2) (2) (2) (2) (2) (2) (3) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (10) (14) (2).png>)
+![](<../../../../.gitbook/assets/image (477) (2) (2) (2) (2) (2) (2) (2) (3) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (10) (14) (2).png>)
 
 ### USB Detective
 
 [**USBDetective**](https://usbdetective.com) can be used to obtain information about the USB devices that have been connected to an image.
 
-![](<../../../images/image (452).png>)
+![](<../../../../.gitbook/assets/image (452).png>)
 
 ### Plug and Play Cleanup
 
@@ -162,11 +162,11 @@ A screenshot depicting the task's content is provided: ![](https://2.bp.blogspot
 
 **Key Components and Settings of the Task:**
 
-- **pnpclean.dll**: This DLL is responsible for the actual cleanup process.
-- **UseUnifiedSchedulingEngine**: Set to `TRUE`, indicating the use of the generic task scheduling engine.
-- **MaintenanceSettings**:
-  - **Period ('P1M')**: Directs the Task Scheduler to initiate the cleanup task monthly during regular Automatic maintenance.
-  - **Deadline ('P2M')**: Instructs the Task Scheduler, if the task fails for two consecutive months, to execute the task during emergency Automatic maintenance.
+* **pnpclean.dll**: This DLL is responsible for the actual cleanup process.
+* **UseUnifiedSchedulingEngine**: Set to `TRUE`, indicating the use of the generic task scheduling engine.
+* **MaintenanceSettings**:
+  * **Period ('P1M')**: Directs the Task Scheduler to initiate the cleanup task monthly during regular Automatic maintenance.
+  * **Deadline ('P2M')**: Instructs the Task Scheduler, if the task fails for two consecutive months, to execute the task during emergency Automatic maintenance.
 
 This configuration ensures regular maintenance and cleanup of drivers, with provisions for reattempting the task in case of consecutive failures.
 
@@ -176,12 +176,12 @@ This configuration ensures regular maintenance and cleanup of drivers, with prov
 
 Emails contain **2 interesting parts: The headers and the content** of the email. In the **headers** you can find information like:
 
-- **Who** sent the emails (email address, IP, mail servers that have redirected the email)
-- **When** was the email sent
+* **Who** sent the emails (email address, IP, mail servers that have redirected the email)
+* **When** was the email sent
 
 Also, inside the `References` and `In-Reply-To` headers you can find the ID of the messages:
 
-![](<../../../images/image (593).png>)
+![](<../../../../.gitbook/assets/image (593).png>)
 
 ### Windows Mail App
 
@@ -195,21 +195,21 @@ The **metadata** of the emails and the **contacts** can be found inside the **ED
 
 When Exchange servers or Outlook clients are used there are going to be some MAPI headers:
 
-- `Mapi-Client-Submit-Time`: Time of the system when the email was sent
-- `Mapi-Conversation-Index`: Number of children messages of the thread and timestamp of each message of the thread
-- `Mapi-Entry-ID`: Message identifier.
-- `Mappi-Message-Flags` and `Pr_last_Verb-Executed`: Information about the MAPI client (message read? no read? responded? redirected? out of the office?)
+* `Mapi-Client-Submit-Time`: Time of the system when the email was sent
+* `Mapi-Conversation-Index`: Number of children messages of the thread and timestamp of each message of the thread
+* `Mapi-Entry-ID`: Message identifier.
+* `Mappi-Message-Flags` and `Pr_last_Verb-Executed`: Information about the MAPI client (message read? no read? responded? redirected? out of the office?)
 
 In the Microsoft Outlook client, all the sent/received messages, contacts data, and calendar data are stored in a PST file in:
 
-- `%USERPROFILE%\Local Settings\Application Data\Microsoft\Outlook` (WinXP)
-- `%USERPROFILE%\AppData\Local\Microsoft\Outlook`
+* `%USERPROFILE%\Local Settings\Application Data\Microsoft\Outlook` (WinXP)
+* `%USERPROFILE%\AppData\Local\Microsoft\Outlook`
 
 The registry path `HKEY_CURRENT_USER\Software\Microsoft\WindowsNT\CurrentVersion\Windows Messaging Subsystem\Profiles\Outlook` indicates the file that is being used.
 
 You can open the PST file using the tool [**Kernel PST Viewer**](https://www.nucleustechnologies.com/es/visor-de-pst.html).
 
-![](<../../../images/image (498).png>)
+![](<../../../../.gitbook/assets/image (498).png>)
 
 ### Microsoft Outlook OST Files
 
@@ -219,8 +219,8 @@ An **OST file** is generated by Microsoft Outlook when it's configured with **IM
 
 Lost attachments might be recoverable from:
 
-- For **IE10**: `%APPDATA%\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook`
-- For **IE11 and above**: `%APPDATA%\Local\Microsoft\InetCache\Content.Outlook`
+* For **IE10**: `%APPDATA%\Local\Microsoft\Windows\Temporary Internet Files\Content.Outlook`
+* For **IE11 and above**: `%APPDATA%\Local\Microsoft\InetCache\Content.Outlook`
 
 ### Thunderbird MBOX Files
 
@@ -228,27 +228,27 @@ Lost attachments might be recoverable from:
 
 ### Image Thumbnails
 
-- **Windows XP and 8-8.1**: Accessing a folder with thumbnails generates a `thumbs.db` file storing image previews, even after deletion.
-- **Windows 7/10**: `thumbs.db` is created when accessed over a network via UNC path.
-- **Windows Vista and newer**: Thumbnail previews are centralized in `%userprofile%\AppData\Local\Microsoft\Windows\Explorer` with files named **thumbcache_xxx.db**. [**Thumbsviewer**](https://thumbsviewer.github.io) and [**ThumbCache Viewer**](https://thumbcacheviewer.github.io) are tools for viewing these files.
+* **Windows XP and 8-8.1**: Accessing a folder with thumbnails generates a `thumbs.db` file storing image previews, even after deletion.
+* **Windows 7/10**: `thumbs.db` is created when accessed over a network via UNC path.
+* **Windows Vista and newer**: Thumbnail previews are centralized in `%userprofile%\AppData\Local\Microsoft\Windows\Explorer` with files named **thumbcache\_xxx.db**. [**Thumbsviewer**](https://thumbsviewer.github.io) and [**ThumbCache Viewer**](https://thumbcacheviewer.github.io) are tools for viewing these files.
 
 ### Windows Registry Information
 
 The Windows Registry, storing extensive system and user activity data, is contained within files in:
 
-- `%windir%\System32\Config` for various `HKEY_LOCAL_MACHINE` subkeys.
-- `%UserProfile%{User}\NTUSER.DAT` for `HKEY_CURRENT_USER`.
-- Windows Vista and later versions back up `HKEY_LOCAL_MACHINE` registry files in `%Windir%\System32\Config\RegBack\`.
-- Additionally, program execution information is stored in `%UserProfile%\{User}\AppData\Local\Microsoft\Windows\USERCLASS.DAT` from Windows Vista and Windows 2008 Server onwards.
+* `%windir%\System32\Config` for various `HKEY_LOCAL_MACHINE` subkeys.
+* `%UserProfile%{User}\NTUSER.DAT` for `HKEY_CURRENT_USER`.
+* Windows Vista and later versions back up `HKEY_LOCAL_MACHINE` registry files in `%Windir%\System32\Config\RegBack\`.
+* Additionally, program execution information is stored in `%UserProfile%\{User}\AppData\Local\Microsoft\Windows\USERCLASS.DAT` from Windows Vista and Windows 2008 Server onwards.
 
 ### Tools
 
 Some tools are useful to analyze the registry files:
 
-- **Registry Editor**: It's installed in Windows. It's a GUI to navigate through the Windows registry of the current session.
-- [**Registry Explorer**](https://ericzimmerman.github.io/#!index.md): It allows you to load the registry file and navigate through them with a GUI. It also contains Bookmarks highlighting keys with interesting information.
-- [**RegRipper**](https://github.com/keydet89/RegRipper3.0): Again, it has a GUI that allows to navigate through the loaded registry and also contains plugins that highlight interesting information inside the loaded registry.
-- [**Windows Registry Recovery**](https://www.mitec.cz/wrr.html): Another GUI application capable of extracting the important information from the registry loaded.
+* **Registry Editor**: It's installed in Windows. It's a GUI to navigate through the Windows registry of the current session.
+* [**Registry Explorer**](https://ericzimmerman.github.io/#!index.md): It allows you to load the registry file and navigate through them with a GUI. It also contains Bookmarks highlighting keys with interesting information.
+* [**RegRipper**](https://github.com/keydet89/RegRipper3.0): Again, it has a GUI that allows to navigate through the loaded registry and also contains plugins that highlight interesting information inside the loaded registry.
+* [**Windows Registry Recovery**](https://www.mitec.cz/wrr.html): Another GUI application capable of extracting the important information from the registry loaded.
 
 ### Recovering Deleted Element
 
@@ -266,10 +266,7 @@ In `SAM\Domains\Account\Users` you can obtain the username, the RID, last login,
 
 ### Interesting entries in the Windows Registry
 
-
-{{#ref}}
-interesting-windows-registry-keys.md
-{{#endref}}
+\{{#ref\}} interesting-windows-registry-keys.md \{{#endref\}}
 
 ## Programs Executed
 
@@ -301,7 +298,7 @@ To inspect these files you can use the tool [**PEcmd.exe**](https://github.com/E
 .\PECmd.exe -d C:\Users\student\Desktop\Prefetch --html "C:\Users\student\Desktop\out_folder"
 ```
 
-![](<../../../images/image (315).png>)
+![](<../../../../.gitbook/assets/image (315).png>)
 
 ### Superprefetch
 
@@ -318,17 +315,17 @@ You can access this information using the tool [**CrowdResponse**](https://www.c
 
 It gives the following information:
 
-- AppID and Path
-- User that executed the process
-- Sent Bytes
-- Received Bytes
-- Network Interface
-- Connection duration
-- Process duration
+* AppID and Path
+* User that executed the process
+* Sent Bytes
+* Received Bytes
+* Network Interface
+* Connection duration
+* Process duration
 
 This information is updated every 60 mins.
 
-You can obtain the date from this file using the tool [**srum_dump**](https://github.com/MarkBaggett/srum-dump).
+You can obtain the date from this file using the tool [**srum\_dump**](https://github.com/MarkBaggett/srum-dump).
 
 ```bash
 .\srum_dump.exe -i C:\Users\student\Desktop\SRUDB.dat -t SRUM_TEMPLATE.xlsx -o C:\Users\student\Desktop\srum
@@ -338,20 +335,20 @@ You can obtain the date from this file using the tool [**srum_dump**](https://gi
 
 The **AppCompatCache**, also known as **ShimCache**, forms a part of the **Application Compatibility Database** developed by **Microsoft** to tackle application compatibility issues. This system component records various pieces of file metadata, which include:
 
-- Full path of the file
-- Size of the file
-- Last Modified time under **$Standard_Information** (SI)
-- Last Updated time of the ShimCache
-- Process Execution Flag
+* Full path of the file
+* Size of the file
+* Last Modified time under **$Standard\_Information** (SI)
+* Last Updated time of the ShimCache
+* Process Execution Flag
 
 Such data is stored within the registry at specific locations based on the version of the operating system:
 
-- For XP, the data is stored under `SYSTEM\CurrentControlSet\Control\SessionManager\Appcompatibility\AppcompatCache` with a capacity for 96 entries.
-- For Server 2003, as well as for Windows versions 2008, 2012, 2016, 7, 8, and 10, the storage path is `SYSTEM\CurrentControlSet\Control\SessionManager\AppcompatCache\AppCompatCache`, accommodating 512 and 1024 entries, respectively.
+* For XP, the data is stored under `SYSTEM\CurrentControlSet\Control\SessionManager\Appcompatibility\AppcompatCache` with a capacity for 96 entries.
+* For Server 2003, as well as for Windows versions 2008, 2012, 2016, 7, 8, and 10, the storage path is `SYSTEM\CurrentControlSet\Control\SessionManager\AppcompatCache\AppCompatCache`, accommodating 512 and 1024 entries, respectively.
 
 To parse the stored information, the [**AppCompatCacheParser** tool](https://github.com/EricZimmerman/AppCompatCacheParser) is recommended for use.
 
-![](<../../../images/image (75).png>)
+![](<../../../../.gitbook/assets/image (75).png>)
 
 ### Amcache
 
@@ -397,11 +394,11 @@ And **uninstalled** **applications** in: `Software\Microsoft\Windows\CurrentVers
 
 Information that appears inside Windows events are:
 
-- What happened
-- Timestamp (UTC + 0)
-- Users involved
-- Hosts involved (hostname, IP)
-- Assets accessed (files, folder, printer, services)
+* What happened
+* Timestamp (UTC + 0)
+* Users involved
+* Hosts involved (hostname, IP)
+* Assets accessed (files, folder, printer, services)
 
 The logs are located in `C:\Windows\System32\config` before Windows Vista and in `C:\Windows\System32\winevt\Logs` after Windows Vista. Before Windows Vista, the event logs were in binary format and after it, they are in **XML format** and use the **.evtx** extension.
 
@@ -415,58 +412,58 @@ Access events are recorded in the security configuration file located at `C:\Win
 
 ### Key Event IDs for User Authentication:
 
-- **EventID 4624**: Indicates a user successfully authenticated.
-- **EventID 4625**: Signals an authentication failure.
-- **EventIDs 4634/4647**: Represent user logoff events.
-- **EventID 4672**: Denotes login with administrative privileges.
+* **EventID 4624**: Indicates a user successfully authenticated.
+* **EventID 4625**: Signals an authentication failure.
+* **EventIDs 4634/4647**: Represent user logoff events.
+* **EventID 4672**: Denotes login with administrative privileges.
 
 #### Sub-types within EventID 4634/4647:
 
-- **Interactive (2)**: Direct user login.
-- **Network (3)**: Access to shared folders.
-- **Batch (4)**: Execution of batch processes.
-- **Service (5)**: Service launches.
-- **Proxy (6)**: Proxy authentication.
-- **Unlock (7)**: Screen unlocked with a password.
-- **Network Cleartext (8)**: Clear text password transmission, often from IIS.
-- **New Credentials (9)**: Usage of different credentials for access.
-- **Remote Interactive (10)**: Remote desktop or terminal services login.
-- **Cache Interactive (11)**: Login with cached credentials without domain controller contact.
-- **Cache Remote Interactive (12)**: Remote login with cached credentials.
-- **Cached Unlock (13)**: Unlocking with cached credentials.
+* **Interactive (2)**: Direct user login.
+* **Network (3)**: Access to shared folders.
+* **Batch (4)**: Execution of batch processes.
+* **Service (5)**: Service launches.
+* **Proxy (6)**: Proxy authentication.
+* **Unlock (7)**: Screen unlocked with a password.
+* **Network Cleartext (8)**: Clear text password transmission, often from IIS.
+* **New Credentials (9)**: Usage of different credentials for access.
+* **Remote Interactive (10)**: Remote desktop or terminal services login.
+* **Cache Interactive (11)**: Login with cached credentials without domain controller contact.
+* **Cache Remote Interactive (12)**: Remote login with cached credentials.
+* **Cached Unlock (13)**: Unlocking with cached credentials.
 
 #### Status and Sub Status Codes for EventID 4625:
 
-- **0xC0000064**: User name does not exist - Could indicate a username enumeration attack.
-- **0xC000006A**: Correct user name but wrong password - Possible password guessing or brute-force attempt.
-- **0xC0000234**: User account locked out - May follow a brute-force attack resulting in multiple failed logins.
-- **0xC0000072**: Account disabled - Unauthorized attempts to access disabled accounts.
-- **0xC000006F**: Logon outside allowed time - Indicates attempts to access outside of set login hours, a possible sign of unauthorized access.
-- **0xC0000070**: Violation of workstation restrictions - Could be an attempt to login from an unauthorized location.
-- **0xC0000193**: Account expiration - Access attempts with expired user accounts.
-- **0xC0000071**: Expired password - Login attempts with outdated passwords.
-- **0xC0000133**: Time sync issues - Large time discrepancies between client and server may be indicative of more sophisticated attacks like pass-the-ticket.
-- **0xC0000224**: Mandatory password change required - Frequent mandatory changes might suggest an attempt to destabilize account security.
-- **0xC0000225**: Indicates a system bug rather than a security issue.
-- **0xC000015b**: Denied logon type - Access attempt with unauthorized logon type, such as a user trying to execute a service logon.
+* **0xC0000064**: User name does not exist - Could indicate a username enumeration attack.
+* **0xC000006A**: Correct user name but wrong password - Possible password guessing or brute-force attempt.
+* **0xC0000234**: User account locked out - May follow a brute-force attack resulting in multiple failed logins.
+* **0xC0000072**: Account disabled - Unauthorized attempts to access disabled accounts.
+* **0xC000006F**: Logon outside allowed time - Indicates attempts to access outside of set login hours, a possible sign of unauthorized access.
+* **0xC0000070**: Violation of workstation restrictions - Could be an attempt to login from an unauthorized location.
+* **0xC0000193**: Account expiration - Access attempts with expired user accounts.
+* **0xC0000071**: Expired password - Login attempts with outdated passwords.
+* **0xC0000133**: Time sync issues - Large time discrepancies between client and server may be indicative of more sophisticated attacks like pass-the-ticket.
+* **0xC0000224**: Mandatory password change required - Frequent mandatory changes might suggest an attempt to destabilize account security.
+* **0xC0000225**: Indicates a system bug rather than a security issue.
+* **0xC000015b**: Denied logon type - Access attempt with unauthorized logon type, such as a user trying to execute a service logon.
 
 #### EventID 4616:
 
-- **Time Change**: Modification of the system time, could obscure the timeline of events.
+* **Time Change**: Modification of the system time, could obscure the timeline of events.
 
 #### EventID 6005 and 6006:
 
-- **System Startup and Shutdown**: EventID 6005 indicates the system starting up, while EventID 6006 marks it shutting down.
+* **System Startup and Shutdown**: EventID 6005 indicates the system starting up, while EventID 6006 marks it shutting down.
 
 #### EventID 1102:
 
-- **Log Deletion**: Security logs being cleared, which is often a red flag for covering up illicit activities.
+* **Log Deletion**: Security logs being cleared, which is often a red flag for covering up illicit activities.
 
 #### EventIDs for USB Device Tracking:
 
-- **20001 / 20003 / 10000**: USB device first connection.
-- **10100**: USB driver update.
-- **EventID 112**: Time of USB device insertion.
+* **20001 / 20003 / 10000**: USB device first connection.
+* **10100**: USB driver update.
+* **EventID 112**: Time of USB device insertion.
 
 For practical examples on simulating these login types and credential dumping opportunities, refer to [Altered Security's detailed guide](https://www.alteredsecurity.com/post/fantastic-windows-logon-types-and-where-to-find-credentials-in-them).
 
@@ -474,7 +471,7 @@ Event details, including status and sub-status codes, provide further insights i
 
 ### Recovering Windows Events
 
-To enhance the chances of recovering deleted Windows Events, it's advisable to power down the suspect computer by directly unplugging it. **Bulk_extractor**, a recovery tool specifying the `.evtx` extension, is recommended for attempting to recover such events.
+To enhance the chances of recovering deleted Windows Events, it's advisable to power down the suspect computer by directly unplugging it. **Bulk\_extractor**, a recovery tool specifying the `.evtx` extension, is recommended for attempting to recover such events.
 
 ### Identifying Common Attacks via Windows Events
 
@@ -500,6 +497,4 @@ EventID 6005 indicates system startup, while EventID 6006 marks shutdown.
 
 Security EventID 1102 signals the deletion of logs, a critical event for forensic analysis.
 
-{{#include ../../../banners/hacktricks-training.md}}
-
-
+\{{#include ../../../banners/hacktricks-training.md\}}

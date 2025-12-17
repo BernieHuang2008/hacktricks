@@ -1,6 +1,6 @@
 # ACLs - DACLs/SACLs/ACEs
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## **Access Control List (ACL)**
 
@@ -8,15 +8,15 @@ An Access Control List (ACL) consists of an ordered set of Access Control Entrie
 
 There are two types of ACLs:
 
-- **Discretionary Access Control List (DACL):** Specifies which users and groups have or do not have access to an object.
-- **System Access Control List (SACL):** Governs the auditing of access attempts to an object.
+* **Discretionary Access Control List (DACL):** Specifies which users and groups have or do not have access to an object.
+* **System Access Control List (SACL):** Governs the auditing of access attempts to an object.
 
 The process of accessing a file involves the system checking the object's security descriptor against the user's access token to determine if access should be granted and the extent of that access, based on the ACEs.
 
 ### **Key Components**
 
-- **DACL:** Contains ACEs that grant or deny access permissions to users and groups for an object. It's essentially the main ACL that dictates access rights.
-- **SACL:** Used for auditing access to objects, where ACEs define the types of access to be logged in the Security Event Log. This can be invaluable for detecting unauthorized access attempts or troubleshooting access issues.
+* **DACL:** Contains ACEs that grant or deny access permissions to users and groups for an object. It's essentially the main ACL that dictates access rights.
+* **SACL:** Used for auditing access to objects, where ACEs define the types of access to be logged in the Security Event Log. This can be invaluable for detecting unauthorized access attempts or troubleshooting access issues.
 
 ### **System Interaction with ACLs**
 
@@ -26,17 +26,17 @@ The Local Security Authority (LSASS) processes access requests to objects by exa
 
 ### **Summarized Process**
 
-- **ACLs:** Define access permissions through DACLs and audit rules through SACLs.
-- **Access Token:** Contains user, group, and privilege information for a session.
-- **Access Decision:** Made by comparing DACL ACEs with the access token; SACLs are used for auditing.
+* **ACLs:** Define access permissions through DACLs and audit rules through SACLs.
+* **Access Token:** Contains user, group, and privilege information for a session.
+* **Access Decision:** Made by comparing DACL ACEs with the access token; SACLs are used for auditing.
 
 ### ACEs
 
 There arey **three main types of Access Control Entries (ACEs)**:
 
-- **Access Denied ACE**: This ACE explicitly denies access to an object for specified users or groups (in a DACL).
-- **Access Allowed ACE**: This ACE explicitly grants access to an object for specified users or groups (in a DACL).
-- **System Audit ACE**: Positioned within a System Access Control List (SACL), this ACE is responsible for generating audit logs upon access attempts to an object by users or groups. It documents whether access was allowed or denied and the nature of the access.
+* **Access Denied ACE**: This ACE explicitly denies access to an object for specified users or groups (in a DACL).
+* **Access Allowed ACE**: This ACE explicitly grants access to an object for specified users or groups (in a DACL).
+* **System Audit ACE**: Positioned within a System Access Control List (SACL), this ACE is responsible for generating audit logs upon access attempts to an object by users or groups. It documents whether access was allowed or denied and the nature of the access.
 
 Each ACE has **four critical components**:
 
@@ -47,9 +47,9 @@ Each ACE has **four critical components**:
 
 Access determination is conducted by sequentially examining each ACE until:
 
-- An **Access-Denied ACE** explicitly denies the requested rights to a trustee identified in the access token.
-- **Access-Allowed ACE(s)** explicitly grant all requested rights to a trustee in the access token.
-- Upon checking all ACEs, if any requested right has **not been explicitly allowed**, access is implicitly **denied**.
+* An **Access-Denied ACE** explicitly denies the requested rights to a trustee identified in the access token.
+* **Access-Allowed ACE(s)** explicitly grant all requested rights to a trustee in the access token.
+* Upon checking all ACEs, if any requested right has **not been explicitly allowed**, access is implicitly **denied**.
 
 ### Order of ACEs
 
@@ -57,14 +57,14 @@ The way **ACEs** (rules that say who can or cannot access something) are put in 
 
 There is a best way to organize these ACEs, and it is called **"canonical order."** This method helps make sure everything works smoothly and fairly. Here is how it goes for systems like **Windows 2000** and **Windows Server 2003**:
 
-- First, put all the rules that are made **specifically for this item** before the ones that come from somewhere else, like a parent folder.
-- In those specific rules, put the ones that say **"no" (deny)** before the ones that say **"yes" (allow)**.
-- For the rules that come from somewhere else, start with the ones from the **closest source**, like the parent, and then go back from there. Again, put **"no"** before **"yes."**
+* First, put all the rules that are made **specifically for this item** before the ones that come from somewhere else, like a parent folder.
+* In those specific rules, put the ones that say **"no" (deny)** before the ones that say **"yes" (allow)**.
+* For the rules that come from somewhere else, start with the ones from the **closest source**, like the parent, and then go back from there. Again, put **"no"** before **"yes."**
 
 This setup helps in two big ways:
 
-- It makes sure that if there is a specific **"no,"** it is respected, no matter what other **"yes"** rules are there.
-- It lets the owner of an item have the **final say** on who gets in, before any rules from parent folders or further back come into play.
+* It makes sure that if there is a specific **"no,"** it is respected, no matter what other **"yes"** rules are there.
+* It lets the owner of an item have the **final say** on who gets in, before any rules from parent folders or further back come into play.
 
 By doing things this way, the owner of a file or folder can be very precise about who gets access, making sure the right people can get in and the wrong ones can't.
 
@@ -78,19 +78,19 @@ So, this **"canonical order"** is all about making sure the access rules are cle
 
 This is the classic security tab of a folder showing the ACL, DACL and ACEs:
 
-![http://secureidentity.se/wp-content/uploads/2014/04/classicsectab.jpg](../../images/classicsectab.jpg)
+![http://secureidentity.se/wp-content/uploads/2014/04/classicsectab.jpg](../../../.gitbook/assets/classicsectab.jpg)
 
 If we click the **Advanced button** we will get more options like inheritance:
 
-![http://secureidentity.se/wp-content/uploads/2014/04/aceinheritance.jpg](../../images/aceinheritance.jpg)
+![http://secureidentity.se/wp-content/uploads/2014/04/aceinheritance.jpg](../../../.gitbook/assets/aceinheritance.jpg)
 
 And if you add or edit a Security Principal:
 
-![http://secureidentity.se/wp-content/uploads/2014/04/editseprincipalpointers1.jpg](../../images/editseprincipalpointers1.jpg)
+![http://secureidentity.se/wp-content/uploads/2014/04/editseprincipalpointers1.jpg](../../../.gitbook/assets/editseprincipalpointers1.jpg)
 
 And last we have the SACL in the Auditing tab:
 
-![http://secureidentity.se/wp-content/uploads/2014/04/audit-tab.jpg](../../images/audit-tab.jpg)
+![http://secureidentity.se/wp-content/uploads/2014/04/audit-tab.jpg](../../../.gitbook/assets/audit-tab.jpg)
 
 ### Explaining Access Control in a Simplified Manner
 
@@ -108,15 +108,15 @@ Let's say Bob, the marketing director, needs access to the Cost folder, even tho
 
 ACEs are the individual rules in an ACL. They identify users or groups, specify what access is allowed or denied, and determine how these rules apply to sub-items (inheritance). There are two main types of ACEs:
 
-- **Generic ACEs**: These apply broadly, affecting either all types of objects or distinguishing only between containers (like folders) and non-containers (like files). For example, a rule that allows users to see the contents of a folder but not to access the files within it.
-- **Object-Specific ACEs**: These provide more precise control, allowing rules to be set for specific types of objects or even individual properties within an object. For instance, in a directory of users, a rule might allow a user to update their phone number but not their login hours.
+* **Generic ACEs**: These apply broadly, affecting either all types of objects or distinguishing only between containers (like folders) and non-containers (like files). For example, a rule that allows users to see the contents of a folder but not to access the files within it.
+* **Object-Specific ACEs**: These provide more precise control, allowing rules to be set for specific types of objects or even individual properties within an object. For instance, in a directory of users, a rule might allow a user to update their phone number but not their login hours.
 
 Each ACE contains important information like who the rule applies to (using a Security Identifier or SID), what the rule allows or denies (using an access mask), and how it's inherited by other objects.
 
 #### Key Differences Between ACE Types
 
-- **Generic ACEs** are suitable for simple access control scenarios, where the same rule applies to all aspects of an object or to all objects within a container.
-- **Object-Specific ACEs** are used for more complex scenarios, especially in environments like Active Directory, where you might need to control access to specific properties of an object differently.
+* **Generic ACEs** are suitable for simple access control scenarios, where the same rule applies to all aspects of an object or to all objects within a container.
+* **Object-Specific ACEs** are used for more complex scenarios, especially in environments like Active Directory, where you might need to control access to specific properties of an object differently.
 
 In summary, ACLs and ACEs help define precise access controls, ensuring that only the right individuals or groups have access to sensitive information or resources, with the ability to tailor access rights down to the level of individual properties or object types.
 
@@ -145,12 +145,8 @@ In summary, ACLs and ACEs help define precise access controls, ensuring that onl
 
 ## References
 
-- [https://www.ntfs.com/ntfs-permissions-acl-use.htm](https://www.ntfs.com/ntfs-permissions-acl-use.htm)
-- [https://secureidentity.se/acl-dacl-sacl-and-the-ace/](https://secureidentity.se/acl-dacl-sacl-and-the-ace/)
-- [https://www.coopware.in2.info/\_ntfsacl_ht.htm](https://www.coopware.in2.info/_ntfsacl_ht.htm)
+* [https://www.ntfs.com/ntfs-permissions-acl-use.htm](https://www.ntfs.com/ntfs-permissions-acl-use.htm)
+* [https://secureidentity.se/acl-dacl-sacl-and-the-ace/](https://secureidentity.se/acl-dacl-sacl-and-the-ace/)
+* [https://www.coopware.in2.info/\_ntfsacl\_ht.htm](https://www.coopware.in2.info/_ntfsacl_ht.htm)
 
-{{#include ../../banners/hacktricks-training.md}}
-
-
-
-
+\{{#include ../../banners/hacktricks-training.md\}}

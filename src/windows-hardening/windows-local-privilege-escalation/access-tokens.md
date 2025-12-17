@@ -1,6 +1,6 @@
 # Access Tokens
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## Access Tokens
 
@@ -54,7 +54,7 @@ SeTimeZonePrivilege           Change the time zone                 Disabled
 
 or using _Process Explorer_ from Sysinternals (select process and access"Security" tab):
 
-![](<../../images/image (772).png>)
+![](<../../../.gitbook/assets/image (772).png>)
 
 ### Local administrator
 
@@ -82,12 +82,12 @@ This is useful if you have useful credentials to access objects in the network b
 
 There are two types of tokens available:
 
-- **Primary Token**: It serves as a representation of a process's security credentials. The creation and association of primary tokens with processes are actions that require elevated privileges, emphasizing the principle of privilege separation. Typically, an authentication service is responsible for token creation, while a logon service handles its association with the user's operating system shell. It is worth noting that processes inherit the primary token of their parent process at creation.
-- **Impersonation Token**: Empowers a server application to adopt the client's identity temporarily for accessing secure objects. This mechanism is stratified into four levels of operation:
-  - **Anonymous**: Grants server access akin to that of an unidentified user.
-  - **Identification**: Allows the server to verify the client's identity without utilizing it for object access.
-  - **Impersonation**: Enables the server to operate under the client's identity.
-  - **Delegation**: Similar to Impersonation but includes the ability to extend this identity assumption to remote systems the server interacts with, ensuring credential preservation.
+* **Primary Token**: It serves as a representation of a process's security credentials. The creation and association of primary tokens with processes are actions that require elevated privileges, emphasizing the principle of privilege separation. Typically, an authentication service is responsible for token creation, while a logon service handles its association with the user's operating system shell. It is worth noting that processes inherit the primary token of their parent process at creation.
+* **Impersonation Token**: Empowers a server application to adopt the client's identity temporarily for accessing secure objects. This mechanism is stratified into four levels of operation:
+  * **Anonymous**: Grants server access akin to that of an unidentified user.
+  * **Identification**: Allows the server to verify the client's identity without utilizing it for object access.
+  * **Impersonation**: Enables the server to operate under the client's identity.
+  * **Delegation**: Similar to Impersonation but includes the ability to extend this identity assumption to remote systems the server interacts with, ensuring credential preservation.
 
 #### Impersonate Tokens
 
@@ -97,10 +97,7 @@ Using the _**incognito**_ module of metasploit if you have enough privileges you
 
 Learn which **token privileges can be abused to escalate privileges:**
 
-
-{{#ref}}
-privilege-escalation-abusing-tokens.md
-{{#endref}}
+\{{#ref\}} privilege-escalation-abusing-tokens.md \{{#endref\}}
 
 Take a look to [**all the possible token privileges and some definitions on this external page**](https://github.com/gtworek/Priv2Admin).
 
@@ -108,6 +105,4 @@ Take a look to [**all the possible token privileges and some definitions on this
 
 Learn more about tokens in this tutorials: [https://medium.com/@seemant.bisht24/understanding-and-abusing-process-tokens-part-i-ee51671f2cfa](https://medium.com/@seemant.bisht24/understanding-and-abusing-process-tokens-part-i-ee51671f2cfa) and [https://medium.com/@seemant.bisht24/understanding-and-abusing-access-tokens-part-ii-b9069f432962](https://medium.com/@seemant.bisht24/understanding-and-abusing-access-tokens-part-ii-b9069f432962)
 
-{{#include ../../banners/hacktricks-training.md}}
-
-
+\{{#include ../../banners/hacktricks-training.md\}}

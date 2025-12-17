@@ -1,6 +1,6 @@
 # Interesting Groups - Linux Privesc
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 ## Sudo/Admin Groups
 
@@ -201,11 +201,11 @@ cat /sys/class/graphics/fb0/virtual_size
 
 To **open** the **raw image** you can use **GIMP**, select the **`screen.raw`** file and select as file type **Raw image data**:
 
-![](<../../../images/image (463).png>)
+![](<../../../../.gitbook/assets/image (463).png>)
 
 Then modify the Width and Height to the ones used on the screen and check different Image Types (and select the one that shows better the screen):
 
-![](<../../../images/image (317).png>)
+![](<../../../../.gitbook/assets/image (317).png>)
 
 ## Root Group
 
@@ -235,29 +235,17 @@ docker run --rm -it --pid=host --net=host --privileged -v /:/mnt <imagename> chr
 
 Finally, if you don't like any of the suggestions of before, or they aren't working for some reason (docker api firewall?) you could always try to **run a privileged container and escape from it** as explained here:
 
-
-{{#ref}}
-../docker-security/
-{{#endref}}
+\{{#ref\}} ../docker-security/ \{{#endref\}}
 
 If you have write permissions over the docker socket read [**this post about how to escalate privileges abusing the docker socket**](../index.html#writable-docker-socket)**.**
 
+\{{#ref\}} https://github.com/KrustyHack/docker-privilege-escalation \{{#endref\}}
 
-{{#ref}}
-https://github.com/KrustyHack/docker-privilege-escalation
-{{#endref}}
-
-
-{{#ref}}
-https://fosterelli.co/privilege-escalation-via-docker.html
-{{#endref}}
+\{{#ref\}} https://fosterelli.co/privilege-escalation-via-docker.html \{{#endref\}}
 
 ## lxc/lxd Group
 
-
-{{#ref}}
-./
-{{#endref}}
+\{{#ref\}} ./ \{{#endref\}}
 
 ## Adm Group
 
@@ -269,4 +257,4 @@ Therefore, if you have compromised a user inside this group you should definitel
 Inside OpenBSD the **auth** group usually can write in the folders _**/etc/skey**_ and _**/var/db/yubikey**_ if they are used.\
 These permissions may be abused with the following exploit to **escalate privileges** to root: [https://raw.githubusercontent.com/bcoles/local-exploits/master/CVE-2019-19520/openbsd-authroot](https://raw.githubusercontent.com/bcoles/local-exploits/master/CVE-2019-19520/openbsd-authroot)
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}

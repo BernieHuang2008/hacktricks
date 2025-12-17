@@ -1,10 +1,10 @@
 # USB Keystrokes
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 If you have a pcap containing the communication via USB of a keyboard like the following one:
 
-![](<../../../images/image (962).png>)
+![](<../../../../.gitbook/assets/image (962).png>)
 
 You can use the tool [**ctf-usb-keyboard-parser**](https://github.com/TeamRocketIst/ctf-usb-keyboard-parser) to get what was written in the communication:
 
@@ -15,10 +15,7 @@ python3 usbkeyboard.py ./keystrokes.txt
 
 You can read more information and find some scripts about how to analyse this in:
 
-- [https://medium.com/@ali.bawazeeer/kaizen-ctf-2018-reverse-engineer-usb-keystrok-from-pcap-file-2412351679f4](https://medium.com/@ali.bawazeeer/kaizen-ctf-2018-reverse-engineer-usb-keystrok-from-pcap-file-2412351679f4)
-- [https://github.com/tanc7/HacktheBox_Deadly_Arthropod_Writeup](https://github.com/tanc7/HacktheBox_Deadly_Arthropod_Writeup)
+* [https://medium.com/@ali.bawazeeer/kaizen-ctf-2018-reverse-engineer-usb-keystrok-from-pcap-file-2412351679f4](https://medium.com/@ali.bawazeeer/kaizen-ctf-2018-reverse-engineer-usb-keystrok-from-pcap-file-2412351679f4)
+* [https://github.com/tanc7/HacktheBox\_Deadly\_Arthropod\_Writeup](https://github.com/tanc7/HacktheBox_Deadly_Arthropod_Writeup)
 
-{{#include ../../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../../banners/hacktricks-training.md\}}

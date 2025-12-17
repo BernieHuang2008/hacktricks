@@ -1,6 +1,6 @@
 # Phishing Files & Documents
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## Office Documents
 
@@ -21,9 +21,9 @@ DOCX files referencing a remote template (File –Options –Add-ins –Manage: 
 ### External Image Load
 
 Go to: _Insert --> Quick Parts --> Field_\
-_**Categories**: Links and References, **Filed names**: includePicture, and **Filename or URL**:_ http://<ip>/whatever
+&#xNAN;_**Categories**: Links and References, **Filed names**: includePicture, and **Filename or URL**:_ http:///whatever
 
-![](<../../images/image (155).png>)
+![](<../../../.gitbook/assets/image (155).png>)
 
 ### Macros Backdoor
 
@@ -33,8 +33,8 @@ It's possible to use macros to run arbitrary code from the document.
 
 The more common they are, the more probable the AV will detect them.
 
-- AutoOpen()
-- Document_Open()
+* AutoOpen()
+* Document\_Open()
 
 #### Macros Code Examples
 
@@ -79,9 +79,9 @@ Do this because you **can't save macro's inside a `.docx`** and there's a **stig
 
 #### Malicious Macros Generators
 
-- MacOS
-  - [**macphish**](https://github.com/cldrn/macphish)
-  - [**Mythic Macro Generator**](https://github.com/cedowens/Mythic-Macro-Generator)
+* MacOS
+  * [**macphish**](https://github.com/cldrn/macphish)
+  * [**Mythic Macro Generator**](https://github.com/cedowens/Mythic-Macro-Generator)
 
 ## HTA Files
 
@@ -150,22 +150,16 @@ There are several ways to **force NTLM authentication "remotely"**, for example,
 
 **Check these ideas and more in the following pages:**
 
+\{{#ref\}} ../../windows-hardening/active-directory-methodology/printers-spooler-service-abuse.md \{{#endref\}}
 
-{{#ref}}
-../../windows-hardening/active-directory-methodology/printers-spooler-service-abuse.md
-{{#endref}}
-
-
-{{#ref}}
-../../windows-hardening/ntlm/places-to-steal-ntlm-creds.md
-{{#endref}}
+\{{#ref\}} ../../windows-hardening/ntlm/places-to-steal-ntlm-creds.md \{{#endref\}}
 
 ### NTLM Relay
 
 Don't forget that you cannot only steal the hash or the authentication but also **perform NTLM relay attacks**:
 
-- [**NTLM Relay attacks**](../pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks.md#ntml-relay-attack)
-- [**AD CS ESC8 (NTLM relay to certificates)**](../../windows-hardening/active-directory-methodology/ad-certificates/domain-escalation.md#ntlm-relay-to-ad-cs-http-endpoints-esc8)
+* [**NTLM Relay attacks**](../pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks.md#ntml-relay-attack)
+* [**AD CS ESC8 (NTLM relay to certificates)**](../../windows-hardening/active-directory-methodology/ad-certificates/domain-escalation.md#ntlm-relay-to-ad-cs-http-endpoints-esc8)
 
 ## LNK Loaders + ZIP-Embedded Payloads (fileless chain)
 
@@ -173,11 +167,11 @@ Highly effective campaigns deliver a ZIP that contains two legitimate decoy docu
 
 Typical flow implemented by the .lnk PowerShell one-liner:
 
-1) Locate the original ZIP in common paths: Desktop, Downloads, Documents, %TEMP%, %ProgramData%, and the parent of the current working directory.
-2) Read the ZIP bytes and find a hardcoded marker (e.g., xFIQCV). Everything after the marker is the embedded PowerShell payload.
-3) Copy the ZIP to %ProgramData%, extract there, and open the decoy .docx to appear legitimate.
-4) Bypass AMSI for the current process: [System.Management.Automation.AmsiUtils]::amsiInitFailed = $true
-5) Deobfuscate the next stage (e.g., remove all # characters) and execute it in memory.
+1. Locate the original ZIP in common paths: Desktop, Downloads, Documents, %TEMP%, %ProgramData%, and the parent of the current working directory.
+2. Read the ZIP bytes and find a hardcoded marker (e.g., xFIQCV). Everything after the marker is the embedded PowerShell payload.
+3. Copy the ZIP to %ProgramData%, extract there, and open the decoy .docx to appear legitimate.
+4. Bypass AMSI for the current process: \[System.Management.Automation.AmsiUtils]::amsiInitFailed = $true
+5. Deobfuscate the next stage (e.g., remove all # characters) and execute it in memory.
 
 Example PowerShell skeleton to carve and run the embedded stage:
 
@@ -199,38 +193,39 @@ Invoke-Expression $code
 ```
 
 Notes
-- Delivery often abuses reputable PaaS subdomains (e.g., *.herokuapp.com) and may gate payloads (serve benign ZIPs based on IP/UA).
-- The next stage frequently decrypts base64/XOR shellcode and executes it via Reflection.Emit + VirtualAlloc to minimize disk artifacts.
+
+* Delivery often abuses reputable PaaS subdomains (e.g., \*.herokuapp.com) and may gate payloads (serve benign ZIPs based on IP/UA).
+* The next stage frequently decrypts base64/XOR shellcode and executes it via Reflection.Emit + VirtualAlloc to minimize disk artifacts.
 
 Persistence used in the same chain
-- COM TypeLib hijacking of the Microsoft Web Browser control so that IE/Explorer or any app embedding it re-launches the payload automatically. See details and ready-to-use commands here:
 
-{{#ref}}
-../../windows-hardening/windows-local-privilege-escalation/com-hijacking.md
-{{#endref}}
+* COM TypeLib hijacking of the Microsoft Web Browser control so that IE/Explorer or any app embedding it re-launches the payload automatically. See details and ready-to-use commands here:
+
+\{{#ref\}} ../../windows-hardening/windows-local-privilege-escalation/com-hijacking.md \{{#endref\}}
 
 Hunting/IOCs
-- ZIP files containing the ASCII marker string (e.g., xFIQCV) appended to the archive data.
-- .lnk that enumerates parent/user folders to locate the ZIP and opens a decoy document.
-- AMSI tampering via [System.Management.Automation.AmsiUtils]::amsiInitFailed.
-- Long-running business threads ending with links hosted under trusted PaaS domains.
+
+* ZIP files containing the ASCII marker string (e.g., xFIQCV) appended to the archive data.
+* .lnk that enumerates parent/user folders to locate the ZIP and opens a decoy document.
+* AMSI tampering via \[System.Management.Automation.AmsiUtils]::amsiInitFailed.
+* Long-running business threads ending with links hosted under trusted PaaS domains.
 
 ## Steganography-delimited payloads in images (PowerShell stager)
 
-Recent loader chains deliver an obfuscated JavaScript/VBS that decodes and runs a Base64 PowerShell stager. That stager downloads an image (often GIF) that contains a Base64-encoded .NET DLL hidden as plain text between unique start/end markers. The script searches for these delimiters (examples seen in the wild: «<<sudo_png>> … <<sudo_odt>>>»), extracts the between-text, Base64-decodes it to bytes, loads the assembly in-memory and invokes a known entry method with the C2 URL.
+Recent loader chains deliver an obfuscated JavaScript/VBS that decodes and runs a Base64 PowerShell stager. That stager downloads an image (often GIF) that contains a Base64-encoded .NET DLL hidden as plain text between unique start/end markers. The script searches for these delimiters (examples seen in the wild: «<\<sudo\_png>> … <\<sudo\_odt>>>»), extracts the between-text, Base64-decodes it to bytes, loads the assembly in-memory and invokes a known entry method with the C2 URL.
 
 Workflow
-- Stage 1: Archived JS/VBS dropper → decodes embedded Base64 → launches PowerShell stager with -nop -w hidden -ep bypass.
-- Stage 2: PowerShell stager → downloads image, carves marker-delimited Base64, loads the .NET DLL in-memory and calls its method (e.g., VAI) passing the C2 URL and options.
-- Stage 3: Loader retrieves final payload and typically injects it via process hollowing into a trusted binary (commonly MSBuild.exe). See more about process hollowing and trusted utility proxy execution here:
 
-{{#ref}}
-../../reversing/common-api-used-in-malware.md
-{{#endref}}
+* Stage 1: Archived JS/VBS dropper → decodes embedded Base64 → launches PowerShell stager with -nop -w hidden -ep bypass.
+* Stage 2: PowerShell stager → downloads image, carves marker-delimited Base64, loads the .NET DLL in-memory and calls its method (e.g., VAI) passing the C2 URL and options.
+* Stage 3: Loader retrieves final payload and typically injects it via process hollowing into a trusted binary (commonly MSBuild.exe). See more about process hollowing and trusted utility proxy execution here:
+
+\{{#ref\}} ../../reversing/common-api-used-in-malware.md \{{#endref\}}
 
 PowerShell example to carve a DLL from an image and invoke a .NET method in-memory:
 
 <details>
+
 <summary>PowerShell stego payload extractor and loader</summary>
 
 ```powershell
@@ -258,46 +253,44 @@ $null = $method.Invoke($null, @($C2, $env:PROCESSOR_ARCHITECTURE))
 </details>
 
 Notes
-- This is ATT&CK T1027.003 (steganography/marker-hiding). Markers vary between campaigns.
-- AMSI/ETW bypass and string deobfuscation are commonly applied before loading the assembly.
-- Hunting: scan downloaded images for known delimiters; identify PowerShell accessing images and immediately decoding Base64 blobs.
+
+* This is ATT\&CK T1027.003 (steganography/marker-hiding). Markers vary between campaigns.
+* AMSI/ETW bypass and string deobfuscation are commonly applied before loading the assembly.
+* Hunting: scan downloaded images for known delimiters; identify PowerShell accessing images and immediately decoding Base64 blobs.
 
 See also stego tools and carving techniques:
 
-{{#ref}}
-../../crypto-and-stego/stego-tricks.md
-{{#endref}}
+\{{#ref\}} ../../crypto-and-stego/stego-tricks.md \{{#endref\}}
 
 ## JS/VBS droppers → Base64 PowerShell staging
 
 A recurring initial stage is a small, heavily‑obfuscated `.js` or `.vbs` delivered inside an archive. Its sole purpose is to decode an embedded Base64 string and launch PowerShell with `-nop -w hidden -ep bypass` to bootstrap the next stage over HTTPS.
 
 Skeleton logic (abstract):
-- Read own file contents
-- Locate a Base64 blob between junk strings
-- Decode to ASCII PowerShell
-- Execute with `wscript.exe`/`cscript.exe` invoking `powershell.exe`
+
+* Read own file contents
+* Locate a Base64 blob between junk strings
+* Decode to ASCII PowerShell
+* Execute with `wscript.exe`/`cscript.exe` invoking `powershell.exe`
 
 Hunting cues
-- Archived JS/VBS attachments spawning `powershell.exe` with `-enc`/`FromBase64String` in the command line.
-- `wscript.exe` launching `powershell.exe -nop -w hidden` from user temp paths.
+
+* Archived JS/VBS attachments spawning `powershell.exe` with `-enc`/`FromBase64String` in the command line.
+* `wscript.exe` launching `powershell.exe -nop -w hidden` from user temp paths.
 
 ## Windows files to steal NTLM hashes
 
 Check the page about **places to steal NTLM creds**:
 
-{{#ref}}
-../../windows-hardening/ntlm/places-to-steal-ntlm-creds.md
-{{#endref}}
-
+\{{#ref\}} ../../windows-hardening/ntlm/places-to-steal-ntlm-creds.md \{{#endref\}}
 
 ## References
 
-- [Check Point Research – ZipLine Campaign: A Sophisticated Phishing Attack Targeting US Companies](https://research.checkpoint.com/2025/zipline-phishing-campaign/)
-- [Hijack the TypeLib – New COM persistence technique (CICADA8)](https://cicada-8.medium.com/hijack-the-typelib-new-com-persistence-technique-32ae1d284661)
-- [Unit 42 – PhantomVAI Loader Delivers a Range of Infostealers](https://unit42.paloaltonetworks.com/phantomvai-loader-delivers-infostealers/)
-- [MITRE ATT&CK – Steganography (T1027.003)](https://attack.mitre.org/techniques/T1027/003/)
-- [MITRE ATT&CK – Process Hollowing (T1055.012)](https://attack.mitre.org/techniques/T1055/012/)
-- [MITRE ATT&CK – Trusted Developer Utilities Proxy Execution: MSBuild (T1127.001)](https://attack.mitre.org/techniques/T1127/001/)
+* [Check Point Research – ZipLine Campaign: A Sophisticated Phishing Attack Targeting US Companies](https://research.checkpoint.com/2025/zipline-phishing-campaign/)
+* [Hijack the TypeLib – New COM persistence technique (CICADA8)](https://cicada-8.medium.com/hijack-the-typelib-new-com-persistence-technique-32ae1d284661)
+* [Unit 42 – PhantomVAI Loader Delivers a Range of Infostealers](https://unit42.paloaltonetworks.com/phantomvai-loader-delivers-infostealers/)
+* [MITRE ATT\&CK – Steganography (T1027.003)](https://attack.mitre.org/techniques/T1027/003/)
+* [MITRE ATT\&CK – Process Hollowing (T1055.012)](https://attack.mitre.org/techniques/T1055/012/)
+* [MITRE ATT\&CK – Trusted Developer Utilities Proxy Execution: MSBuild (T1127.001)](https://attack.mitre.org/techniques/T1127/001/)
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}

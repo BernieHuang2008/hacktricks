@@ -1,7 +1,6 @@
 # MSSQL AD Abuse
 
-{{#include ../../banners/hacktricks-training.md}}
-
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## **MSSQL Enumeration / Discovery**
 
@@ -9,8 +8,8 @@
 
 The [MSSQLPwner](https://github.com/ScorpionesLabs/MSSqlPwner) tool is based on impacket, and allows also authenticate using kerberos tickets, and attack through link chains
 
-<figure><img src="https://raw.githubusercontent.com/ScorpionesLabs/MSSqlPwner/main/assets/interractive.png"></figure>
-  
+<figure><img src="https://raw.githubusercontent.com/ScorpionesLabs/MSSqlPwner/main/assets/interractive.png" alt=""><figcaption></figcaption></figure>
+
 ```shell
 # Interactive mode
 mssqlpwner corp.com/user:lab@192.168.1.65 -windows-auth interactive
@@ -89,16 +88,17 @@ mssqlpwner hosts.txt brute -ul users.txt -hl hashes.txt
 
 mssqlpwner corp.com/user:lab@192.168.1.65 -windows-auth interactive
 
-````
+```
 
----
-###  Powershell
+***
+
+### Powershell
 
 The powershell module [PowerUpSQL](https://github.com/NetSPI/PowerUpSQL) is very useful in this case.
 
 ```bash
 Import-Module .\PowerupSQL.psd1
-````
+```
 
 ### Enumerating from the network without domain session
 
@@ -184,10 +184,7 @@ Check in the page mentioned in the **following section how to do this manually.*
 
 ### MSSQL Basic Hacking Tricks
 
-
-{{#ref}}
-../../network-services-pentesting/pentesting-mssql-microsoft-sql-server/
-{{#endref}}
+\{{#ref\}} ../../network-services-pentesting/pentesting-mssql-microsoft-sql-server/ \{{#endref\}}
 
 ## MSSQL Trusted Links
 
@@ -257,7 +254,7 @@ From **Windows** you could also find the links and execute commands manually usi
 
 _Login using Windows authentication:_
 
-![](<../../images/image (808).png>)
+![](<../../../.gitbook/assets/image (808).png>)
 
 #### Find Trustable Links
 
@@ -266,7 +263,7 @@ select * from master..sysservers;
 EXEC sp_linkedservers;
 ```
 
-![](<../../images/image (716).png>)
+![](<../../../.gitbook/assets/image (716).png>)
 
 #### Execute queries in trustable link
 
@@ -276,10 +273,9 @@ Execute queries through the link (example: find more links in the new accessible
 select * from openquery("dcorp-sql1", 'select * from master..sysservers')
 ```
 
-> [!WARNING]
-> Check where double and single quotes are used, it's important to use them that way.
+> \[!WARNING] Check where double and single quotes are used, it's important to use them that way.
 
-![](<../../images/image (643).png>)
+![](<../../../.gitbook/assets/image (643).png>)
 
 You can continue these trusted links chain forever manually.
 
@@ -311,15 +307,10 @@ A strategy that many authors have come up with is to force a SYSTEM service to a
 
 [SweetPotato](https://github.com/CCob/SweetPotato) has a collection of these various techniques which can be executed via Beacon's `execute-assembly` command.
 
-
-
 ### SCCM Management Point NTLM Relay (OSD Secret Extraction)
+
 See how the default SQL roles of SCCM **Management Points** can be abused to dump Network Access Account and Task-Sequence secrets directly from the site database:
 
-{{#ref}}
-sccm-management-point-relay-sql-policy-secrets.md
-{{#endref}}
+\{{#ref\}} sccm-management-point-relay-sql-policy-secrets.md \{{#endref\}}
 
-{{#include ../../banners/hacktricks-training.md}}
-
-
+\{{#include ../../banners/hacktricks-training.md\}}

@@ -1,6 +1,6 @@
 # macOS Electron Applications Injection
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 ## Basic Information
 
@@ -11,15 +11,15 @@ And node has some **parameters** and **env variables** that can be use to **make
 
 These techniques will be discussed next, but in recent times Electron has added several **security flags to prevent them**. These are the [**Electron Fuses**](https://www.electronjs.org/docs/latest/tutorial/fuses) and these are the ones used to **prevent** Electron apps in macOS from **loading arbitrary code**:
 
-- **`RunAsNode`**: If disabled, it prevents the use of the env var **`ELECTRON_RUN_AS_NODE`** to inject code.
-- **`EnableNodeCliInspectArguments`**: If disabled, params like `--inspect`, `--inspect-brk` won't be respected. Avoiding his way to inject code.
-- **`EnableEmbeddedAsarIntegrityValidation`**: If enabled, the loaded **`asar`** **file** will be **validated** by macOS. **Preventing** this way **code injection** by modifying the contents of this file.
-- **`OnlyLoadAppFromAsar`**: If this is enabled, instead of searching to load in the following order: **`app.asar`**, **`app`** and finally **`default_app.asar`**. It will only check and use app.asar, thus ensuring that when **combined** with the **`embeddedAsarIntegrityValidation`** fuse it is **impossible** to **load non-validated code**.
-- **`LoadBrowserProcessSpecificV8Snapshot`**: If enabled, the browser process uses the file called `browser_v8_context_snapshot.bin` for its V8 snapshot.
+* **`RunAsNode`**: If disabled, it prevents the use of the env var **`ELECTRON_RUN_AS_NODE`** to inject code.
+* **`EnableNodeCliInspectArguments`**: If disabled, params like `--inspect`, `--inspect-brk` won't be respected. Avoiding his way to inject code.
+* **`EnableEmbeddedAsarIntegrityValidation`**: If enabled, the loaded **`asar`** **file** will be **validated** by macOS. **Preventing** this way **code injection** by modifying the contents of this file.
+* **`OnlyLoadAppFromAsar`**: If this is enabled, instead of searching to load in the following order: **`app.asar`**, **`app`** and finally **`default_app.asar`**. It will only check and use app.asar, thus ensuring that when **combined** with the **`embeddedAsarIntegrityValidation`** fuse it is **impossible** to **load non-validated code**.
+* **`LoadBrowserProcessSpecificV8Snapshot`**: If enabled, the browser process uses the file called `browser_v8_context_snapshot.bin` for its V8 snapshot.
 
 Another interesting fuse that won't be preventing code injection is:
 
-- **EnableCookieEncryption**: If enabled, the cookie store on disk is encrypted using OS level cryptography keys.
+* **EnableCookieEncryption**: If enabled, the cookie store on disk is encrypted using OS level cryptography keys.
 
 ### Checking Electron Fuses
 
@@ -52,7 +52,7 @@ Binary file Slack.app//Contents/Frameworks/Electron Framework.framework/Versions
 
 You could load this file in [https://hexed.it/](https://hexed.it/) and search for the previous string. After this string you can see in ASCII a number "0" or "1" indicating if each fuse is disabled or enabled. Just modify the hex code (`0x30` is `0` and `0x31` is `1`) to **modify the fuse values**.
 
-<figure><img src="../../../images/image (34).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (34).png" alt=""><figcaption></figcaption></figure>
 
 Note that if you try to **overwrite** the **`Electron Framework` binary** inside an application with these bytes modified, the app won't run.
 
@@ -60,11 +60,10 @@ Note that if you try to **overwrite** the **`Electron Framework` binary** inside
 
 There could be **external JS/HTML files** that an Electron App is using, so an attacker could inject code in these files whose signature won't be checked and execute arbitrary code in the context of the app.
 
-> [!CAUTION]
-> However, at the moment there are 2 limitations:
+> \[!CAUTION] However, at the moment there are 2 limitations:
 >
-> - The **`kTCCServiceSystemPolicyAppBundles`** permission is **needed** to modify an App, so by default this is no longer possible.
-> - The compiled **`asap`** file usually has the fuses **`embeddedAsarIntegrityValidation`** `and` **`onlyLoadAppFromAsar`** `enabled`
+> * The **`kTCCServiceSystemPolicyAppBundles`** permission is **needed** to modify an App, so by default this is no longer possible.
+> * The compiled **`asap`** file usually has the fuses **`embeddedAsarIntegrityValidation`** `and` **`onlyLoadAppFromAsar`** `enabled`
 >
 > Making this attack path more complicated (or impossible).
 
@@ -82,7 +81,7 @@ And pack it back after having modified it with:
 npx asar pack app-decomp app-new.asar
 ```
 
-## RCE with ELECTRON_RUN_AS_NODE
+## RCE with ELECTRON\_RUN\_AS\_NODE
 
 According to [**the docs**](https://www.electronjs.org/docs/latest/api/environment-variables#electron_run_as_node), if this env variable is set, it will start the process as a normal Node.js process.
 
@@ -93,8 +92,7 @@ ELECTRON_RUN_AS_NODE=1 /Applications/Discord.app/Contents/MacOS/Discord
 require('child_process').execSync('/System/Applications/Calculator.app/Contents/MacOS/Calculator')
 ```
 
-> [!CAUTION]
-> If the fuse **`RunAsNode`** is disabled the env var **`ELECTRON_RUN_AS_NODE`** will be ignored, and this won't work.
+> \[!CAUTION] If the fuse **`RunAsNode`** is disabled the env var **`ELECTRON_RUN_AS_NODE`** will be ignored, and this won't work.
 
 ### Injection from the App Plist
 
@@ -136,8 +134,7 @@ require('child_process').execSync('/System/Applications/Calculator.app/Contents/
 NODE_OPTIONS="--require /tmp/payload.js" ELECTRON_RUN_AS_NODE=1 /Applications/Discord.app/Contents/MacOS/Discord
 ```
 
-> [!CAUTION]
-> If the fuse **`EnableNodeOptionsEnvironmentVariable`** is **disabled**, the app will **ignore** the env var **NODE_OPTIONS** when launched unless the env variable **`ELECTRON_RUN_AS_NODE`** is set, which will be also **ignored** if the fuse **`RunAsNode`** is disabled.
+> \[!CAUTION] If the fuse **`EnableNodeOptionsEnvironmentVariable`** is **disabled**, the app will **ignore** the env var **NODE\_OPTIONS** when launched unless the env variable **`ELECTRON_RUN_AS_NODE`** is set, which will be also **ignored** if the fuse **`RunAsNode`** is disabled.
 >
 > If you don't set **`ELECTRON_RUN_AS_NODE`** , you will find the **error**: `Most NODE_OPTIONs are not supported in packaged apps. See documentation for more details.`
 
@@ -174,8 +171,7 @@ require('child_process').execSync('/System/Applications/Calculator.app/Contents/
 
 In [**this blogpost**](https://hackerone.com/reports/1274695), this debugging is abused to make a headless chrome **download arbitrary files in arbitrary locations**.
 
-> [!TIP]
-> If an app has its custom way to check if env variables or params such as `--inspect` are set, you could try to **bypass** it in runtime using the arg `--inspect-brk` which will **stop the execution** at the beggining the app and execute a bypass (overwritting the args or the env variables of the current process for example).
+> \[!TIP] If an app has its custom way to check if env variables or params such as `--inspect` are set, you could try to **bypass** it in runtime using the arg `--inspect-brk` which will **stop the execution** at the beggining the app and execute a bypass (overwritting the args or the env variables of the current process for example).
 
 The folllowing was an exploit that monitoring and executing the app with the param `--inspect-brk` it was possible to bypass the custom protection it had (overwritting the params of the process to remove `--inspect-brk`) and then injecting a JS payload to dump cookies and credentials from the app:
 
@@ -382,8 +378,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-> [!CAUTION]
-> If the fuse **`EnableNodeCliInspectArguments`** is disabled, the app will **ignore node parameters** (such as `--inspect`) when launched unless the env variable **`ELECTRON_RUN_AS_NODE`** is set, which will be also **ignored** if the fuse **`RunAsNode`** is disabled.
+> \[!CAUTION] If the fuse **`EnableNodeCliInspectArguments`** is disabled, the app will **ignore node parameters** (such as `--inspect`) when launched unless the env variable **`ELECTRON_RUN_AS_NODE`** is set, which will be also **ignored** if the fuse **`RunAsNode`** is disabled.
 >
 > However, you could still use the **electron param `--remote-debugging-port=9229`** but the previous payload won't work to execute other processes.
 
@@ -398,8 +393,6 @@ ws.connect("ws://localhost:9222/devtools/page/85976D59050BFEFDBA48204E3D865D00",
 ws.send('{\"id\": 1, \"method\": \"Network.getAllCookies\"}')
 print(ws.recv()
 ```
-
-
 
 ### Injection from the App Plist
 
@@ -421,8 +414,7 @@ You could abuse this env variable in a plist to maintain persistence adding thes
 
 ## TCC Bypass abusing Older Versions
 
-> [!TIP]
-> The TCC daemon from macOS doesn't check the executed version of the application. So if you **cannot inject code in an Electron application** with any of the previous techniques you could download a previous version of the APP and inject code on it as it will still get the TCC privileges (unless Trust Cache prevents it).
+> \[!TIP] The TCC daemon from macOS doesn't check the executed version of the application. So if you **cannot inject code in an Electron application** with any of the previous techniques you could download a previous version of the APP and inject code on it as it will still get the TCC privileges (unless Trust Cache prevents it).
 
 ## Run non JS Code
 
@@ -433,24 +425,24 @@ Therefore, if you want to abuse entitlements to access the camera or microphone 
 
 ### CVE-2023-44402 – ASAR integrity bypass
 
-Electron ≤22.3.23 and various 23-27 pre-releases allowed an attacker with write access to the `.app/Contents/Resources` folder to bypass the `embeddedAsarIntegrityValidation` **and** `onlyLoadAppFromAsar` fuses. The bug was a *file-type confusion* in the integrity checker that let a crafted **directory named `app.asar`** be loaded instead of the validated archive, so any JavaScript placed inside that directory was executed when the app started. Even vendors that had followed the hardening guidance and enabled both fuses were therefore still vulnerable on macOS.
+Electron ≤22.3.23 and various 23-27 pre-releases allowed an attacker with write access to the `.app/Contents/Resources` folder to bypass the `embeddedAsarIntegrityValidation` **and** `onlyLoadAppFromAsar` fuses. The bug was a _file-type confusion_ in the integrity checker that let a crafted **directory named `app.asar`** be loaded instead of the validated archive, so any JavaScript placed inside that directory was executed when the app started. Even vendors that had followed the hardening guidance and enabled both fuses were therefore still vulnerable on macOS.
 
-Patched Electron versions: **22.3.24**, **24.8.3**, **25.8.1**, **26.2.1** and **27.0.0-alpha.7**. Attackers who find an application running an older build can overwrite `Contents/Resources/app.asar` with their own directory to execute code with the application’s TCC entitlements. 
+Patched Electron versions: **22.3.24**, **24.8.3**, **25.8.1**, **26.2.1** and **27.0.0-alpha.7**. Attackers who find an application running an older build can overwrite `Contents/Resources/app.asar` with their own directory to execute code with the application’s TCC entitlements.
 
 ### 2024 “RunAsNode” / “enableNodeCliInspectArguments” CVE cluster
 
-In January 2024 a series of CVEs (CVE-2024-23738 through CVE-2024-23743) highlighted that many Electron apps ship with the fuses **RunAsNode** and **EnableNodeCliInspectArguments** still enabled. A local attacker can therefore relaunch the program with the environment variable `ELECTRON_RUN_AS_NODE=1` or flags such as `--inspect-brk` to turn it into a *generic* Node.js process and inherit all the application’s sandbox and TCC permissions.
+In January 2024 a series of CVEs (CVE-2024-23738 through CVE-2024-23743) highlighted that many Electron apps ship with the fuses **RunAsNode** and **EnableNodeCliInspectArguments** still enabled. A local attacker can therefore relaunch the program with the environment variable `ELECTRON_RUN_AS_NODE=1` or flags such as `--inspect-brk` to turn it into a _generic_ Node.js process and inherit all the application’s sandbox and TCC permissions.
 
-Although the Electron team disputed the “critical” rating and noted that an attacker already needs local code–execution, the issue is still valuable during post-exploitation because it turns any vulnerable Electron bundle into a *living-off-the-land* binary that can e.g. read Contacts, Photos or other sensitive resources previously granted to the desktop app.
+Although the Electron team disputed the “critical” rating and noted that an attacker already needs local code–execution, the issue is still valuable during post-exploitation because it turns any vulnerable Electron bundle into a _living-off-the-land_ binary that can e.g. read Contacts, Photos or other sensitive resources previously granted to the desktop app.
 
 Defensive guidance from the Electron maintainers:
 
 * Disable the `RunAsNode` and `EnableNodeCliInspectArguments` fuses in production builds.
-* Use the newer **UtilityProcess** API if your application legitimately needs a helper Node.js process instead of re-enabling those fuses. 
+* Use the newer **UtilityProcess** API if your application legitimately needs a helper Node.js process instead of re-enabling those fuses.
 
 ## Automatic Injection
 
-- [**electroniz3r**](https://github.com/r3ggi/electroniz3r)
+* [**electroniz3r**](https://github.com/r3ggi/electroniz3r)
 
 The tool [**electroniz3r**](https://github.com/r3ggi/electroniz3r) can be easily used to **find vulnerable electron applications** installed and inject code on them. This tool will try to use the **`--inspect`** technique:
 
@@ -492,20 +484,16 @@ The webSocketDebuggerUrl is: ws://127.0.0.1:13337/8e0410f0-00e8-4e0e-92e4-58984d
 Shell binding requested. Check `nc 127.0.0.1 12345`
 ```
 
-
-- [https://github.com/boku7/Loki](https://github.com/boku7/Loki)
+* [https://github.com/boku7/Loki](https://github.com/boku7/Loki)
 
 Loki was designed to backdoor Electron applications by replacing the applications JavaScript files with the Loki Command & Control JavaScript files.
 
-
 ## References
 
-- [https://www.electronjs.org/docs/latest/tutorial/fuses](https://www.electronjs.org/docs/latest/tutorial/fuses)
-- [https://www.trustedsec.com/blog/macos-injection-via-third-party-frameworks](https://www.trustedsec.com/blog/macos-injection-via-third-party-frameworks)
-- [https://github.com/electron/electron/security/advisories/GHSA-7m48-wc93-9g85](https://github.com/electron/electron/security/advisories/GHSA-7m48-wc93-9g85)
-- [https://www.electronjs.org/blog/statement-run-as-node-cves](https://www.electronjs.org/blog/statement-run-as-node-cves)
-- [https://m.youtube.com/watch?v=VWQY5R2A6X8](https://m.youtube.com/watch?v=VWQY5R2A6X8)
+* [https://www.electronjs.org/docs/latest/tutorial/fuses](https://www.electronjs.org/docs/latest/tutorial/fuses)
+* [https://www.trustedsec.com/blog/macos-injection-via-third-party-frameworks](https://www.trustedsec.com/blog/macos-injection-via-third-party-frameworks)
+* [https://github.com/electron/electron/security/advisories/GHSA-7m48-wc93-9g85](https://github.com/electron/electron/security/advisories/GHSA-7m48-wc93-9g85)
+* [https://www.electronjs.org/blog/statement-run-as-node-cves](https://www.electronjs.org/blog/statement-run-as-node-cves)
+* [https://m.youtube.com/watch?v=VWQY5R2A6X8](https://m.youtube.com/watch?v=VWQY5R2A6X8)
 
-{{#include ../../../banners/hacktricks-training.md}}
-
-
+\{{#include ../../../banners/hacktricks-training.md\}}

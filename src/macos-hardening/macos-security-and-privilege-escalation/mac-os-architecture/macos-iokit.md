@@ -1,6 +1,6 @@
 # macOS IOKit
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 ## Basic Information
 
@@ -10,7 +10,7 @@ IOKit drivers will basically **export functions from the kernel**. These functio
 
 **IOKit XNU kernel code** is opensourced by Apple in [https://github.com/apple-oss-distributions/xnu/tree/main/iokit](https://github.com/apple-oss-distributions/xnu/tree/main/iokit). Moreover, the user space IOKit components are also opensource [https://github.com/opensource-apple/IOKitUser](https://github.com/opensource-apple/IOKitUser).
 
-However, **no IOKit drivers** are opensource. Anyway, from time to time a release of a driver might come with symbols that makes it easier to debug it. Check how to [**get the driver extensions from the firmware here**](#ipsw)**.**
+However, **no IOKit drivers** are opensource. Anyway, from time to time a release of a driver might come with symbols that makes it easier to debug it. Check how to [**get the driver extensions from the firmware here**](macos-iokit.md#ipsw)**.**
 
 It's written in **C++**. You can get demangled C++ symbols with:
 
@@ -24,21 +24,20 @@ __ZN16IOUserClient202222dispatchExternalMethodEjP31IOExternalMethodArgumentsOpaq
 IOUserClient2022::dispatchExternalMethod(unsigned int, IOExternalMethodArgumentsOpaque*, IOExternalMethodDispatch2022 const*, unsigned long, OSObject*, void*)
 ```
 
-> [!CAUTION]
-> IOKit **exposed functions** could perform **additional security checks** when a client tries to call a function but note that the apps are usually **limited** by the **sandbox** to which IOKit functions they can interact with.
+> \[!CAUTION] IOKit **exposed functions** could perform **additional security checks** when a client tries to call a function but note that the apps are usually **limited** by the **sandbox** to which IOKit functions they can interact with.
 
 ## Drivers
 
 In macOS they are located in:
 
-- **`/System/Library/Extensions`**
-  - KEXT files built into the OS X operating system.
-- **`/Library/Extensions`**
-  - KEXT files installed by 3rd party software
+* **`/System/Library/Extensions`**
+  * KEXT files built into the OS X operating system.
+* **`/Library/Extensions`**
+  * KEXT files installed by 3rd party software
 
 In iOS they are located in:
 
-- **`/System/Library/Extensions`**
+* **`/System/Library/Extensions`**
 
 ```bash
 #Use kextstat to print the loaded drivers
@@ -88,7 +87,7 @@ ioreg -p <plane> #Check other plane
 
 You could download **`IORegistryExplorer`** from **Xcode Additional Tools** from [**https://developer.apple.com/download/all/**](https://developer.apple.com/download/all/) and inspect the **macOS IORegistry** through a **graphical** interface.
 
-<figure><img src="../../../images/image (1167).png" alt="" width="563"><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1167).png" alt="" width="563"><figcaption></figcaption></figure>
 
 In IORegistryExplorer, "planes" are used to organize and display the relationships between different objects in the IORegistry. Each plane represents a specific type of relationship or a particular view of the system's hardware and driver configuration. Here are some of the common planes you might encounter in IORegistryExplorer:
 
@@ -103,9 +102,9 @@ In IORegistryExplorer, "planes" are used to organize and display the relationshi
 
 The following code connects to the IOKit service `"YourServiceNameHere"` and calls the function inside the selector 0. For it:
 
-- it first calls **`IOServiceMatching`** and **`IOServiceGetMatchingServices`** to get the service.
-- It then establish a connection calling **`IOServiceOpen`**.
-- And it finally calls a function with **`IOConnectCallScalarMethod`** indicating the selector 0 (the selector is the number the function you want to call has assigned).
+* it first calls **`IOServiceMatching`** and **`IOServiceGetMatchingServices`** to get the service.
+* It then establish a connection calling **`IOServiceOpen`**.
+* And it finally calls a function with **`IOConnectCallScalarMethod`** indicating the selector 0 (the selector is the number the function you want to call has assigned).
 
 ```objectivec
 #import <Foundation/Foundation.h>
@@ -166,13 +165,13 @@ There are **other** functions that can be used to call IOKit functions apart of 
 
 ## Reversing driver entrypoint
 
-You could obtain these for example from a [**firmware image (ipsw)**](#ipsw). Then, load it into your favourite decompiler.
+You could obtain these for example from a [**firmware image (ipsw)**](macos-iokit.md#ipsw). Then, load it into your favourite decompiler.
 
 You could start decompiling the **`externalMethod`** function as this is the driver function that will be receiving the call and calling the correct function:
 
-<figure><img src="../../../images/image (1168).png" alt="" width="315"><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1168).png" alt="" width="315"><figcaption></figcaption></figure>
 
-<figure><img src="../../../images/image (1169).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1169).png" alt=""><figcaption></figcaption></figure>
 
 That awful call demagled means:
 
@@ -196,40 +195,36 @@ IOUserClient2022::dispatchExternalMethod(uint32_t selector, IOExternalMethodArgu
 
 With this info you can rewrite Ctrl+Right -> `Edit function signature` and set the known types:
 
-<figure><img src="../../../images/image (1174).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1174).png" alt=""><figcaption></figcaption></figure>
 
 The new decompiled code will look like:
 
-<figure><img src="../../../images/image (1175).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1175).png" alt=""><figcaption></figcaption></figure>
 
 For the next step we need to have defined the **`IOExternalMethodDispatch2022`** struct. It's opensource in [https://github.com/apple-oss-distributions/xnu/blob/1031c584a5e37aff177559b9f69dbd3c8c3fd30a/iokit/IOKit/IOUserClient.h#L168-L176](https://github.com/apple-oss-distributions/xnu/blob/1031c584a5e37aff177559b9f69dbd3c8c3fd30a/iokit/IOKit/IOUserClient.h#L168-L176), you could define it:
 
-<figure><img src="../../../images/image (1170).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1170).png" alt=""><figcaption></figcaption></figure>
 
 Now, following the `(IOExternalMethodDispatch2022 *)&sIOExternalMethodArray` you can see a lot of data:
 
-<figure><img src="../../../images/image (1176).png" alt="" width="563"><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1176).png" alt="" width="563"><figcaption></figcaption></figure>
 
 Change the Data Type to **`IOExternalMethodDispatch2022:`**
 
-<figure><img src="../../../images/image (1177).png" alt="" width="375"><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1177).png" alt="" width="375"><figcaption></figcaption></figure>
 
 after the change:
 
-<figure><img src="../../../images/image (1179).png" alt="" width="563"><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1179).png" alt="" width="563"><figcaption></figcaption></figure>
 
 And as we now in there we have an **array of 7 elements** (check the final decompiled code), click to create an array of 7 elements:
 
-<figure><img src="../../../images/image (1180).png" alt="" width="563"><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1180).png" alt="" width="563"><figcaption></figcaption></figure>
 
 After the array is created you can see all the exported functions:
 
-<figure><img src="../../../images/image (1181).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1181).png" alt=""><figcaption></figcaption></figure>
 
-> [!TIP]
-> If you remember, to **call** an **exported** function from user space we don't need to call the name of the function, but the **selector number**. Here you can see that the selector **0** is the function **`initializeDecoder`**, the selector **1** is **`startDecoder`**, the selector **2** **`initializeEncoder`**...
+> \[!TIP] If you remember, to **call** an **exported** function from user space we don't need to call the name of the function, but the **selector number**. Here you can see that the selector **0** is the function **`initializeDecoder`**, the selector **1** is **`startDecoder`**, the selector **2** **`initializeEncoder`**...
 
-{{#include ../../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../../banners/hacktricks-training.md\}}

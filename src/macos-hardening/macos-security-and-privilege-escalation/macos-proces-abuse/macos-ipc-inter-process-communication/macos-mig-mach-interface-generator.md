@@ -1,6 +1,6 @@
 # macOS MIG - Mach Interface Generator
 
-{{#include ../../../../banners/hacktricks-training.md}}
+\{{#include ../../../../banners/hacktricks-training.md\}}
 
 ## Basic Information
 
@@ -10,18 +10,18 @@ The definition is specified in Interface Definition Language (IDL) using the `.d
 
 These definitions have 5 sections:
 
-- **Subsystem declaration**: The keyword subsystem is used to indicate the **name** and the **id**. It's also possible to mark it as **`KernelServer`** if the server should run in the kernel.
-- **Inclusions and imports**: MIG uses the C-prepocessor, so it's able to use imports. Moreover, it's possible to use `uimport` and `simport` for user or server generated code.
-- **Type declarations**: It's possible to define data types although usually it will import `mach_types.defs` and `std_types.defs`. For custom ones some syntax can be used:
-  - \[i`n/out]tran`: Function that needs to be trasnlated from an incoming or to an outgoing message
-  - `c[user/server]type`: Mapping to another C type.
-  - `destructor`: Call this function when the type is released.
-- **Operations**: These are the definitions of the RPC methods. There are 5 different types:
-  - `routine`: Expects reply
-  - `simpleroutine`: Doesn't expect reply
-  - `procedure`: Expects reply
-  - `simpleprocedure`: Doesn't expect reply
-  - `function`: Expects reply
+* **Subsystem declaration**: The keyword subsystem is used to indicate the **name** and the **id**. It's also possible to mark it as **`KernelServer`** if the server should run in the kernel.
+* **Inclusions and imports**: MIG uses the C-prepocessor, so it's able to use imports. Moreover, it's possible to use `uimport` and `simport` for user or server generated code.
+* **Type declarations**: It's possible to define data types although usually it will import `mach_types.defs` and `std_types.defs`. For custom ones some syntax can be used:
+  * \[i`n/out]tran`: Function that needs to be trasnlated from an incoming or to an outgoing message
+  * `c[user/server]type`: Mapping to another C type.
+  * `destructor`: Call this function when the type is released.
+* **Operations**: These are the definitions of the RPC methods. There are 5 different types:
+  * `routine`: Expects reply
+  * `simpleroutine`: Doesn't expect reply
+  * `procedure`: Expects reply
+  * `simpleprocedure`: Doesn't expect reply
+  * `function`: Expects reply
 
 ### Example
 
@@ -52,14 +52,12 @@ mig -header myipcUser.h -sheader myipcServer.h myipc.defs
 
 Several new files will be created in the current directory.
 
-> [!TIP]
-> You can find a more complex example in your system with: `mdfind mach_port.defs`\
+> \[!TIP] You can find a more complex example in your system with: `mdfind mach_port.defs`\
 > And you can compile it from the same folder as the file with: `mig -DLIBSYSCALL_INTERFACE mach_ports.defs`
 
 In the files **`myipcServer.c`** and **`myipcServer.h`** you can find the declaration and definition of the struct **`SERVERPREFmyipc_subsystem`**, which basically defines the function to call based on the received message ID (we indicated a starting number of 500):
 
-{{#tabs}}
-{{#tab name="myipcServer.c"}}
+\{{#tabs\}} \{{#tab name="myipcServer.c"\}}
 
 ```c
 /* Description of this subsystem, for use in direct RPC */
@@ -77,9 +75,9 @@ const struct SERVERPREFmyipc_subsystem SERVERPREFmyipc_subsystem = {
 };
 ```
 
-{{#endtab}}
+\{{#endtab\}}
 
-{{#tab name="myipcServer.h"}}
+\{{#tab name="myipcServer.h"\}}
 
 ```c
 /* Description of this subsystem, for use in direct RPC */
@@ -94,8 +92,7 @@ extern const struct SERVERPREFmyipc_subsystem {
 } SERVERPREFmyipc_subsystem;
 ```
 
-{{#endtab}}
-{{#endtabs}}
+\{{#endtab\}} \{{#endtabs\}}
 
 Based on the previous struct the function **`myipc_server_routine`** will get the **message ID** and return the proper function to call:
 
@@ -150,7 +147,7 @@ Finally, another important function to make the server work will be **`myipc_ser
 	OutHeadP->msgh_id = InHeadP->msgh_id + 100;
 	OutHeadP->msgh_reserved = 0;
 
-	if ((InHeadP->msgh_id > 500) || (InHeadP->msgh_id < 500) ||
+	if ((InHeadP->msgh_id > 500) || (InHeadP->msgh_id &#x3C; 500) ||
 <strong>	    ((routine = SERVERPREFmyipc_subsystem.routine[InHeadP->msgh_id - 500].stub_routine) == 0)) {
 </strong>		((mig_reply_error_t *)OutHeadP)->NDR = NDR_record;
 		((mig_reply_error_t *)OutHeadP)->RetCode = MIG_BAD_ID;
@@ -165,8 +162,7 @@ Check the previously highlighted lines accessing the function to call by ID.
 
 The following is the code to create a simple **server** and **client** where the client can call the functions Subtract from the server:
 
-{{#tabs}}
-{{#tab name="myipc_server.c"}}
+\{{#tabs\}} \{{#tab name="myipc\_server.c"\}}
 
 ```c
 // gcc myipc_server.c myipcServer.c -o myipc_server
@@ -199,9 +195,9 @@ int main() {
 }
 ```
 
-{{#endtab}}
+\{{#endtab\}}
 
-{{#tab name="myipc_client.c"}}
+\{{#tab name="myipc\_client.c"\}}
 
 ```c
 // gcc myipc_client.c myipcUser.c -o myipc_client
@@ -228,12 +224,11 @@ int main() {
 }
 ```
 
-{{#endtab}}
-{{#endtabs}}
+\{{#endtab\}} \{{#endtabs\}}
 
-### The NDR_record
+### The NDR\_record
 
-The NDR_record is exported by `libsystem_kernel.dylib`, and it's a struct that allows MIG to **transform data so it's agnostic of the system** it's being used as MIG was thought to be used between different systems (and not only in the same machine).
+The NDR\_record is exported by `libsystem_kernel.dylib`, and it's a struct that allows MIG to **transform data so it's agnostic of the system** it's being used as MIG was thought to be used between different systems (and not only in the same machine).
 
 This is interesting because if `_NDR_record` is found in a binary as a dependency (`jtool2 -S <binary> | grep NDR` or `nm`), it means that the binary is a MIG client or Server.
 
@@ -263,20 +258,19 @@ jtool2 -d __DATA.__const myipc_server | grep BL
 
 It was previously mentioned that the function that will take care of **calling the correct function depending on the received message ID** was `myipc_server`. However, you usually won't have the symbols of the binary (no functions names), so it's interesting to **check how it looks like decompiled** as it will always be very similar (the code of this function is independent from the functions exposed):
 
-{{#tabs}}
-{{#tab name="myipc_server decompiled 1"}}
+\{{#tabs\}} \{{#tab name="myipc\_server decompiled 1"\}}
 
 <pre class="language-c"><code class="lang-c">int _myipc_server(int arg0, int arg1) {
     var_10 = arg0;
     var_18 = arg1;
     // Initial instructions to find the proper function ponters
-    *(int32_t *)var_18 = *(int32_t *)var_10 & 0x1f;
+    *(int32_t *)var_18 = *(int32_t *)var_10 &#x26; 0x1f;
     *(int32_t *)(var_18 + 0x8) = *(int32_t *)(var_10 + 0x8);
     *(int32_t *)(var_18 + 0x4) = 0x24;
     *(int32_t *)(var_18 + 0xc) = 0x0;
     *(int32_t *)(var_18 + 0x14) = *(int32_t *)(var_10 + 0x14) + 0x64;
     *(int32_t *)(var_18 + 0x10) = 0x0;
-    if (*(int32_t *)(var_10 + 0x14) <= 0x1f4 && *(int32_t *)(var_10 + 0x14) >= 0x1f4) {
+    if (*(int32_t *)(var_10 + 0x14) &#x3C;= 0x1f4 &#x26;&#x26; *(int32_t *)(var_10 + 0x14) >= 0x1f4) {
             rax = *(int32_t *)(var_10 + 0x14);
             // Call to sign_extend_64 that can help to identifyf this function
             // This stores in rax the pointer to the call that needs to be called
@@ -306,10 +300,9 @@ It was previously mentioned that the function that will take care of **calling t
 }
 </code></pre>
 
-{{#endtab}}
+\{{#endtab\}}
 
-{{#tab name="myipc_server decompiled 2"}}
-This is the same function decompiled in a difefrent Hopper free version:
+\{{#tab name="myipc\_server decompiled 2"\}} This is the same function decompiled in a difefrent Hopper free version:
 
 <pre class="language-c"><code class="lang-c">int _myipc_server(int arg0, int arg1) {
     r31 = r31 - 0x40;
@@ -318,7 +311,7 @@ This is the same function decompiled in a difefrent Hopper free version:
     var_10 = arg0;
     var_18 = arg1;
     // Initial instructions to find the proper function ponters
-    *(int32_t *)var_18 = *(int32_t *)var_10 & 0x1f | 0x0;
+    *(int32_t *)var_18 = *(int32_t *)var_10 &#x26; 0x1f | 0x0;
     *(int32_t *)(var_18 + 0x8) = *(int32_t *)(var_10 + 0x8);
     *(int32_t *)(var_18 + 0x4) = 0x24;
     *(int32_t *)(var_18 + 0xc) = 0x0;
@@ -327,19 +320,19 @@ This is the same function decompiled in a difefrent Hopper free version:
     r8 = *(int32_t *)(var_10 + 0x14);
     r8 = r8 - 0x1f4;
     if (r8 > 0x0) {
-            if (CPU_FLAGS & G) {
+            if (CPU_FLAGS &#x26; G) {
                     r8 = 0x1;
             }
     }
-    if ((r8 & 0x1) == 0x0) {
+    if ((r8 &#x26; 0x1) == 0x0) {
             r8 = *(int32_t *)(var_10 + 0x14);
             r8 = r8 - 0x1f4;
-            if (r8 < 0x0) {
-                    if (CPU_FLAGS & L) {
+            if (r8 &#x3C; 0x0) {
+                    if (CPU_FLAGS &#x26; L) {
                             r8 = 0x1;
                     }
             }
-            if ((r8 & 0x1) == 0x0) {
+            if ((r8 &#x26; 0x1) == 0x0) {
                     r8 = *(int32_t *)(var_10 + 0x14);
                     // 0x1f4 = 500 (the strating ID)
 <strong>                    r8 = r8 - 0x1f4;
@@ -348,13 +341,13 @@ This is the same function decompiled in a difefrent Hopper free version:
                     var_20 = r8;
                     r8 = r8 - 0x0;
                     if (r8 != 0x0) {
-                            if (CPU_FLAGS & NE) {
+                            if (CPU_FLAGS &#x26; NE) {
                                     r8 = 0x1;
                             }
                     }
                     // Same if else as in the previous version
                     // Check the used of the address 0x100004040 (functions addresses array)
-<strong>                    if ((r8 & 0x1) == 0x0) {
+<strong>                    if ((r8 &#x26; 0x1) == 0x0) {
 </strong><strong>                            *(var_18 + 0x18) = **0x100004000;
 </strong>                            *(int32_t *)(var_18 + 0x20) = 0xfffffed1;
                             var_4 = 0x0;
@@ -382,14 +375,13 @@ This is the same function decompiled in a difefrent Hopper free version:
 
 </code></pre>
 
-{{#endtab}}
-{{#endtabs}}
+\{{#endtab\}} \{{#endtabs\}}
 
 Actually if you go to the function **`0x100004000`** you will find the array of **`routine_descriptor`** structs. The first element of the struct is the **address** where the **function** is implemented, and the **struct takes 0x28 bytes**, so each 0x28 bytes (starting from byte 0) you can get 8 bytes and that will be the **address of the function** that will be called:
 
-<figure><img src="../../../../images/image (35).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../../.gitbook/assets/image (35).png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src="../../../../images/image (36).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../../.gitbook/assets/image (36).png" alt=""><figcaption></figcaption></figure>
 
 This data can be extracted [**using this Hopper script**](https://github.com/knightsc/hopper/blob/master/scripts/MIG%20Detect.py).
 
@@ -399,9 +391,6 @@ The code generated by MIG also calles `kernel_debug` to generate logs about oper
 
 ## References
 
-- [\*OS Internals, Volume I, User Mode, Jonathan Levin](https://www.amazon.com/MacOS-iOS-Internals-User-Mode/dp/099105556X)
+* [\*OS Internals, Volume I, User Mode, Jonathan Levin](https://www.amazon.com/MacOS-iOS-Internals-User-Mode/dp/099105556X)
 
-{{#include ../../../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../../../banners/hacktricks-training.md\}}

@@ -1,6 +1,6 @@
 # macOS Apps - Inspecting, debugging and Fuzzing
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 ## Static Analysis
 
@@ -28,8 +28,7 @@ nm -m ./tccd # List of symbols
 
 You can [**download disarm from here**](https://newosxbook.com/tools/disarm.html).
 
-> [!TIP]
-> Note that **`disarm`** can work also with compressed IM4P files (like `kernelcache`) and extract only required parts or even analyze the required part without extracting it.
+> \[!TIP] Note that **`disarm`** can work also with compressed IM4P files (like `kernelcache`) and extract only required parts or even analyze the required part without extracting it.
 
 ```bash
 export JCOLOR=1
@@ -45,11 +44,9 @@ disarm -r "code signature" /bin/ps # Check code signature of a binary
 disarm -e "code signature" /bin/ps # Extract code signature of a binary
 ```
 
-
 ### Codesign / ldid
 
-> [!TIP]
-> **`Codesign`** can be found in **macOS** while **`ldid`** can be found in **iOS**
+> \[!TIP] **`Codesign`** can be found in **macOS** while **`ldid`** can be found in **iOS**
 
 ```bash
 # Get signer
@@ -95,21 +92,20 @@ It will be mounted in `/Volumes`
 
 ### Packed binaries
 
-- Check for high entropy
-- Check the strings (is there is almost no understandable string, packed)
-- The UPX packer for MacOS generates a section called "\_\_XHDR"
+* Check for high entropy
+* Check the strings (is there is almost no understandable string, packed)
+* The UPX packer for MacOS generates a section called "\_\_XHDR"
 
 ## Static Objective-C analysis
 
 ### Metadata
 
-> [!CAUTION]
-> Note that programs written in Objective-C **retain** their class declarations **when** **compiled** into [Mach-O binaries](../macos-files-folders-and-binaries/universal-binaries-and-mach-o-format.md). Such class declarations **include** the name and type of:
+> \[!CAUTION] Note that programs written in Objective-C **retain** their class declarations **when** **compiled** into [Mach-O binaries](../macos-files-folders-and-binaries/universal-binaries-and-mach-o-format.md). Such class declarations **include** the name and type of:
 
-- The interfaces defined
-- The interface methods
-- The interface instance variables
-- The protocols defined
+* The interfaces defined
+* The interface methods
+* The interface instance variables
+* The protocols defined
 
 Note that this names could be obfuscated to make the reversing of the binary more difficult.
 
@@ -117,24 +113,21 @@ Note that this names could be obfuscated to make the reversing of the binary mor
 
 When a function is called in a binary that uses objective-C, the compiled code instead of calling that function, it will call **`objc_msgSend`**. Which will be calling the final function:
 
-![](<../../../images/image (305).png>)
+![](<../../../../.gitbook/assets/image (305).png>)
 
 The params this function expects are:
 
-- The first parameter (**self**) is "a pointer that points to the **instance of the class that is to receive the message**". Or more simply put, it’s the object that the method is being invoked upon. If the method is a class method, this will be an instance of the class object (as a whole), whereas for an instance method, self will point to an instantiated instance of the class as an object.
-- The second parameter, (**op**), is "the selector of the method that handles the message". Again, more simply put, this is just the **name of the method.**
-- The remaining parameters are any **values that are required by the method** (op).
+* The first parameter (**self**) is "a pointer that points to the **instance of the class that is to receive the message**". Or more simply put, it’s the object that the method is being invoked upon. If the method is a class method, this will be an instance of the class object (as a whole), whereas for an instance method, self will point to an instantiated instance of the class as an object.
+* The second parameter, (**op**), is "the selector of the method that handles the message". Again, more simply put, this is just the **name of the method.**
+* The remaining parameters are any **values that are required by the method** (op).
 
 See how to **get this info easily with `lldb` in ARM64** in this page:
 
-
-{{#ref}}
-arm64-basic-assembly.md
-{{#endref}}
+\{{#ref\}} arm64-basic-assembly.md \{{#endref\}}
 
 x64:
 
-| **Argument**      | **Register**                                                    | **(for) objc_msgSend**                                 |
+| **Argument**      | **Register**                                                    | **(for) objc\_msgSend**                                |
 | ----------------- | --------------------------------------------------------------- | ------------------------------------------------------ |
 | **1st argument**  | **rdi**                                                         | **self: object that the method is being invoked upon** |
 | **2nd argument**  | **rsi**                                                         | **op: name of the method**                             |
@@ -213,18 +206,16 @@ swift demangle
 
 ## Dynamic Analysis
 
-> [!WARNING]
-> Note that in order to debug binaries, **SIP needs to be disabled** (`csrutil disable` or `csrutil enable --without debug`) or to copy the binaries to a temporary folder and **remove the signature** with `codesign --remove-signature <binary-path>` or allow the debugging of the binary (you can use [this script](https://gist.github.com/carlospolop/a66b8d72bb8f43913c4b5ae45672578b))
+> \[!WARNING] Note that in order to debug binaries, **SIP needs to be disabled** (`csrutil disable` or `csrutil enable --without debug`) or to copy the binaries to a temporary folder and **remove the signature** with `codesign --remove-signature <binary-path>` or allow the debugging of the binary (you can use [this script](https://gist.github.com/carlospolop/a66b8d72bb8f43913c4b5ae45672578b))
 
-> [!WARNING]
-> Note that in order to **instrument system binaries**, (such as `cloudconfigurationd`) on macOS, **SIP must be disabled** (just removing the signature won't work).
+> \[!WARNING] Note that in order to **instrument system binaries**, (such as `cloudconfigurationd`) on macOS, **SIP must be disabled** (just removing the signature won't work).
 
 ### APIs
 
 macOS exposes some interesting APIs that give information about the processes:
 
-- `proc_info`: This is the main one giving a lot of information about each process. You need to be root to get other processes information but you don't need special entitlements or mach ports.
-- `libsysmon.dylib`: It allows to get information about processes via XPC exposed functions, however, it's needed to have the entitlement `com.apple.sysmond.client`.
+* `proc_info`: This is the main one giving a lot of information about each process. You need to be root to get other processes information but you don't need special entitlements or mach ports.
+* `libsysmon.dylib`: It allows to get information about processes via XPC exposed functions, however, it's needed to have the entitlement `com.apple.sysmond.client`.
 
 ### Stackshot & microstackshots
 
@@ -238,9 +229,9 @@ It must be run as **root** and the daemon `/usr/libexec/sysdiagnosed` has very i
 
 Its plist is located in `/System/Library/LaunchDaemons/com.apple.sysdiagnose.plist` which declares 3 MachServices:
 
-- `com.apple.sysdiagnose.CacheDelete`: Deletes old archives in /var/rmp
-- `com.apple.sysdiagnose.kernel.ipc`: Special port 23 (kernel)
-- `com.apple.sysdiagnose.service.xpc`: User mode interface through `Libsysdiagnose` Obj-C class. Three arguments in a dict can be passed (`compress`, `display`, `run`)
+* `com.apple.sysdiagnose.CacheDelete`: Deletes old archives in /var/rmp
+* `com.apple.sysdiagnose.kernel.ipc`: Special port 23 (kernel)
+* `com.apple.sysdiagnose.service.xpc`: User mode interface through `Libsysdiagnose` Obj-C class. Three arguments in a dict can be passed (`compress`, `display`, `run`)
 
 ### Unified Logs
 
@@ -258,11 +249,11 @@ In the left panel of hopper it's possible to see the symbols (**Labels**) of the
 
 In the middle panel you can see the **dissasembled code**. And you can see it a **raw** disassemble, as **graph**, as **decompiled** and as **binary** by clicking on the respective icon:
 
-<figure><img src="../../../images/image (343).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (343).png" alt=""><figcaption></figcaption></figure>
 
 Right clicking in a code object you can see **references to/from that object** or even change its name (this doesn't work in decompiled pseudocode):
 
-<figure><img src="../../../images/image (1117).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1117).png" alt=""><figcaption></figcaption></figure>
 
 Moreover, in the **middle down you can write python commands**.
 
@@ -276,8 +267,7 @@ It allows users access to applications at an extremely **low level** and provide
 
 DTrace uses the **`dtrace_probe_create`** function to create a probe for each system call. These probes can be fired in the **entry and exit point of each system call**. The interaction with DTrace occur through /dev/dtrace which is only available for the root user.
 
-> [!TIP]
-> To enable Dtrace without fully disabling SIP protection you could execute on recovery mode: `csrutil enable --without dtrace`
+> \[!TIP] To enable Dtrace without fully disabling SIP protection you could execute on recovery mode: `csrutil enable --without dtrace`
 >
 > You can also **`dtrace`** or **`dtruss`** binaries that **you have compiled**.
 
@@ -303,14 +293,14 @@ A more detailed explanation and more examples can be found in [https://illumos.o
 
 Run `man -k dtrace` to list the **DTrace scripts available**. Example: `sudo dtruss -n binary`
 
-- In line
+* In line
 
 ```bash
 #Count the number of syscalls of each running process
 sudo dtrace -n 'syscall:::entry {@[execname] = count()}'
 ```
 
-- script
+* script
 
 ```bash
 syscall:::entry
@@ -367,13 +357,13 @@ To interface with `kdebug` `sysctl` is used over the `kern.kdebug` namespace and
 
 To interact with kdebug with a custom client these are usually the steps:
 
-- Remove existing settings with KERN_KDSETREMOVE
-- Set trace with KERN_KDSETBUF and KERN_KDSETUP
-- Use KERN_KDGETBUF to get number of buffer entries
-- Get the own client out of the trace with KERN_KDPINDEX
-- Enable tracing with KERN_KDENABLE
-- Read the buffer calling KERN_KDREADTR
-- To match each thread with its process call KERN_KDTHRMAP.
+* Remove existing settings with KERN\_KDSETREMOVE
+* Set trace with KERN\_KDSETBUF and KERN\_KDSETUP
+* Use KERN\_KDGETBUF to get number of buffer entries
+* Get the own client out of the trace with KERN\_KDPINDEX
+* Enable tracing with KERN\_KDENABLE
+* Read the buffer calling KERN\_KDREADTR
+* To match each thread with its process call KERN\_KDTHRMAP.
 
 In order to get this information it's possible to use the Apple tool **`trace`** or the custom tool [kDebugView (kdv)](https://newosxbook.com/tools/kdv.html)**.**
 
@@ -412,7 +402,7 @@ Moreover, a subset of Kperfs functionality resides in `kpc`, which provides info
 [**SpriteTree**](https://themittenmac.com/tools/) is a tool to prints the relations between processes.\
 You need to monitor your mac with a command like **`sudo eslogger fork exec rename create > cap.json`** (the terminal launching this required FDA). And then you can load the json in this tool to view all the relations:
 
-<figure><img src="../../../images/image (1182).png" alt="" width="375"><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1182).png" alt="" width="375"><figcaption></figcaption></figure>
 
 ### FileMonitor
 
@@ -426,9 +416,9 @@ You need to monitor your mac with a command like **`sudo eslogger fork exec rena
 
 [**Apple Instruments**](https://developer.apple.com/library/archive/documentation/Performance/Conceptual/CellularBestPractices/Appendix/Appendix.html) are part of Xcode’s Developer tools – used for monitoring application performance, identifying memory leaks and tracking filesystem activity.
 
-![](<../../../images/image (1138).png>)
+![](<../../../../.gitbook/assets/image (1138).png>)
 
-### fs_usage
+### fs\_usage
 
 Allows to follow actions performed by processes:
 
@@ -442,7 +432,7 @@ fs_usage -w -f network curl #This tracks network actions
 [**Taskexplorer**](https://objective-see.com/products/taskexplorer.html) is useful to see the **libraries** used by a binary, the **files** it's using and the **network** connections.\
 It also checks the binary processes against **virustotal** and show information about the binary.
 
-## PT_DENY_ATTACH <a href="#page-title" id="page-title"></a>
+## PT\_DENY\_ATTACH <a href="#page-title" id="page-title"></a>
 
 In [**this blog post**](https://knight.sc/debugging/2019/06/03/debugging-apple-binaries-that-use-pt-deny-attach.html) you can find an example about how to **debug a running daemon** that used **`PT_DENY_ATTACH`** to prevent debugging even if SIP was disabled.
 
@@ -463,13 +453,11 @@ You can set intel flavour when using lldb creating a file called **`.lldbinit`**
 settings set target.x86-disassembly-flavor intel
 ```
 
-> [!WARNING]
-> Inside lldb, dump a process with `process save-core`
+> \[!WARNING] Inside lldb, dump a process with `process save-core`
 
-<table data-header-hidden><thead><tr><th width="225"></th><th></th></tr></thead><tbody><tr><td><strong>(lldb) Command</strong></td><td><strong>Description</strong></td></tr><tr><td><strong>run (r)</strong></td><td>Starting execution, which will continue unabated until a breakpoint is hit or the process terminates.</td></tr><tr><td><strong>process launch --stop-at-entry</strong></td><td>Strt execution stopping at the entry point</td></tr><tr><td><strong>continue (c)</strong></td><td>Continue execution of the debugged process.</td></tr><tr><td><strong>nexti (n / ni)</strong></td><td>Execute the next instruction. This command will skip over function calls.</td></tr><tr><td><strong>stepi (s / si)</strong></td><td>Execute the next instruction. Unlike the nexti command, this command will step into function calls.</td></tr><tr><td><strong>finish (f)</strong></td><td>Execute the rest of the instructions in the current function (“frame”) return and halt.</td></tr><tr><td><strong>control + c</strong></td><td>Pause execution. If the process has been run (r) or continued (c), this will cause the process to halt ...wherever it is currently executing.</td></tr><tr><td><strong>breakpoint (b)</strong></td><td><p><code>b main</code> #Any func called main</p><p><code>b <binname>`main</code> #Main func of the bin</p><p><code>b set -n main --shlib <lib_name></code> #Main func of the indicated bin</p><p><code>breakpoint set -r '\[NSFileManager .*\]$'</code> #Any NSFileManager method</p><p><code>breakpoint set -r '\[NSFileManager contentsOfDirectoryAtPath:.*\]$'</code></p><p><code>break set -r . -s libobjc.A.dylib</code> # Break in all functions of that library</p><p><code>b -a 0x0000000100004bd9</code></p><p><code>br l</code> #Breakpoint list</p><p><code>br e/dis <num></code> #Enable/Disable breakpoint</p><p>breakpoint delete <num></p></td></tr><tr><td><strong>help</strong></td><td><p>help breakpoint #Get help of breakpoint command</p><p>help memory write #Get help to write into the memory</p></td></tr><tr><td><strong>reg</strong></td><td><p>reg read</p><p>reg read $rax</p><p>reg read $rax --format <<a href="https://lldb.llvm.org/use/variable.html#type-format">format</a>></p><p>reg write $rip 0x100035cc0</p></td></tr><tr><td><strong>x/s <reg/memory address></strong></td><td>Display the memory as a null-terminated string.</td></tr><tr><td><strong>x/i <reg/memory address></strong></td><td>Display the memory as assembly instruction.</td></tr><tr><td><strong>x/b <reg/memory address></strong></td><td>Display the memory as byte.</td></tr><tr><td><strong>print object (po)</strong></td><td><p>This will print the object referenced by the param</p><p>po $raw</p><p><code>{</code></p><p><code>dnsChanger = {</code></p><p><code>"affiliate" = "";</code></p><p><code>"blacklist_dns" = ();</code></p><p>Note that most of Apple’s Objective-C APIs or methods return objects, and thus should be displayed via the “print object” (po) command. If po doesn't produce a meaningful output use <code>x/b</code></p></td></tr><tr><td><strong>memory</strong></td><td>memory read 0x000....<br>memory read $x0+0xf2a<br>memory write 0x100600000 -s 4 0x41414141 #Write AAAA in that address<br>memory write -f s $rip+0x11f+7 "AAAA" #Write AAAA in the addr</td></tr><tr><td><strong>disassembly</strong></td><td><p>dis #Disas current function</p><p>dis -n <funcname> #Disas func</p><p>dis -n <funcname> -b <basename> #Disas func<br>dis -c 6 #Disas 6 lines<br>dis -c 0x100003764 -e 0x100003768 # From one add until the other<br>dis -p -c 4 # Start in current address disassembling</p></td></tr><tr><td><strong>parray</strong></td><td>parray 3 (char **)$x1 # Check array of 3 components in x1 reg</td></tr><tr><td><strong>image dump sections</strong></td><td>Print map of the current process memory</td></tr><tr><td><strong>image dump symtab <library></strong></td><td><code>image dump symtab CoreNLP</code> #Get the address of all the symbols from CoreNLP</td></tr></tbody></table>
+<table data-header-hidden><thead><tr><th width="225"></th><th></th></tr></thead><tbody><tr><td><strong>(lldb) Command</strong></td><td><strong>Description</strong></td></tr><tr><td><strong>run (r)</strong></td><td>Starting execution, which will continue unabated until a breakpoint is hit or the process terminates.</td></tr><tr><td><strong>process launch --stop-at-entry</strong></td><td>Strt execution stopping at the entry point</td></tr><tr><td><strong>continue (c)</strong></td><td>Continue execution of the debugged process.</td></tr><tr><td><strong>nexti (n / ni)</strong></td><td>Execute the next instruction. This command will skip over function calls.</td></tr><tr><td><strong>stepi (s / si)</strong></td><td>Execute the next instruction. Unlike the nexti command, this command will step into function calls.</td></tr><tr><td><strong>finish (f)</strong></td><td>Execute the rest of the instructions in the current function (“frame”) return and halt.</td></tr><tr><td><strong>control + c</strong></td><td>Pause execution. If the process has been run (r) or continued (c), this will cause the process to halt ...wherever it is currently executing.</td></tr><tr><td><strong>breakpoint (b)</strong></td><td><p><code>b main</code> #Any func called main</p><p><code>b `main</code> #Main func of the bin</p><p><code>b set -n main --shlib</code> #Main func of the indicated bin</p><p><code>breakpoint set -r '\[NSFileManager .*\]$'</code> #Any NSFileManager method</p><p><code>breakpoint set -r '\[NSFileManager contentsOfDirectoryAtPath:.*\]$'</code></p><p><code>break set -r . -s libobjc.A.dylib</code> # Break in all functions of that library</p><p><code>b -a 0x0000000100004bd9</code></p><p><code>br l</code> #Breakpoint list</p><p><code>br e/dis</code> #Enable/Disable breakpoint</p><p>breakpoint delete</p></td></tr><tr><td><strong>help</strong></td><td><p>help breakpoint #Get help of breakpoint command</p><p>help memory write #Get help to write into the memory</p></td></tr><tr><td><strong>reg</strong></td><td><p>reg read</p><p>reg read $rax</p><p>reg read $rax --format &#x3C;<a href="https://lldb.llvm.org/use/variable.html#type-format">format</a>></p><p>reg write $rip 0x100035cc0</p></td></tr><tr><td><strong>x/s</strong></td><td>Display the memory as a null-terminated string.</td></tr><tr><td><strong>x/i</strong></td><td>Display the memory as assembly instruction.</td></tr><tr><td><strong>x/b</strong></td><td>Display the memory as byte.</td></tr><tr><td><strong>print object (po)</strong></td><td><p>This will print the object referenced by the param</p><p>po $raw</p><p><code>{</code></p><p><code>dnsChanger = {</code></p><p><code>"affiliate" = "";</code></p><p><code>"blacklist_dns" = ();</code></p><p>Note that most of Apple’s Objective-C APIs or methods return objects, and thus should be displayed via the “print object” (po) command. If po doesn't produce a meaningful output use <code>x/b</code></p></td></tr><tr><td><strong>memory</strong></td><td>memory read 0x000....<br>memory read $x0+0xf2a<br>memory write 0x100600000 -s 4 0x41414141 #Write AAAA in that address<br>memory write -f s $rip+0x11f+7 "AAAA" #Write AAAA in the addr</td></tr><tr><td><strong>disassembly</strong></td><td><p>dis #Disas current function</p><p>dis -n #Disas func</p><p>dis -n -b #Disas func<br>dis -c 6 #Disas 6 lines<br>dis -c 0x100003764 -e 0x100003768 # From one add until the other<br>dis -p -c 4 # Start in current address disassembling</p></td></tr><tr><td><strong>parray</strong></td><td>parray 3 (char **)$x1 # Check array of 3 components in x1 reg</td></tr><tr><td><strong>image dump sections</strong></td><td>Print map of the current process memory</td></tr><tr><td><strong>image dump symtab</strong></td><td><code>image dump symtab CoreNLP</code> #Get the address of all the symbols from CoreNLP</td></tr></tbody></table>
 
-> [!TIP]
-> When calling the **`objc_sendMsg`** function, the **rsi** register holds the **name of the method** as a null-terminated (“C”) string. To print the name via lldb do:
+> \[!TIP] When calling the **`objc_sendMsg`** function, the **rsi** register holds the **name of the method** as a null-terminated (“C”) string. To print the name via lldb do:
 >
 > `(lldb) x/s $rsi: 0x1000f1576: "startMiningWithPort:password:coreCount:slowMemory:currency:"`
 >
@@ -482,23 +470,23 @@ settings set target.x86-disassembly-flavor intel
 
 #### VM detection
 
-- The command **`sysctl hw.model`** returns "Mac" when the **host is a MacOS** but something different when it's a VM.
-- Playing with the values of **`hw.logicalcpu`** and **`hw.physicalcpu`** some malwares try to detect if it's a VM.
-- Some malwares can also **detect** if the machine is **VMware** based on the MAC address (00:50:56).
-- It's also possible to find **if a process is being debugged** with a simple code such us:
-  - `if(P_TRACED == (info.kp_proc.p_flag & P_TRACED)){ //process being debugged }`
-- It can also invoke the **`ptrace`** system call with the **`PT_DENY_ATTACH`** flag. This **prevents** a deb**u**gger from attaching and tracing.
-  - You can check if the **`sysctl`** or **`ptrace`** function is being **imported** (but the malware could import it dynamically)
-  - As noted in this writeup, “[Defeating Anti-Debug Techniques: macOS ptrace variants](https://alexomara.com/blog/defeating-anti-debug-techniques-macos-ptrace-variants/)” :\
-    “_The message Process # exited with **status = 45 (0x0000002d)** is usually a tell-tale sign that the debug target is using **PT_DENY_ATTACH**_”
+* The command **`sysctl hw.model`** returns "Mac" when the **host is a MacOS** but something different when it's a VM.
+* Playing with the values of **`hw.logicalcpu`** and **`hw.physicalcpu`** some malwares try to detect if it's a VM.
+* Some malwares can also **detect** if the machine is **VMware** based on the MAC address (00:50:56).
+* It's also possible to find **if a process is being debugged** with a simple code such us:
+  * `if(P_TRACED == (info.kp_proc.p_flag & P_TRACED)){ //process being debugged }`
+* It can also invoke the **`ptrace`** system call with the **`PT_DENY_ATTACH`** flag. This **prevents** a deb**u**gger from attaching and tracing.
+  * You can check if the **`sysctl`** or **`ptrace`** function is being **imported** (but the malware could import it dynamically)
+  * As noted in this writeup, “[Defeating Anti-Debug Techniques: macOS ptrace variants](https://alexomara.com/blog/defeating-anti-debug-techniques-macos-ptrace-variants/)” :\
+    “_The message Process # exited with **status = 45 (0x0000002d)** is usually a tell-tale sign that the debug target is using **PT\_DENY\_ATTACH**_”
 
 ## Core Dumps
 
 Core dumps are created if:
 
-- `kern.coredump` sysctl is set to 1 (by default)
-- If the process wasn't suid/sgid or `kern.sugid_coredump` is 1 (by default is 0)
-- The `AS_CORE` limit allows the operation. It's possible to suppress code dumps creation by calling `ulimit -c 0` and re-enable them with `ulimit -c unlimited`.
+* `kern.coredump` sysctl is set to 1 (by default)
+* If the process wasn't suid/sgid or `kern.sugid_coredump` is 1 (by default is 0)
+* The `AS_CORE` limit allows the operation. It's possible to suppress code dumps creation by calling `ulimit -c 0` and re-enable them with `ulimit -c unlimited`.
 
 In those cases the core dumps is generated according to `kern.corefile` sysctl and stored usually in `/cores/core/.%P`.
 
@@ -526,17 +514,17 @@ sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.ReportCrash.Root.
 
 While fuzzing in a MacOS it's important to not allow the Mac to sleep:
 
-- systemsetup -setsleep Never
-- pmset, System Preferences
-- [KeepingYouAwake](https://github.com/newmarcel/KeepingYouAwake)
+* systemsetup -setsleep Never
+* pmset, System Preferences
+* [KeepingYouAwake](https://github.com/newmarcel/KeepingYouAwake)
 
 #### SSH Disconnect
 
-If you are fuzzing via a SSH connection it's important to make sure the session isn't going to day. So change the sshd_config file with:
+If you are fuzzing via a SSH connection it's important to make sure the session isn't going to day. So change the sshd\_config file with:
 
-- TCPKeepAlive Yes
-- ClientAliveInterval 0
-- ClientAliveCountMax 0
+* TCPKeepAlive Yes
+* ClientAliveInterval 0
+* ClientAliveCountMax 0
 
 ```bash
 sudo launchctl unload /System/Library/LaunchDaemons/ssh.plist
@@ -547,10 +535,7 @@ sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 
 **Checkout the following page** to find out how you can find which app is responsible of **handling the specified scheme or protocol:**
 
-
-{{#ref}}
-../macos-file-extension-apps.md
-{{#endref}}
+\{{#ref\}} ../macos-file-extension-apps.md \{{#endref\}}
 
 ### Enumerating Network Processes
 
@@ -567,7 +552,7 @@ Or use `netstat` or `lsof`
 
 ### Libgmalloc
 
-<figure><img src="../../../images/Pasted Graphic 14.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/Pasted Graphic 14.png" alt=""><figcaption></figcaption></figure>
 
 ```bash
 lldb -o "target create `which some-binary`" -o "settings set target.env-vars DYLD_INSERT_LIBRARIES=/usr/lib/libgmalloc.dylib" -o "run arg1 arg2" -o "bt" -o "reg read" -o "dis -s \$pc-32 -c 24 -m -F intel" -o "quit"
@@ -611,18 +596,16 @@ litefuzz -s -a tcp://localhost:5900 -i input/screenshared-session --reportcrash 
 
 ### More Fuzzing MacOS Info
 
-- [https://www.youtube.com/watch?v=T5xfL9tEg44](https://www.youtube.com/watch?v=T5xfL9tEg44)
-- [https://github.com/bnagy/slides/blob/master/OSXScale.pdf](https://github.com/bnagy/slides/blob/master/OSXScale.pdf)
-- [https://github.com/bnagy/francis/tree/master/exploitaben](https://github.com/bnagy/francis/tree/master/exploitaben)
-- [https://github.com/ant4g0nist/crashwrangler](https://github.com/ant4g0nist/crashwrangler)
+* [https://www.youtube.com/watch?v=T5xfL9tEg44](https://www.youtube.com/watch?v=T5xfL9tEg44)
+* [https://github.com/bnagy/slides/blob/master/OSXScale.pdf](https://github.com/bnagy/slides/blob/master/OSXScale.pdf)
+* [https://github.com/bnagy/francis/tree/master/exploitaben](https://github.com/bnagy/francis/tree/master/exploitaben)
+* [https://github.com/ant4g0nist/crashwrangler](https://github.com/ant4g0nist/crashwrangler)
 
 ## References
 
-- [**OS X Incident Response: Scripting and Analysis**](https://www.amazon.com/OS-Incident-Response-Scripting-Analysis-ebook/dp/B01FHOHHVS)
-- [**https://www.youtube.com/watch?v=T5xfL9tEg44**](https://www.youtube.com/watch?v=T5xfL9tEg44)
-- [**https://taomm.org/vol1/analysis.html**](https://taomm.org/vol1/analysis.html)
-- [**The Art of Mac Malware: The Guide to Analyzing Malicious Software**](https://taomm.org/)
+* [**OS X Incident Response: Scripting and Analysis**](https://www.amazon.com/OS-Incident-Response-Scripting-Analysis-ebook/dp/B01FHOHHVS)
+* [**https://www.youtube.com/watch?v=T5xfL9tEg44**](https://www.youtube.com/watch?v=T5xfL9tEg44)
+* [**https://taomm.org/vol1/analysis.html**](https://taomm.org/vol1/analysis.html)
+* [**The Art of Mac Malware: The Guide to Analyzing Malicious Software**](https://taomm.org/)
 
-{{#include ../../../banners/hacktricks-training.md}}
-
-
+\{{#include ../../../banners/hacktricks-training.md\}}

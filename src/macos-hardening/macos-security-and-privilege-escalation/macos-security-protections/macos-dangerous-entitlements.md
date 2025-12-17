@@ -1,9 +1,8 @@
 # macOS Dangerous Entitlements & TCC perms
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
-> [!WARNING]
-> Note that entitlements starting with **`com.apple`** are not available to third-parties, only Apple can grant them... Or if you are using an enterprise certificate you could create your own entitlements starting with **`com.apple`** actually and bypass protections based on this.
+> \[!WARNING] Note that entitlements starting with **`com.apple`** are not available to third-parties, only Apple can grant them... Or if you are using an enterprise certificate you could create your own entitlements starting with **`com.apple`** actually and bypass protections based on this.
 
 ## High
 
@@ -115,7 +114,7 @@ Allows to **change** the **`NFSHomeDirectory`** attribute of a user that changes
 
 Allow to modify files inside apps bundle (inside app.app), which is **disallowed by default**.
 
-<figure><img src="../../../images/image (31).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (31).png" alt=""><figcaption></figcaption></figure>
 
 It's possible to check who has this access in _System Settings_ > _Privacy & Security_ > _App Management._
 
@@ -137,15 +136,13 @@ This entitlement allows to **create memory that is writable and executable** by 
 
 This entitlement allows to **override or patch C code**, use the long-deprecated **`NSCreateObjectFileImageFromMemory`** (which is fundamentally insecure), or use the **DVDPlayback** framework. Check [**this for more info**](https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_security_cs_allow-unsigned-executable-memory).
 
-> [!CAUTION]
-> Including this entitlement exposes your app to common vulnerabilities in memory-unsafe code languages. Carefully consider whether your app needs this exception.
+> \[!CAUTION] Including this entitlement exposes your app to common vulnerabilities in memory-unsafe code languages. Carefully consider whether your app needs this exception.
 
 ### `com.apple.security.cs.disable-executable-page-protection`
 
 This entitlement allows to **modify sections of its own executable files** on disk to forcefully exit. Check [**this for more info**](https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_security_cs_disable-executable-page-protection).
 
-> [!CAUTION]
-> The Disable Executable Memory Protection Entitlement is an extreme entitlement that removes a fundamental security protection from your app, making it possible for an attacker to rewrite your app’s executable code without detection. Prefer narrower entitlements if possible.
+> \[!CAUTION] The Disable Executable Memory Protection Entitlement is an extreme entitlement that removes a fundamental security protection from your app, making it possible for an attacker to rewrite your app’s executable code without detection. Prefer narrower entitlements if possible.
 
 ### `com.apple.security.cs.allow-relative-library-loads`
 
@@ -153,7 +150,7 @@ TODO
 
 ### `com.apple.private.nullfs_allow`
 
-This entitlement allows to mount a nullfs file system (forbidden by default). Tool: [**mount_nullfs**](https://github.com/JamaicanMoose/mount_nullfs/tree/master).
+This entitlement allows to mount a nullfs file system (forbidden by default). Tool: [**mount\_nullfs**](https://github.com/JamaicanMoose/mount_nullfs/tree/master).
 
 ### `kTCCServiceAll`
 
@@ -170,11 +167,4 @@ Allow the process to **ask for all the TCC permissions**.
 
 ### **`kTCCServicePostEvent`**
 
-
-
-</details>
-
-
-
-
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}

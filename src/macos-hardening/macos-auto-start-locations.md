@@ -1,40 +1,38 @@
 # macOS Auto Start
 
-{{#include ../banners/hacktricks-training.md}}
+\{{#include ../banners/hacktricks-training.md\}}
 
 This section is heavily based on the blog series [**Beyond the good ol' LaunchAgents**](https://theevilbit.github.io/beyond/), the goal is to add **more Autostart Locations** (if possible), indicate **which techniques are still working** nowadays with latest version of macOS (13.4) and to specify the **permissions** needed.
 
 ## Sandbox Bypass
 
-> [!TIP]
-> Here you can find start locations useful for **sandbox bypass** that allows you to simply execute something by **writing it into a file** and **waiting** for a very **common** **action**, a determined **amount of time** or an **action you can usually perform** from inside a sandbox without needing root permissions.
+> \[!TIP] Here you can find start locations useful for **sandbox bypass** that allows you to simply execute something by **writing it into a file** and **waiting** for a very **common** **action**, a determined **amount of time** or an **action you can usually perform** from inside a sandbox without needing root permissions.
 
 ### Launchd
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-- TCC Bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+* TCC Bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Locations
 
-- **`/Library/LaunchAgents`**
-  - **Trigger**: Reboot
-  - Root required
-- **`/Library/LaunchDaemons`**
-  - **Trigger**: Reboot
-  - Root required
-- **`/System/Library/LaunchAgents`**
-  - **Trigger**: Reboot
-  - Root required
-- **`/System/Library/LaunchDaemons`**
-  - **Trigger**: Reboot
-  - Root required
-- **`~/Library/LaunchAgents`**
-  - **Trigger**: Relog-in
-- **`~/Library/LaunchDemons`**
-  - **Trigger**: Relog-in
+* **`/Library/LaunchAgents`**
+  * **Trigger**: Reboot
+  * Root required
+* **`/Library/LaunchDaemons`**
+  * **Trigger**: Reboot
+  * Root required
+* **`/System/Library/LaunchAgents`**
+  * **Trigger**: Reboot
+  * Root required
+* **`/System/Library/LaunchDaemons`**
+  * **Trigger**: Reboot
+  * Root required
+* **`~/Library/LaunchAgents`**
+  * **Trigger**: Relog-in
+* **`~/Library/LaunchDemons`**
+  * **Trigger**: Relog-in
 
-> [!TIP]
-> As interesting fact, **`launchd`** has an embedded property list in a the Mach-o section `__Text.__config` which contains other well known services launchd must start. Moreover, these services can contain the `RequireSuccess`, `RequireRun` and `RebootOnSuccess` that means that they must be run and complete successfully.
+> \[!TIP] As interesting fact, **`launchd`** has an embedded property list in a the Mach-o section `__Text.__config` which contains other well known services launchd must start. Moreover, these services can contain the `RequireSuccess`, `RequireRun` and `RebootOnSuccess` that means that they must be run and complete successfully.
 >
 > Ofc, It cannot be modified because of code signing.
 
@@ -42,10 +40,10 @@ This section is heavily based on the blog series [**Beyond the good ol' LaunchAg
 
 **`launchd`** is the **first** **process** executed by OX S kernel at startup and the last one to finish at shut down. It should always have the **PID 1**. This process will **read and execute** the configurations indicated in the **ASEP** **plists** in:
 
-- `/Library/LaunchAgents`: Per-user agents installed by the admin
-- `/Library/LaunchDaemons`: System-wide daemons installed by the admin
-- `/System/Library/LaunchAgents`: Per-user agents provided by Apple.
-- `/System/Library/LaunchDaemons`: System-wide daemons provided by Apple.
+* `/Library/LaunchAgents`: Per-user agents installed by the admin
+* `/Library/LaunchDaemons`: System-wide daemons installed by the admin
+* `/System/Library/LaunchAgents`: Per-user agents provided by Apple.
+* `/System/Library/LaunchDaemons`: System-wide daemons provided by Apple.
 
 When a user logs in the plists located in `/Users/$USER/Library/LaunchAgents` and `/Users/$USER/Library/LaunchDemons` are started with the **logged users permissions**.
 
@@ -76,8 +74,7 @@ The **main difference between agents and daemons is that agents are loaded when 
 
 There are cases where an **agent needs to be executed before the user logins**, these are called **PreLoginAgents**. For example, this is useful to provide assistive technology at login. They can be found also in `/Library/LaunchAgents`(see [**here**](https://github.com/HelmutJ/CocoaSampleCode/tree/master/PreLoginAgents) an example).
 
-> [!TIP]
-> New Daemons or Agents config files will be **loaded after next reboot or using** `launchctl load <target.plist>` It's **also possible to load .plist files without that extension** with `launchctl -F <file>` (however those plist files won't be automatically loaded after reboot).\
+> \[!TIP] New Daemons or Agents config files will be **loaded after next reboot or using** `launchctl load <target.plist>` It's **also possible to load .plist files without that extension** with `launchctl -F <file>` (however those plist files won't be automatically loaded after reboot).\
 > It's also possible to **unload** with `launchctl unload <target.plist>` (the process pointed by it will be terminated),
 >
 > To **ensure** that there isn't **anything** (like an override) **preventing** an **Agent** or **Daemon** **from** **running** run: `sudo launchctl load -w /System/Library/LaunchDaemos/com.apple.smdb.plist`
@@ -88,8 +85,7 @@ List all the agents and daemons loaded by the current user:
 launchctl list
 ```
 
-> [!WARNING]
-> If a plist is owned by a user, even if it's in a daemon system wide folders, the **task will be executed as the user** and not as root. This can prevent some privilege escalation attacks.
+> \[!WARNING] If a plist is owned by a user, even if it's in a daemon system wide folders, the **task will be executed as the user** and not as root. This can prevent some privilege escalation attacks.
 
 #### More info about launchd
 
@@ -97,50 +93,50 @@ launchctl list
 
 One of the first things `launchd` would do is to **start** all the **daemons** like:
 
-- **Timer daemons** based on time to be executed:
-  - atd (`com.apple.atrun.plist`): Has a `StartInterval` of 30min
-  - crond (`com.apple.systemstats.daily.plist`): Has `StartCalendarInterval` to start at 00:15
-- **Network daemons** like:
-  - `org.cups.cups-lpd`: Listens in TCP (`SockType: stream`) with `SockServiceName: printer`
-    - SockServiceName must be either a port or a service from `/etc/services`
-  - `com.apple.xscertd.plist`: Listens on TCP in port 1640
-- **Path daemons** that are executed when a specified path changes:
-  - `com.apple.postfix.master`: Checking the path `/etc/postfix/aliases`
-- **IOKit notifications daemons**:
-  - `com.apple.xartstorageremoted`: `"com.apple.iokit.matching" => { "com.apple.device-attach" => { "IOMatchLaunchStream" => 1 ...`
-- **Mach port:**
-  - `com.apple.xscertd-helper.plist`: It's indicating in the `MachServices` entry the name `com.apple.xscertd.helper`
-- **UserEventAgent:**
-  - This is different from the previous one. It makes launchd spawn apps in response to specific event. However, in this case, the main binary involved isn't `launchd` but `/usr/libexec/UserEventAgent`. It loads plugins from the SIP restricted folder /System/Library/UserEventPlugins/ where each plugin indicates its initialiser in the `XPCEventModuleInitializer` key or. in the case of older plugins, in the `CFPluginFactories` dict under the key `FB86416D-6164-2070-726F-70735C216EC0` of its `Info.plist`.
+* **Timer daemons** based on time to be executed:
+  * atd (`com.apple.atrun.plist`): Has a `StartInterval` of 30min
+  * crond (`com.apple.systemstats.daily.plist`): Has `StartCalendarInterval` to start at 00:15
+* **Network daemons** like:
+  * `org.cups.cups-lpd`: Listens in TCP (`SockType: stream`) with `SockServiceName: printer`
+    * SockServiceName must be either a port or a service from `/etc/services`
+  * `com.apple.xscertd.plist`: Listens on TCP in port 1640
+* **Path daemons** that are executed when a specified path changes:
+  * `com.apple.postfix.master`: Checking the path `/etc/postfix/aliases`
+* **IOKit notifications daemons**:
+  * `com.apple.xartstorageremoted`: `"com.apple.iokit.matching" => { "com.apple.device-attach" => { "IOMatchLaunchStream" => 1 ...`
+* **Mach port:**
+  * `com.apple.xscertd-helper.plist`: It's indicating in the `MachServices` entry the name `com.apple.xscertd.helper`
+* **UserEventAgent:**
+  * This is different from the previous one. It makes launchd spawn apps in response to specific event. However, in this case, the main binary involved isn't `launchd` but `/usr/libexec/UserEventAgent`. It loads plugins from the SIP restricted folder /System/Library/UserEventPlugins/ where each plugin indicates its initialiser in the `XPCEventModuleInitializer` key or. in the case of older plugins, in the `CFPluginFactories` dict under the key `FB86416D-6164-2070-726F-70735C216EC0` of its `Info.plist`.
 
 ### shell startup files
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0001/](https://theevilbit.github.io/beyond/beyond_0001/)\
-Writeup (xterm): [https://theevilbit.github.io/beyond/beyond_0018/](https://theevilbit.github.io/beyond/beyond_0018/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0001/](https://theevilbit.github.io/beyond/beyond_0001/)\
+Writeup (xterm): [https://theevilbit.github.io/beyond/beyond\_0018/](https://theevilbit.github.io/beyond/beyond_0018/)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-- TCC Bypass: [✅](https://emojipedia.org/check-mark-button)
-  - But you need to find an app with a TCC bypass that executes a shell that loads these files
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+* TCC Bypass: [✅](https://emojipedia.org/check-mark-button)
+  * But you need to find an app with a TCC bypass that executes a shell that loads these files
 
 #### Locations
 
-- **`~/.zshrc`, `~/.zlogin`, `~/.zshenv.zwc`**, **`~/.zshenv`, `~/.zprofile`**
-  - **Trigger**: Open a terminal with zsh
-- **`/etc/zshenv`, `/etc/zprofile`, `/etc/zshrc`, `/etc/zlogin`**
-  - **Trigger**: Open a terminal with zsh
-  - Root required
-- **`~/.zlogout`**
-  - **Trigger**: Exit a terminal with zsh
-- **`/etc/zlogout`**
-  - **Trigger**: Exit a terminal with zsh
-  - Root required
-- Potentially more in: **`man zsh`**
-- **`~/.bashrc`**
-  - **Trigger**: Open a terminal with bash
-- `/etc/profile` (didn't work)
-- `~/.profile` (didn't work)
-- `~/.xinitrc`, `~/.xserverrc`, `/opt/X11/etc/X11/xinit/xinitrc.d/`
-  - **Trigger**: Expected to trigger with xterm, but it **isn't installed** and even after installed this error is thrown: xterm: `DISPLAY is not set`
+* **`~/.zshrc`, `~/.zlogin`, `~/.zshenv.zwc`**, **`~/.zshenv`, `~/.zprofile`**
+  * **Trigger**: Open a terminal with zsh
+* **`/etc/zshenv`, `/etc/zprofile`, `/etc/zshrc`, `/etc/zlogin`**
+  * **Trigger**: Open a terminal with zsh
+  * Root required
+* **`~/.zlogout`**
+  * **Trigger**: Exit a terminal with zsh
+* **`/etc/zlogout`**
+  * **Trigger**: Exit a terminal with zsh
+  * Root required
+* Potentially more in: **`man zsh`**
+* **`~/.bashrc`**
+  * **Trigger**: Open a terminal with bash
+* `/etc/profile` (didn't work)
+* `~/.profile` (didn't work)
+* `~/.xinitrc`, `~/.xserverrc`, `/opt/X11/etc/X11/xinit/xinitrc.d/`
+  * **Trigger**: Expected to trigger with xterm, but it **isn't installed** and even after installed this error is thrown: xterm: `DISPLAY is not set`
 
 #### Description & Exploitation
 
@@ -155,18 +151,17 @@ echo "touch /tmp/hacktricks" >> ~/.zshrc
 
 ### Re-opened Applications
 
-> [!CAUTION]
-> Configuring the indicated exploitation and loging-out and loging-in or even rebooting didn't work for me to execute the app. (The app wasn't being executed, maybe it needs to be running when these actions are performed)
+> \[!CAUTION] Configuring the indicated exploitation and loging-out and loging-in or even rebooting didn't work for me to execute the app. (The app wasn't being executed, maybe it needs to be running when these actions are performed)
 
-**Writeup**: [https://theevilbit.github.io/beyond/beyond_0021/](https://theevilbit.github.io/beyond/beyond_0021/)
+**Writeup**: [https://theevilbit.github.io/beyond/beyond\_0021/](https://theevilbit.github.io/beyond/beyond_0021/)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Location
 
-- **`~/Library/Preferences/ByHost/com.apple.loginwindow.<UUID>.plist`**
-  - **Trigger**: Restart reopening applications
+* **`~/Library/Preferences/ByHost/com.apple.loginwindow.<UUID>.plist`**
+  * **Trigger**: Restart reopening applications
 
 #### Description & Exploitation
 
@@ -198,14 +193,14 @@ To **add an application to this list** you can use:
 
 ### Terminal Preferences
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-- TCC bypass: [✅](https://emojipedia.org/check-mark-button)
-  - Terminal use to have FDA permissions of the user use it
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+* TCC bypass: [✅](https://emojipedia.org/check-mark-button)
+  * Terminal use to have FDA permissions of the user use it
 
 #### Location
 
-- **`~/Library/Preferences/com.apple.Terminal.plist`**
-  - **Trigger**: Open Terminal
+* **`~/Library/Preferences/com.apple.Terminal.plist`**
+  * **Trigger**: Open Terminal
 
 #### Description & Exploitation
 
@@ -213,7 +208,7 @@ In **`~/Library/Preferences`** are store the preferences of the user in the Appl
 
 For example, the Terminal can execute a command in the Startup:
 
-<figure><img src="../images/image (1148).png" alt="" width="495"><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1148).png" alt="" width="495"><figcaption></figcaption></figure>
 
 This config is reflected in the file **`~/Library/Preferences/com.apple.Terminal.plist`** like this:
 
@@ -248,14 +243,14 @@ You can add this from the cli with:
 
 ### Terminal Scripts / Other file extensions
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-- TCC bypass: [✅](https://emojipedia.org/check-mark-button)
-  - Terminal use to have FDA permissions of the user use it
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+* TCC bypass: [✅](https://emojipedia.org/check-mark-button)
+  * Terminal use to have FDA permissions of the user use it
 
 #### Location
 
-- **Anywhere**
-  - **Trigger**: Open Terminal
+* **Anywhere**
+  * **Trigger**: Open Terminal
 
 #### Description & Exploitation
 
@@ -293,31 +288,30 @@ open /tmp/test.terminal
 
 You could also use the extensions **`.command`**, **`.tool`**, with regular shell scripts content and they will be also opened by Terminal.
 
-> [!CAUTION]
-> If terminal has **Full Disk Access** it will be able to complete that action (note that the command executed will be visible in a terminal window).
+> \[!CAUTION] If terminal has **Full Disk Access** it will be able to complete that action (note that the command executed will be visible in a terminal window).
 
 ### Audio Plugins
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0013/](https://theevilbit.github.io/beyond/beyond_0013/)\
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0013/](https://theevilbit.github.io/beyond/beyond_0013/)\
 Writeup: [https://posts.specterops.io/audio-unit-plug-ins-896d3434a882](https://posts.specterops.io/audio-unit-plug-ins-896d3434a882)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-- TCC bypass: [🟠](https://emojipedia.org/large-orange-circle)
-  - You might get some extra TCC access
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+* TCC bypass: [🟠](https://emojipedia.org/large-orange-circle)
+  * You might get some extra TCC access
 
 #### Location
 
-- **`/Library/Audio/Plug-Ins/HAL`**
-  - Root required
-  - **Trigger**: Restart coreaudiod or the computer
-- **`/Library/Audio/Plug-ins/Components`**
-  - Root required
-  - **Trigger**: Restart coreaudiod or the computer
-- **`~/Library/Audio/Plug-ins/Components`**
-  - **Trigger**: Restart coreaudiod or the computer
-- **`/System/Library/Components`**
-  - Root required
-  - **Trigger**: Restart coreaudiod or the computer
+* **`/Library/Audio/Plug-Ins/HAL`**
+  * Root required
+  * **Trigger**: Restart coreaudiod or the computer
+* **`/Library/Audio/Plug-ins/Components`**
+  * Root required
+  * **Trigger**: Restart coreaudiod or the computer
+* **`~/Library/Audio/Plug-ins/Components`**
+  * **Trigger**: Restart coreaudiod or the computer
+* **`/System/Library/Components`**
+  * Root required
+  * **Trigger**: Restart coreaudiod or the computer
 
 #### Description
 
@@ -325,19 +319,19 @@ According to the previous writeups it's possible to **compile some audio plugins
 
 ### QuickLook Plugins
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0028/](https://theevilbit.github.io/beyond/beyond_0028/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0028/](https://theevilbit.github.io/beyond/beyond_0028/)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-- TCC bypass: [🟠](https://emojipedia.org/large-orange-circle)
-  - You might get some extra TCC access
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+* TCC bypass: [🟠](https://emojipedia.org/large-orange-circle)
+  * You might get some extra TCC access
 
 #### Location
 
-- `/System/Library/QuickLook`
-- `/Library/QuickLook`
-- `~/Library/QuickLook`
-- `/Applications/AppNameHere/Contents/Library/QuickLook/`
-- `~/Applications/AppNameHere/Contents/Library/QuickLook/`
+* `/System/Library/QuickLook`
+* `/Library/QuickLook`
+* `~/Library/QuickLook`
+* `/Applications/AppNameHere/Contents/Library/QuickLook/`
+* `~/Applications/AppNameHere/Contents/Library/QuickLook/`
 
 #### Description & Exploitation
 
@@ -347,18 +341,17 @@ It's possible to compile your own QuickLook plugin, place it in one of the previ
 
 ### ~~Login/Logout Hooks~~
 
-> [!CAUTION]
-> This didn't work for me, neither with the user LoginHook nor with the root LogoutHook
+> \[!CAUTION] This didn't work for me, neither with the user LoginHook nor with the root LogoutHook
 
-**Writeup**: [https://theevilbit.github.io/beyond/beyond_0022/](https://theevilbit.github.io/beyond/beyond_0022/)
+**Writeup**: [https://theevilbit.github.io/beyond/beyond\_0022/](https://theevilbit.github.io/beyond/beyond_0022/)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Location
 
-- You need to be able to execute something like `defaults write com.apple.loginwindow LoginHook /Users/$USER/hook.sh`
-  - `Lo`cated in `~/Library/Preferences/com.apple.loginwindow.plist`
+* You need to be able to execute something like `defaults write com.apple.loginwindow LoginHook /Users/$USER/hook.sh`
+  * `Lo`cated in `~/Library/Preferences/com.apple.loginwindow.plist`
 
 They are deprecated but can be used to execute commands when a user logs in.
 
@@ -397,23 +390,22 @@ The root user one is stored in **`/private/var/root/Library/Preferences/com.appl
 
 ## Conditional Sandbox Bypass
 
-> [!TIP]
-> Here you can find start locations useful for **sandbox bypass** that allows you to simply execute something by **writing it into a file** and **expecting not super common conditions** like specific **programs installed, "uncommon" user** actions or environments.
+> \[!TIP] Here you can find start locations useful for **sandbox bypass** that allows you to simply execute something by **writing it into a file** and **expecting not super common conditions** like specific **programs installed, "uncommon" user** actions or environments.
 
 ### Cron
 
-**Writeup**: [https://theevilbit.github.io/beyond/beyond_0004/](https://theevilbit.github.io/beyond/beyond_0004/)
+**Writeup**: [https://theevilbit.github.io/beyond/beyond\_0004/](https://theevilbit.github.io/beyond/beyond_0004/)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-  - However, you need to be able to execute `crontab` binary
-  - Or be root
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+  * However, you need to be able to execute `crontab` binary
+  * Or be root
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Location
 
-- **`/usr/lib/cron/tabs/`, `/private/var/at/tabs`, `/private/var/at/jobs`, `/etc/periodic/`**
-  - Root required for direct write access. No root required if you can execute `crontab <file>`
-  - **Trigger**: Depends on the cron job
+* **`/usr/lib/cron/tabs/`, `/private/var/at/tabs`, `/private/var/at/jobs`, `/etc/periodic/`**
+  * Root required for direct write access. No root required if you can execute `crontab <file>`
+  * **Trigger**: Depends on the cron job
 
 #### Description & Exploitation
 
@@ -443,20 +435,20 @@ crontab /tmp/cron
 
 ### iTerm2
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0002/](https://theevilbit.github.io/beyond/beyond_0002/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0002/](https://theevilbit.github.io/beyond/beyond_0002/)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-- TCC bypass: [✅](https://emojipedia.org/check-mark-button)
-  - iTerm2 use to have granted TCC permissions
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+* TCC bypass: [✅](https://emojipedia.org/check-mark-button)
+  * iTerm2 use to have granted TCC permissions
 
 #### Locations
 
-- **`~/Library/Application Support/iTerm2/Scripts/AutoLaunch`**
-  - **Trigger**: Open iTerm
-- **`~/Library/Application Support/iTerm2/Scripts/AutoLaunch.scpt`**
-  - **Trigger**: Open iTerm
-- **`~/Library/Preferences/com.googlecode.iterm2.plist`**
-  - **Trigger**: Open iTerm
+* **`~/Library/Application Support/iTerm2/Scripts/AutoLaunch`**
+  * **Trigger**: Open iTerm
+* **`~/Library/Application Support/iTerm2/Scripts/AutoLaunch.scpt`**
+  * **Trigger**: Open iTerm
+* **`~/Library/Preferences/com.googlecode.iterm2.plist`**
+  * **Trigger**: Open iTerm
 
 #### Description & Exploitation
 
@@ -500,7 +492,7 @@ The iTerm2 preferences located in **`~/Library/Preferences/com.googlecode.iterm2
 
 This setting can be configured in the iTerm2 settings:
 
-<figure><img src="../images/image (37).png" alt="" width="563"><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (37).png" alt="" width="563"><figcaption></figcaption></figure>
 
 And the command is reflected in the preferences:
 
@@ -527,22 +519,21 @@ open /Applications/iTerm.app/Contents/MacOS/iTerm2
 /usr/libexec/PlistBuddy -c "Set :\"New Bookmarks\":0:\"Initial Text\" ''" $HOME/Library/Preferences/com.googlecode.iterm2.plist
 ```
 
-> [!WARNING]
-> Highly probable there are **other ways to abuse the iTerm2 preferences** to execute arbitrary commands.
+> \[!WARNING] Highly probable there are **other ways to abuse the iTerm2 preferences** to execute arbitrary commands.
 
 ### xbar
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0007/](https://theevilbit.github.io/beyond/beyond_0007/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0007/](https://theevilbit.github.io/beyond/beyond_0007/)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-  - But xbar must be installed
-- TCC bypass: [✅](https://emojipedia.org/check-mark-button)
-  - It requests Accessibility permissions
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+  * But xbar must be installed
+* TCC bypass: [✅](https://emojipedia.org/check-mark-button)
+  * It requests Accessibility permissions
 
 #### Location
 
-- **`~/Library/Application\ Support/xbar/plugins/`**
-  - **Trigger**: Once xbar is executed
+* **`~/Library/Application\ Support/xbar/plugins/`**
+  * **Trigger**: Once xbar is executed
 
 #### Description
 
@@ -558,17 +549,17 @@ chmod +x "$HOME/Library/Application Support/xbar/plugins/a.sh"
 
 ### Hammerspoon
 
-**Writeup**: [https://theevilbit.github.io/beyond/beyond_0008/](https://theevilbit.github.io/beyond/beyond_0008/)
+**Writeup**: [https://theevilbit.github.io/beyond/beyond\_0008/](https://theevilbit.github.io/beyond/beyond_0008/)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-  - But Hammerspoon must be installed
-- TCC bypass: [✅](https://emojipedia.org/check-mark-button)
-  - It requests Accessibility permissions
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+  * But Hammerspoon must be installed
+* TCC bypass: [✅](https://emojipedia.org/check-mark-button)
+  * It requests Accessibility permissions
 
 #### Location
 
-- **`~/.hammerspoon/init.lua`**
-  - **Trigger**: Once hammerspoon is executed
+* **`~/.hammerspoon/init.lua`**
+  * **Trigger**: Once hammerspoon is executed
 
 #### Description
 
@@ -585,49 +576,48 @@ EOF
 
 ### BetterTouchTool
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-  - But BetterTouchTool must be installed
-- TCC bypass: [✅](https://emojipedia.org/check-mark-button)
-  - It requests Automation-Shortcuts and Accessibility permissions
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+  * But BetterTouchTool must be installed
+* TCC bypass: [✅](https://emojipedia.org/check-mark-button)
+  * It requests Automation-Shortcuts and Accessibility permissions
 
 #### Location
 
-- `~/Library/Application Support/BetterTouchTool/*`
+* `~/Library/Application Support/BetterTouchTool/*`
 
 This tool allows to indicate applications or scripts to execute when some shortcuts are pressed . An attacker might be able configure his own **shortcut and action to execute in the database** to make it execute arbitrary code (a shortcut could be to just to press a key).
 
 ### Alfred
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-  - But Alfred must be installed
-- TCC bypass: [✅](https://emojipedia.org/check-mark-button)
-  - It requests Automation, Accessibility and even Full-Disk access permissions
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+  * But Alfred must be installed
+* TCC bypass: [✅](https://emojipedia.org/check-mark-button)
+  * It requests Automation, Accessibility and even Full-Disk access permissions
 
 #### Location
 
-- `???`
+* `???`
 
 It allows to create workflows that can execute code when certain conditions are met. Potentially it's possible for an attacker to create a workflow file and make Alfred load it (it's needed to pay the premium version to use workflows).
 
 ### SSHRC
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0006/](https://theevilbit.github.io/beyond/beyond_0006/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0006/](https://theevilbit.github.io/beyond/beyond_0006/)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-  - But ssh needs to be enabled and used
-- TCC bypass: [✅](https://emojipedia.org/check-mark-button)
-  - SSH use to have FDA access
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+  * But ssh needs to be enabled and used
+* TCC bypass: [✅](https://emojipedia.org/check-mark-button)
+  * SSH use to have FDA access
 
 #### Location
 
-- **`~/.ssh/rc`**
-  - **Trigger**: Login via ssh
-- **`/etc/ssh/sshrc`**
-  - Root required
-  - **Trigger**: Login via ssh
+* **`~/.ssh/rc`**
+  * **Trigger**: Login via ssh
+* **`/etc/ssh/sshrc`**
+  * Root required
+  * **Trigger**: Login via ssh
 
-> [!CAUTION]
-> To turn ssh on requres Full Disk Access:
+> \[!CAUTION] To turn ssh on requres Full Disk Access:
 >
 > ```bash
 > sudo systemsetup -setremotelogin on
@@ -639,20 +629,20 @@ By default, unless `PermitUserRC no` in `/etc/ssh/sshd_config`, when a user **lo
 
 ### **Login Items**
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0003/](https://theevilbit.github.io/beyond/beyond_0003/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0003/](https://theevilbit.github.io/beyond/beyond_0003/)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-  - But you need to execute `osascript` with args
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+  * But you need to execute `osascript` with args
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Locations
 
-- **`~/Library/Application Support/com.apple.backgroundtaskmanagementagent`**
-  - **Trigger:** Login
-  - Exploit payload stored calling **`osascript`**
-- **`/var/db/com.apple.xpc.launchd/loginitems.501.plist`**
-  - **Trigger:** Login
-  - Root required
+* **`~/Library/Application Support/com.apple.backgroundtaskmanagementagent`**
+  * **Trigger:** Login
+  * Exploit payload stored calling **`osascript`**
+* **`/var/db/com.apple.xpc.launchd/loginitems.501.plist`**
+  * **Trigger:** Login
+  * Root required
 
 #### Description
 
@@ -684,15 +674,15 @@ Another options would be to create the files **`.bash_profile`** and **`.zshenv`
 
 ### At
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0014/](https://theevilbit.github.io/beyond/beyond_0014/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0014/](https://theevilbit.github.io/beyond/beyond_0014/)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-  - But you need to **execute** **`at`** and it must be **enabled**
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+  * But you need to **execute** **`at`** and it must be **enabled**
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Location
 
-- Need to **execute** **`at`** and it must be **enabled**
+* Need to **execute** **`at`** and it must be **enabled**
 
 #### **Description**
 
@@ -751,8 +741,7 @@ unset OLDPWD
 echo 11 > /tmp/at.txt
 ```
 
-> [!WARNING]
-> If AT tasks aren't enabled the created tasks won't be executed.
+> \[!WARNING] If AT tasks aren't enabled the created tasks won't be executed.
 
 The **job files** can be found at `/private/var/at/jobs/`
 
@@ -767,29 +756,29 @@ total 32
 
 The filename contains the queue, the job number, and the time it’s scheduled to run. For example let’s take a loot at `a0001a019bdcd2`.
 
-- `a` - this is the queue
-- `0001a` - job number in hex, `0x1a = 26`
-- `019bdcd2` - time in hex. It represents the minutes passed since epoch. `0x019bdcd2` is `26991826` in decimal. If we multiply it by 60 we get `1619509560`, which is `GMT: 2021. April 27., Tuesday 7:46:00`.
+* `a` - this is the queue
+* `0001a` - job number in hex, `0x1a = 26`
+* `019bdcd2` - time in hex. It represents the minutes passed since epoch. `0x019bdcd2` is `26991826` in decimal. If we multiply it by 60 we get `1619509560`, which is `GMT: 2021. April 27., Tuesday 7:46:00`.
 
 If we print the job file, we find that it contains the same information we got using `at -c`.
 
 ### Folder Actions
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0024/](https://theevilbit.github.io/beyond/beyond_0024/)\
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0024/](https://theevilbit.github.io/beyond/beyond_0024/)\
 Writeup: [https://posts.specterops.io/folder-actions-for-persistence-on-macos-8923f222343d](https://posts.specterops.io/folder-actions-for-persistence-on-macos-8923f222343d)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-  - But you need to be able to call `osascript` with arguments to contact **`System Events`** to be able to configure Folder Actions
-- TCC bypass: [🟠](https://emojipedia.org/large-orange-circle)
-  - It has some basic TCC permissions like Desktop, Documents and Downloads
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+  * But you need to be able to call `osascript` with arguments to contact **`System Events`** to be able to configure Folder Actions
+* TCC bypass: [🟠](https://emojipedia.org/large-orange-circle)
+  * It has some basic TCC permissions like Desktop, Documents and Downloads
 
 #### Location
 
-- **`/Library/Scripts/Folder Action Scripts`**
-  - Root required
-  - **Trigger**: Access to the specified folder
-- **`~/Library/Scripts/Folder Action Scripts`**
-  - **Trigger**: Access to the specified folder
+* **`/Library/Scripts/Folder Action Scripts`**
+  * Root required
+  * **Trigger**: Access to the specified folder
+* **`~/Library/Scripts/Folder Action Scripts`**
+  * **Trigger**: Access to the specified folder
 
 #### Description & Exploitation
 
@@ -800,7 +789,7 @@ To set up Folder Actions, you have options like:
 1. Crafting a Folder Action workflow with [Automator](https://support.apple.com/guide/automator/welcome/mac) and installing it as a service.
 2. Attaching a script manually via the Folder Actions Setup in the context menu of a folder.
 3. Utilizing OSAScript to send Apple Event messages to the `System Events.app` for programmatically setting up a Folder Action.
-   - This method is particularly useful for embedding the action into the system, offering a level of persistence.
+   * This method is particularly useful for embedding the action into the system, offering a level of persistence.
 
 The following script is an example of what can be executed by a Folder Action:
 
@@ -838,7 +827,7 @@ Run the setup script with:
 osascript -l JavaScript /Users/username/attach.scpt
 ```
 
-- This is the way yo implement this persistence via GUI:
+* This is the way yo implement this persistence via GUI:
 
 This is the script that will be executed:
 
@@ -862,7 +851,7 @@ mv /tmp/folder.scpt "$HOME/Library/Scripts/Folder Action Scripts"
 
 Then, open the `Folder Actions Setup` app, select the **folder you would like to watch** and select in your case **`folder.scpt`** (in my case I called it output2.scp):
 
-<figure><img src="../images/image (39).png" alt="" width="297"><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (39).png" alt="" width="297"><figcaption></figcaption></figure>
 
 Now, if you open that folder with **Finder**, your script will be executed.
 
@@ -871,31 +860,30 @@ This configuration was stored in the **plist** located in **`~/Library/Preferenc
 Now, lets try to prepare this persistence without GUI access:
 
 1. **Copy `~/Library/Preferences/com.apple.FolderActionsDispatcher.plist`** to `/tmp` to backup it:
-   - `cp ~/Library/Preferences/com.apple.FolderActionsDispatcher.plist /tmp`
+   * `cp ~/Library/Preferences/com.apple.FolderActionsDispatcher.plist /tmp`
 2. **Remove** the Folder Actions you just set:
 
-<figure><img src="../images/image (40).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (40).png" alt=""><figcaption></figcaption></figure>
 
 Now that we have an empty environment
 
 3. Copy the backup file: `cp /tmp/com.apple.FolderActionsDispatcher.plist ~/Library/Preferences/`
 4. Open the Folder Actions Setup.app to consume this config: `open "/System/Library/CoreServices/Applications/Folder Actions Setup.app/"`
 
-> [!CAUTION]
-> And this didn't work for me, but those are the instructions from the writeup:(
+> \[!CAUTION] And this didn't work for me, but those are the instructions from the writeup:(
 
 ### Dock shortcuts
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0027/](https://theevilbit.github.io/beyond/beyond_0027/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0027/](https://theevilbit.github.io/beyond/beyond_0027/)
 
-- Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
-  - But you need to have installed a malicious application inside the system
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [✅](https://emojipedia.org/check-mark-button)
+  * But you need to have installed a malicious application inside the system
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Location
 
-- `~/Library/Preferences/com.apple.dock.plist`
-  - **Trigger**: When the user clicks on the app inside the dock
+* `~/Library/Preferences/com.apple.dock.plist`
+  * **Trigger**: When the user clicks on the app inside the dock
 
 #### Description & Exploitation
 
@@ -968,20 +956,20 @@ killall Dock
 
 ### Color Pickers
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0017](https://theevilbit.github.io/beyond/beyond_0017/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0017](https://theevilbit.github.io/beyond/beyond_0017/)
 
-- Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
-  - A very specific action needs to happen
-  - You will end in another sandbox
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
+  * A very specific action needs to happen
+  * You will end in another sandbox
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Location
 
-- `/Library/ColorPickers`
-  - Root required
-  - Trigger: Use the color picker
-- `~/Library/ColorPickers`
-  - Trigger: Use the color picker
+* `/Library/ColorPickers`
+  * Root required
+  * Trigger: Use the color picker
+* `~/Library/ColorPickers`
+  * Trigger: Use the color picker
 
 #### Description & Exploit
 
@@ -1002,15 +990,15 @@ Note that the binary loading your library has a **very restrictive sandbox**: `/
 
 ### Finder Sync Plugins
 
-**Writeup**: [https://theevilbit.github.io/beyond/beyond_0026/](https://theevilbit.github.io/beyond/beyond_0026/)\
-**Writeup**: [https://objective-see.org/blog/blog_0x11.html](https://objective-see.org/blog/blog_0x11.html)
+**Writeup**: [https://theevilbit.github.io/beyond/beyond\_0026/](https://theevilbit.github.io/beyond/beyond_0026/)\
+**Writeup**: [https://objective-see.org/blog/blog\_0x11.html](https://objective-see.org/blog/blog_0x11.html)
 
-- Useful to bypass sandbox: **No, because you need to execute your own app**
-- TCC bypass: ???
+* Useful to bypass sandbox: **No, because you need to execute your own app**
+* TCC bypass: ???
 
 #### Location
 
-- A specific app
+* A specific app
 
 #### Description & Exploit
 
@@ -1025,25 +1013,25 @@ pluginkit -e use -i com.example.InSync.InSync
 
 ### Screen Saver
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0016/](https://theevilbit.github.io/beyond/beyond_0016/)\
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0016/](https://theevilbit.github.io/beyond/beyond_0016/)\
 Writeup: [https://posts.specterops.io/saving-your-access-d562bf5bf90b](https://posts.specterops.io/saving-your-access-d562bf5bf90b)
 
-- Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
-  - But you will end in a common application sandbox
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
+  * But you will end in a common application sandbox
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Location
 
-- `/System/Library/Screen Savers`
-  - Root required
-  - **Trigger**: Select the screen saver
-- `/Library/Screen Savers`
-  - Root required
-  - **Trigger**: Select the screen saver
-- `~/Library/Screen Savers`
-  - **Trigger**: Select the screen saver
+* `/System/Library/Screen Savers`
+  * Root required
+  * **Trigger**: Select the screen saver
+* `/Library/Screen Savers`
+  * Root required
+  * **Trigger**: Select the screen saver
+* `~/Library/Screen Savers`
+  * **Trigger**: Select the screen saver
 
-<figure><img src="../images/image (38).png" alt="" width="375"><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (38).png" alt="" width="375"><figcaption></figcaption></figure>
 
 #### Description & Exploit
 
@@ -1060,8 +1048,7 @@ Timestamp                       (process)[PID]
 2023-09-27 22:55:39.622704+0200  localhost legacyScreenSaver[41737]: (ScreenSaverExample) hello_screensaver -[ScreenSaverExampleView hasConfigureSheet]
 ```
 
-> [!CAUTION]
-> Note that because inside the entitlements of the binary that loads this code (`/System/Library/Frameworks/ScreenSaver.framework/PlugIns/legacyScreenSaver.appex/Contents/MacOS/legacyScreenSaver`) you can find **`com.apple.security.app-sandbox`** you will be **inside the common application sandbox**.
+> \[!CAUTION] Note that because inside the entitlements of the binary that loads this code (`/System/Library/Frameworks/ScreenSaver.framework/PlugIns/legacyScreenSaver.appex/Contents/MacOS/legacyScreenSaver`) you can find **`com.apple.security.app-sandbox`** you will be **inside the common application sandbox**.
 
 Saver code:
 
@@ -1133,26 +1120,26 @@ void custom(int argc, const char **argv) {
 
 ### Spotlight Plugins
 
-writeup: [https://theevilbit.github.io/beyond/beyond_0011/](https://theevilbit.github.io/beyond/beyond_0011/)
+writeup: [https://theevilbit.github.io/beyond/beyond\_0011/](https://theevilbit.github.io/beyond/beyond_0011/)
 
-- Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
-  - But you will end in an application sandbox
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
-  - The sandbox looks very limited
+* Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
+  * But you will end in an application sandbox
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+  * The sandbox looks very limited
 
 #### Location
 
-- `~/Library/Spotlight/`
-  - **Trigger**: A new file with a extension managed by the spotlight plugin is created.
-- `/Library/Spotlight/`
-  - **Trigger**: A new file with a extension managed by the spotlight plugin is created.
-  - Root required
-- `/System/Library/Spotlight/`
-  - **Trigger**: A new file with a extension managed by the spotlight plugin is created.
-  - Root required
-- `Some.app/Contents/Library/Spotlight/`
-  - **Trigger**: A new file with a extension managed by the spotlight plugin is created.
-  - New app required
+* `~/Library/Spotlight/`
+  * **Trigger**: A new file with a extension managed by the spotlight plugin is created.
+* `/Library/Spotlight/`
+  * **Trigger**: A new file with a extension managed by the spotlight plugin is created.
+  * Root required
+* `/System/Library/Spotlight/`
+  * **Trigger**: A new file with a extension managed by the spotlight plugin is created.
+  * Root required
+* `Some.app/Contents/Library/Spotlight/`
+  * **Trigger**: A new file with a extension managed by the spotlight plugin is created.
+  * New app required
 
 #### Description & Exploitation
 
@@ -1212,8 +1199,7 @@ plutil -p /Library/Spotlight/iBooksAuthor.mdimporter/Contents/Info.plist
 [...]
 ```
 
-> [!CAUTION]
-> If you check the Plist of other `mdimporter` you might not find the entry **`UTTypeConformsTo`**. Thats because that is a built-in _Uniform Type Identifiers_ ([UTI](https://en.wikipedia.org/wiki/Uniform_Type_Identifier)) and it doesn't need to specify extensions.
+> \[!CAUTION] If you check the Plist of other `mdimporter` you might not find the entry **`UTTypeConformsTo`**. Thats because that is a built-in _Uniform Type Identifiers_ ([UTI](https://en.wikipedia.org/wiki/Uniform_Type_Identifier)) and it doesn't need to specify extensions.
 >
 > Moreover, System default plugins always take precedence, so an attacker can only access files that are not otherwise indexed by Apple's own `mdimporters`.
 
@@ -1224,20 +1210,19 @@ Finally **build and copy your new `.mdimporter`** to one of thre previous locati
 
 ### ~~Preference Pane~~
 
-> [!CAUTION]
-> It doesn't look like this is working anymore.
+> \[!CAUTION] It doesn't look like this is working anymore.
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0009/](https://theevilbit.github.io/beyond/beyond_0009/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0009/](https://theevilbit.github.io/beyond/beyond_0009/)
 
-- Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
-  - It needs a specific user action
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
+  * It needs a specific user action
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Location
 
-- **`/System/Library/PreferencePanes`**
-- **`/Library/PreferencePanes`**
-- **`~/Library/PreferencePanes`**
+* **`/System/Library/PreferencePanes`**
+* **`/Library/PreferencePanes`**
+* **`~/Library/PreferencePanes`**
 
 #### Description
 
@@ -1245,25 +1230,24 @@ It doesn't look like this is working anymore.
 
 ## Root Sandbox Bypass
 
-> [!TIP]
-> Here you can find start locations useful for **sandbox bypass** that allows you to simply execute something by **writing it into a file** being **root** and/or requiring other **weird conditions.**
+> \[!TIP] Here you can find start locations useful for **sandbox bypass** that allows you to simply execute something by **writing it into a file** being **root** and/or requiring other **weird conditions.**
 
 ### Periodic
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0019/](https://theevilbit.github.io/beyond/beyond_0019/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0019/](https://theevilbit.github.io/beyond/beyond_0019/)
 
-- Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
-  - But you need to be root
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
+  * But you need to be root
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Location
 
-- `/etc/periodic/daily`, `/etc/periodic/weekly`, `/etc/periodic/monthly`, `/usr/local/etc/periodic`
-  - Root required
-  - **Trigger**: When the time comes
-- `/etc/daily.local`, `/etc/weekly.local` or `/etc/monthly.local`
-  - Root required
-  - **Trigger**: When the time comes
+* `/etc/periodic/daily`, `/etc/periodic/weekly`, `/etc/periodic/monthly`, `/usr/local/etc/periodic`
+  * Root required
+  * **Trigger**: When the time comes
+* `/etc/daily.local`, `/etc/weekly.local` or `/etc/monthly.local`
+  * Root required
+  * **Trigger**: When the time comes
 
 #### Description & Exploitation
 
@@ -1311,21 +1295,20 @@ monthly_local="/etc/monthly.local"			# Local scripts
 
 If you manage to write any of the files `/etc/daily.local`, `/etc/weekly.local` or `/etc/monthly.local` it will be **executed sooner or later**.
 
-> [!WARNING]
-> Note that the periodic script will be **executed as the owner of the script**. So if a regular user owns the script, it will be executed as that user (this might prevent privilege escalation attacks).
+> \[!WARNING] Note that the periodic script will be **executed as the owner of the script**. So if a regular user owns the script, it will be executed as that user (this might prevent privilege escalation attacks).
 
 ### PAM
 
 Writeup: [Linux Hacktricks PAM](../linux-hardening/linux-post-exploitation/pam-pluggable-authentication-modules.md)\
-Writeup: [https://theevilbit.github.io/beyond/beyond_0005/](https://theevilbit.github.io/beyond/beyond_0005/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0005/](https://theevilbit.github.io/beyond/beyond_0005/)
 
-- Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
-  - But you need to be root
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
+  * But you need to be root
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Location
 
-- Root always required
+* Root always required
 
 #### Description & Exploitation
 
@@ -1358,8 +1341,7 @@ session    required       pam_permit.so
 
 And therefore any attempt to use **`sudo` will work**.
 
-> [!CAUTION]
-> Note that this directory is protected by TCC so it's highly probably that the user will get a prompt asking for access.
+> \[!CAUTION] Note that this directory is protected by TCC so it's highly probably that the user will get a prompt asking for access.
 
 Another nice example is su, were you can see that it's also possible to give parameters to the PAM modules (and you coukd also backdoor this file):
 
@@ -1376,18 +1358,18 @@ session    required       pam_launchd.so
 
 ### Authorization Plugins
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0028/](https://theevilbit.github.io/beyond/beyond_0028/)\
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0028/](https://theevilbit.github.io/beyond/beyond_0028/)\
 Writeup: [https://posts.specterops.io/persistent-credential-theft-with-authorization-plugins-d17b34719d65](https://posts.specterops.io/persistent-credential-theft-with-authorization-plugins-d17b34719d65)
 
-- Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
-  - But you need to be root and make extra configs
-- TCC bypass: ???
+* Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
+  * But you need to be root and make extra configs
+* TCC bypass: ???
 
 #### Location
 
-- `/Library/Security/SecurityAgentPlugins/`
-  - Root required
-  - It's also needed to configure the authorization database to use the plugin
+* `/Library/Security/SecurityAgentPlugins/`
+  * Root required
+  * It's also needed to configure the authorization database to use the plugin
 
 #### Description & Exploitation
 
@@ -1447,17 +1429,17 @@ And then the **staff group should have sudo** access (read `/etc/sudoers` to con
 
 ### Man.conf
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0030/](https://theevilbit.github.io/beyond/beyond_0030/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0030/](https://theevilbit.github.io/beyond/beyond_0030/)
 
-- Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
-  - But you need to be root and the user must use man
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
+  * But you need to be root and the user must use man
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Location
 
-- **`/private/etc/man.conf`**
-  - Root required
-  - **`/private/etc/man.conf`**: Whenever man is used
+* **`/private/etc/man.conf`**
+  * Root required
+  * **`/private/etc/man.conf`**: Whenever man is used
 
 #### Description & Exploit
 
@@ -1481,18 +1463,18 @@ touch /tmp/manconf
 
 ### Apache2
 
-**Writeup**: [https://theevilbit.github.io/beyond/beyond_0023/](https://theevilbit.github.io/beyond/beyond_0023/)
+**Writeup**: [https://theevilbit.github.io/beyond/beyond\_0023/](https://theevilbit.github.io/beyond/beyond_0023/)
 
-- Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
-  - But you need to be root and apache needs to be running
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
-  - Httpd doesn't have entitlements
+* Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
+  * But you need to be root and apache needs to be running
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+  * Httpd doesn't have entitlements
 
 #### Location
 
-- **`/etc/apache2/httpd.conf`**
-  - Root required
-  - Trigger: When Apache2 is started
+* **`/etc/apache2/httpd.conf`**
+  * Root required
+  * Trigger: When Apache2 is started
 
 #### Description & Exploit
 
@@ -1526,17 +1508,17 @@ static void myconstructor(int argc, const char **argv)
 
 ### BSM audit framework
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0031/](https://theevilbit.github.io/beyond/beyond_0031/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0031/](https://theevilbit.github.io/beyond/beyond_0031/)
 
-- Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
-  - But you need to be root, auditd be running and cause a warning
-- TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
+* Useful to bypass sandbox: [🟠](https://emojipedia.org/large-orange-circle)
+  * But you need to be root, auditd be running and cause a warning
+* TCC bypass: [🔴](https://emojipedia.org/large-red-circle)
 
 #### Location
 
-- **`/etc/security/audit_warn`**
-  - Root required
-  - **Trigger**: When auditd detects a warning
+* **`/etc/security/audit_warn`**
+  * Root required
+  * **Trigger**: When auditd detects a warning
 
 #### Description & Exploit
 
@@ -1550,7 +1532,7 @@ You could force a warning with `sudo audit -n`.
 
 ### Startup Items
 
-> [!CAUTION] > **This is deprecated, so nothing should be found in those directories.**
+> \[!CAUTION] > **This is deprecated, so nothing should be found in those directories.**
 
 The **StartupItem** is a directory that should be positioned within either `/Library/StartupItems/` or `/System/Library/StartupItems/`. Once this directory is established, it must encompass two specific files:
 
@@ -1559,8 +1541,7 @@ The **StartupItem** is a directory that should be positioned within either `/Lib
 
 Ensure that both the rc script and the `StartupParameters.plist` file are correctly placed inside the **StartupItem** directory for the startup process to recognize and utilize them.
 
-{{#tabs}}
-{{#tab name="StartupParameters.plist"}}
+\{{#tabs\}} \{{#tab name="StartupParameters.plist"\}}
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1579,9 +1560,9 @@ Ensure that both the rc script and the `StartupParameters.plist` file are correc
 </plist>
 ```
 
-{{#endtab}}
+\{{#endtab\}}
 
-{{#tab name="superservicename"}}
+\{{#tab name="superservicename"\}}
 
 ```bash
 #!/bin/sh
@@ -1602,15 +1583,13 @@ RestartService(){
 RunService "$1"
 ```
 
-{{#endtab}}
-{{#endtabs}}
+\{{#endtab\}} \{{#endtabs\}}
 
 ### ~~emond~~
 
-> [!CAUTION]
-> I cannot find this component in my macOS so for more info check the writeup
+> \[!CAUTION] I cannot find this component in my macOS so for more info check the writeup
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0023/](https://theevilbit.github.io/beyond/beyond_0023/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0023/](https://theevilbit.github.io/beyond/beyond_0023/)
 
 Introduced by Apple, **emond** is a logging mechanism that seems to be underdeveloped or possibly abandoned, yet it remains accessible. While not particularly beneficial for a Mac administrator, this obscure service could serve as a subtle persistence method for threat actors, likely unnoticed by most macOS admins.
 
@@ -1622,13 +1601,13 @@ ls -l /private/var/db/emondClients
 
 ### ~~XQuartz~~
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0018/](https://theevilbit.github.io/beyond/beyond_0018/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0018/](https://theevilbit.github.io/beyond/beyond_0018/)
 
 #### Location
 
-- **`/opt/X11/etc/X11/xinit/privileged_startx.d`**
-  - Root required
-  - **Trigger**: With XQuartz
+* **`/opt/X11/etc/X11/xinit/privileged_startx.d`**
+  * Root required
+  * **Trigger**: With XQuartz
 
 #### Description & Exploit
 
@@ -1636,17 +1615,16 @@ XQuartz is **no longer installed in macOS**, so if you want more info check the 
 
 ### ~~kext~~
 
-> [!CAUTION]
-> It's so complicated to install kext even as root taht I won't consider this to escape from sandboxes or even for persistence (unless you have an exploit)
+> \[!CAUTION] It's so complicated to install kext even as root taht I won't consider this to escape from sandboxes or even for persistence (unless you have an exploit)
 
 #### Location
 
 In order to install a KEXT as a startup item, it needs to be **installed in one of the following locations**:
 
-- `/System/Library/Extensions`
-  - KEXT files built into the OS X operating system.
-- `/Library/Extensions`
-  - KEXT files installed by 3rd party software
+* `/System/Library/Extensions`
+  * KEXT files built into the OS X operating system.
+* `/Library/Extensions`
+  * KEXT files installed by 3rd party software
 
 You can list currently loaded kext files with:
 
@@ -1662,12 +1640,12 @@ For more information about [**kernel extensions check this section**](macos-secu
 
 ### ~~amstoold~~
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0029/](https://theevilbit.github.io/beyond/beyond_0029/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0029/](https://theevilbit.github.io/beyond/beyond_0029/)
 
 #### Location
 
-- **`/usr/local/bin/amstoold`**
-  - Root required
+* **`/usr/local/bin/amstoold`**
+  * Root required
 
 #### Description & Exploitation
 
@@ -1677,13 +1655,13 @@ I can no longer find this in my macOS.
 
 ### ~~xsanctl~~
 
-Writeup: [https://theevilbit.github.io/beyond/beyond_0015/](https://theevilbit.github.io/beyond/beyond_0015/)
+Writeup: [https://theevilbit.github.io/beyond/beyond\_0015/](https://theevilbit.github.io/beyond/beyond_0015/)
 
 #### Location
 
-- **`/Library/Preferences/Xsan/.xsanrc`**
-  - Root required
-  - **Trigger**: When the service is run (rarely)
+* **`/Library/Preferences/Xsan/.xsanrc`**
+  * Root required
+  * **Trigger**: When the service is run (rarely)
 
 #### Description & exploit
 
@@ -1691,7 +1669,7 @@ Apparently it's not very common to run this script and I couldn't even find it i
 
 ### ~~/etc/rc.common~~
 
-> [!CAUTION] > **This isn't working in modern MacOS versions**
+> \[!CAUTION] > **This isn't working in modern MacOS versions**
 
 It's also possible to place here **commands that will be executed at startup.** Example os regular rc.common script:
 
@@ -1790,10 +1768,7 @@ RunService ()
 
 ## Persistence techniques and tools
 
-- [https://github.com/cedowens/Persistent-Swift](https://github.com/cedowens/Persistent-Swift)
-- [https://github.com/D00MFist/PersistentJXA](https://github.com/D00MFist/PersistentJXA)
+* [https://github.com/cedowens/Persistent-Swift](https://github.com/cedowens/Persistent-Swift)
+* [https://github.com/D00MFist/PersistentJXA](https://github.com/D00MFist/PersistentJXA)
 
-{{#include ../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../banners/hacktricks-training.md\}}

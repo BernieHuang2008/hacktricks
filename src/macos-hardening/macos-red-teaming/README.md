@@ -1,21 +1,17 @@
 # macOS Red Teaming
 
-{{#include ../../banners/hacktricks-training.md}}
-
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## Abusing MDMs
 
-- JAMF Pro: `jamf checkJSSConnection`
-- Kandji
+* JAMF Pro: `jamf checkJSSConnection`
+* Kandji
 
 If you manage to **compromise admin credentials** to access the management platform, you can **potentially compromise all the computers** by distributing your malware in the machines.
 
 For red teaming in MacOS environments it's highly recommended to have some understanding of how the MDMs work:
 
-
-{{#ref}}
-macos-mdm/
-{{#endref}}
+\{{#ref\}} macos-mdm/ \{{#endref\}}
 
 ### Using MDM as a C2
 
@@ -41,11 +37,11 @@ You could use the script [**JamfSniper.py**](https://github.com/WithSecureLabs/J
 
 Moreover, after finding proper credentials you could be able to brute-force other usernames with the next form:
 
-![](<../../images/image (107).png>)
+![](<../../../.gitbook/assets/image (107).png>)
 
 #### JAMF device Authentication
 
-<figure><img src="../../images/image (167).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (167).png" alt=""><figcaption></figcaption></figure>
 
 The **`jamf`** binary contained the secret to open the keychain which at the time of the discovery was **shared** among everybody and it was: **`jk23ucnq91jfu9aj`**.\
 Moreover, jamf **persist** as a **LaunchDaemon** in **`/Library/LaunchAgents/com.jamf.management.agent.plist`**
@@ -81,14 +77,14 @@ sudo jamf policy -id 0
 
 In order to **impersonate the communication** between a device and JMF you need:
 
-- The **UUID** of the device: `ioreg -d2 -c IOPlatformExpertDevice | awk -F" '/IOPlatformUUID/{print $(NF-1)}'`
-- The **JAMF keychain** from: `/Library/Application\ Support/Jamf/JAMF.keychain` which contains the device certificate
+* The **UUID** of the device: `ioreg -d2 -c IOPlatformExpertDevice | awk -F" '/IOPlatformUUID/{print $(NF-1)}'`
+* The **JAMF keychain** from: `/Library/Application\ Support/Jamf/JAMF.keychain` which contains the device certificate
 
 With this information, **create a VM** with the **stolen** Hardware **UUID** and with **SIP disabled**, drop the **JAMF keychain,** **hook** the Jamf **agent** and steal its information.
 
 #### Secrets stealing
 
-<figure><img src="../../images/image (1025).png" alt=""><figcaption><p>a</p></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (1025).png" alt=""><figcaption><p>a</p></figcaption></figure>
 
 You could also monitor the location `/Library/Application Support/Jamf/tmp/` for the **custom scripts** admins might want to execute via Jamf as they are **placed here, executed and removed**. These scripts **might contain credentials**.
 
@@ -100,29 +96,17 @@ The script [**JamfExplorer.py**](https://github.com/WithSecureLabs/Jamf-Attack-T
 
 And also about **MacOS** "special" **network** **protocols**:
 
-
-{{#ref}}
-../macos-security-and-privilege-escalation/macos-protocols.md
-{{#endref}}
+\{{#ref\}} ../macos-security-and-privilege-escalation/macos-protocols.md \{{#endref\}}
 
 ## Active Directory
 
 In some occasions you will find that the **MacOS computer is connected to an AD**. In this scenario you should try to **enumerate** the active directory as you are use to it. Find some **help** in the following pages:
 
+\{{#ref\}} ../../network-services-pentesting/pentesting-ldap.md \{{#endref\}}
 
-{{#ref}}
-../../network-services-pentesting/pentesting-ldap.md
-{{#endref}}
+\{{#ref\}} ../../windows-hardening/active-directory-methodology/ \{{#endref\}}
 
-
-{{#ref}}
-../../windows-hardening/active-directory-methodology/
-{{#endref}}
-
-
-{{#ref}}
-../../network-services-pentesting/pentesting-kerberos-88/
-{{#endref}}
+\{{#ref\}} ../../network-services-pentesting/pentesting-kerberos-88/ \{{#endref\}}
 
 Some **local MacOS tool** that may also help you is `dscl`:
 
@@ -132,9 +116,9 @@ dscl "/Active Directory/[Domain]/All Domains" ls /
 
 Also there are some tools prepared for MacOS to automatically enumerate the AD and play with kerberos:
 
-- [**Machound**](https://github.com/XMCyber/MacHound): MacHound is an extension to the Bloodhound audting tool allowing collecting and ingesting of Active Directory relationships on MacOS hosts.
-- [**Bifrost**](https://github.com/its-a-feature/bifrost): Bifrost is an Objective-C project designed to interact with the Heimdal krb5 APIs on macOS. The goal of the project is to enable better security testing around Kerberos on macOS devices using native APIs without requiring any other framework or packages on the target.
-- [**Orchard**](https://github.com/its-a-feature/Orchard): JavaScript for Automation (JXA) tool to do Active Directory enumeration.
+* [**Machound**](https://github.com/XMCyber/MacHound): MacHound is an extension to the Bloodhound audting tool allowing collecting and ingesting of Active Directory relationships on MacOS hosts.
+* [**Bifrost**](https://github.com/its-a-feature/bifrost): Bifrost is an Objective-C project designed to interact with the Heimdal krb5 APIs on macOS. The goal of the project is to enable better security testing around Kerberos on macOS devices using native APIs without requiring any other framework or packages on the target.
+* [**Orchard**](https://github.com/its-a-feature/Orchard): JavaScript for Automation (JXA) tool to do Active Directory enumeration.
 
 ### Domain Information
 
@@ -146,18 +130,18 @@ echo show com.apple.opendirectoryd.ActiveDirectory | scutil
 
 The three types of MacOS users are:
 
-- **Local Users** — Managed by the local OpenDirectory service, they aren’t connected in any way to the Active Directory.
-- **Network Users** — Volatile Active Directory users who require a connection to the DC server to authenticate.
-- **Mobile Users** — Active Directory users with a local backup for their credentials and files.
+* **Local Users** — Managed by the local OpenDirectory service, they aren’t connected in any way to the Active Directory.
+* **Network Users** — Volatile Active Directory users who require a connection to the DC server to authenticate.
+* **Mobile Users** — Active Directory users with a local backup for their credentials and files.
 
 The local information about users and groups is stored in in the folder _/var/db/dslocal/nodes/Default._\
 For example, the info about user called _mark_ is stored in _/var/db/dslocal/nodes/Default/users/mark.plist_ and the info about the group _admin_ is in _/var/db/dslocal/nodes/Default/groups/admin.plist_.
 
 In addition to using the HasSession and AdminTo edges, **MacHound adds three new edges** to the Bloodhound database:
 
-- **CanSSH** - entity allowed to SSH to host
-- **CanVNC** - entity allowed to VNC to host
-- **CanAE** - entity allowed to execute AppleEvent scripts on host
+* **CanSSH** - entity allowed to SSH to host
+* **CanVNC** - entity allowed to VNC to host
+* **CanAE** - entity allowed to execute AppleEvent scripts on host
 
 ```bash
 #User enumeration
@@ -228,10 +212,7 @@ mount -t smbfs //server/folder /local/mount/point
 
 The Keychain highly probably contains sensitive information that if accessed without generating a prompt could help to move forward a red team exercise:
 
-
-{{#ref}}
-macos-keychain.md
-{{#endref}}
+\{{#ref\}} macos-keychain.md \{{#endref\}}
 
 ## External Services
 
@@ -243,17 +224,14 @@ MacOS Red Teaming is different from a regular Windows Red Teaming as usually **M
 
 When a file is downloaded in Safari, if its a "safe" file, it will be **automatically opened**. So for example, if you **download a zip**, it will be automatically decompressed:
 
-<figure><img src="../../images/image (226).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (226).png" alt=""><figcaption></figcaption></figure>
 
 ## References
 
-- [**https://www.youtube.com/watch?v=IiMladUbL6E**](https://www.youtube.com/watch?v=IiMladUbL6E)
-- [**https://medium.com/xm-cyber/introducing-machound-a-solution-to-macos-active-directory-based-attacks-2a425f0a22b6**](https://medium.com/xm-cyber/introducing-machound-a-solution-to-macos-active-directory-based-attacks-2a425f0a22b6)
-- [**https://gist.github.com/its-a-feature/1a34f597fb30985a2742bb16116e74e0**](https://gist.github.com/its-a-feature/1a34f597fb30985a2742bb16116e74e0)
-- [**Come to the Dark Side, We Have Apples: Turning macOS Management Evil**](https://www.youtube.com/watch?v=pOQOh07eMxY)
-- [**OBTS v3.0: "An Attackers Perspective on Jamf Configurations" - Luke Roberts / Calum Hall**](https://www.youtube.com/watch?v=ju1IYWUv4ZA)
+* [**https://www.youtube.com/watch?v=IiMladUbL6E**](https://www.youtube.com/watch?v=IiMladUbL6E)
+* [**https://medium.com/xm-cyber/introducing-machound-a-solution-to-macos-active-directory-based-attacks-2a425f0a22b6**](https://medium.com/xm-cyber/introducing-machound-a-solution-to-macos-active-directory-based-attacks-2a425f0a22b6)
+* [**https://gist.github.com/its-a-feature/1a34f597fb30985a2742bb16116e74e0**](https://gist.github.com/its-a-feature/1a34f597fb30985a2742bb16116e74e0)
+* [**Come to the Dark Side, We Have Apples: Turning macOS Management Evil**](https://www.youtube.com/watch?v=pOQOh07eMxY)
+* [**OBTS v3.0: "An Attackers Perspective on Jamf Configurations" - Luke Roberts / Calum Hall**](https://www.youtube.com/watch?v=ju1IYWUv4ZA)
 
-
-{{#include ../../banners/hacktricks-training.md}}
-
-
+\{{#include ../../banners/hacktricks-training.md\}}

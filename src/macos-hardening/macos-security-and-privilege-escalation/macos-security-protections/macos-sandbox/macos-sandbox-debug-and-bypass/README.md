@@ -1,10 +1,10 @@
 # macOS Sandbox Debug & Bypass
 
-{{#include ../../../../../banners/hacktricks-training.md}}
+\{{#include ../../../../../banners/hacktricks-training.md\}}
 
 ## Sandbox loading process
 
-<figure><img src="../../../../../images/image (901).png" alt=""><figcaption><p>Image from <a href="http://newosxbook.com/files/HITSB.pdf">http://newosxbook.com/files/HITSB.pdf</a></p></figcaption></figure>
+<figure><img src="../../../../../../.gitbook/assets/image (901).png" alt=""><figcaption><p>Image from <a href="http://newosxbook.com/files/HITSB.pdf">http://newosxbook.com/files/HITSB.pdf</a></p></figcaption></figure>
 
 In the previous image it's possible to observe **how the sandbox will be loaded** when an application with the entitlement **`com.apple.security.app-sandbox`** is run.
 
@@ -21,8 +21,7 @@ Finally, the sandbox will be activated will a call to **`__sandbox_ms`** which w
 
 This is what was done in [**CVE-2023-32364**](https://gergelykalman.com/CVE-2023-32364-a-macOS-sandbox-escape-by-mounting.html)**.**
 
-> [!CAUTION]
-> Therefore, at the moment, if you are just capable of creating a folder with a name ending in **`.app`** without a quarantine attribute, you can scape the sandbox because macOS only **checks** the **quarantine** attribute in the **`.app` folder** and in the **main executable** (and we will point the main executable to **`/bin/bash`**).
+> \[!CAUTION] Therefore, at the moment, if you are just capable of creating a folder with a name ending in **`.app`** without a quarantine attribute, you can scape the sandbox because macOS only **checks** the **quarantine** attribute in the **`.app` folder** and in the **main executable** (and we will point the main executable to **`/bin/bash`**).
 >
 > Note that if an .app bundle has already been authorized to run (it has a quarantine xttr with the authorized to run flag on), you could also abuse it... except that now you cannot write inside **`.app`** bundles unless you have some privileged TCC perms (which you won't have inside a sandbox high).
 
@@ -30,10 +29,7 @@ This is what was done in [**CVE-2023-32364**](https://gergelykalman.com/CVE-2023
 
 In the [**last examples of Word sandbox bypass**](macos-office-sandbox-bypasses.md#word-sandbox-bypass-via-login-items-and-.zshenv) can be appreciated how the **`open`** cli functionality could be abused to bypass the sandbox.
 
-
-{{#ref}}
-macos-office-sandbox-bypasses.md
-{{#endref}}
+\{{#ref\}} macos-office-sandbox-bypasses.md \{{#endref\}}
 
 ### Launch Agents/Daemons
 
@@ -48,19 +44,13 @@ For this you might even need **2 steps**: To make a process with a **more permis
 
 Check this page about **Auto Start locations**:
 
-
-{{#ref}}
-../../../../macos-auto-start-locations.md
-{{#endref}}
+\{{#ref\}} ../../../../macos-auto-start-locations.md \{{#endref\}}
 
 ### Abusing other processes
 
 If from then sandbox process you are able to **compromise other processes** running in less restrictive sandboxes (or none), you will be able to escape to their sandboxes:
 
-
-{{#ref}}
-../../../macos-proces-abuse/
-{{#endref}}
+\{{#ref\}} ../../../macos-proces-abuse/ \{{#endref\}}
 
 ### Available System and User Mach services
 
@@ -222,8 +212,8 @@ void expoit_ShortcutsFileAccessHelper(NSString *target) {
 
 [**This research**](https://saagarjha.com/blog/2020/05/20/mac-app-store-sandbox-escape/) discovered 2 ways to bypass the Sandbox. Because the sandbox is applied from userland when the **libSystem** library is loaded. If a binary could avoid loading it, it would never get sandboxed:
 
-- If the binary was **completely statically compiled**, it could avoid loading that library.
-- If the **binary wouldn't need to load any libraries** (because the linker is also in libSystem), it won't need to load libSystem.
+* If the binary was **completely statically compiled**, it could avoid loading that library.
+* If the **binary wouldn't need to load any libraries** (because the linker is also in libSystem), it won't need to load libSystem.
 
 ### Shellcodes
 
@@ -236,7 +226,7 @@ ld: dynamic executables or dylibs must link with libSystem.dylib for architectur
 
 ### Not inherited restrictions
 
-As explined in the **[bonus of this writeup](https://jhftss.github.io/A-New-Era-of-macOS-Sandbox-Escapes/)** a sandbox restriction like:
+As explined in the [**bonus of this writeup**](https://jhftss.github.io/A-New-Era-of-macOS-Sandbox-Escapes/) a sandbox restriction like:
 
 ```
 (version 1)
@@ -273,10 +263,7 @@ Note that even if some **actions** might be **allowed by at he sandbox** if an a
 
 For more information about **Interposting** check:
 
-
-{{#ref}}
-../../../macos-proces-abuse/macos-function-hooking.md
-{{#endref}}
+\{{#ref\}} ../../../macos-proces-abuse/macos-function-hooking.md \{{#endref\}}
 
 #### Interpost `_libsecinit_initializer` to prevent the sandbox
 
@@ -354,8 +341,7 @@ Sandbox Bypassed!
 
 Let's compile an application that should be sandboxed:
 
-{{#tabs}}
-{{#tab name="sand.c"}}
+\{{#tabs\}} \{{#tab name="sand.c"\}}
 
 ```c
 #include <stdlib.h>
@@ -364,9 +350,9 @@ int main() {
 }
 ```
 
-{{#endtab}}
+\{{#endtab\}}
 
-{{#tab name="entitlements.xml"}}
+\{{#tab name="entitlements.xml"\}}
 
 ```xml
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> <plist version="1.0">
@@ -377,9 +363,9 @@ int main() {
 </plist>
 ```
 
-{{#endtab}}
+\{{#endtab\}}
 
-{{#tab name="Info.plist"}}
+\{{#tab name="Info.plist"\}}
 
 ```xml
 <plist version="1.0">
@@ -392,8 +378,7 @@ int main() {
 </plist>
 ```
 
-{{#endtab}}
-{{#endtabs}}
+\{{#endtab\}} \{{#endtabs\}}
 
 Then compile the app:
 
@@ -407,8 +392,7 @@ gcc -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __info_plist -Xlinker Info.pli
 codesign -s <cert-name> --entitlements entitlements.xml sand
 ```
 
-> [!CAUTION]
-> The app will try to **read** the file **`~/Desktop/del.txt`**, which the **Sandbox won't allow**.\
+> \[!CAUTION] The app will try to **read** the file **`~/Desktop/del.txt`**, which the **Sandbox won't allow**.\
 > Create a file in there as once the Sandbox is bypassed, it will be able to read it:
 >
 > ```bash
@@ -494,14 +478,12 @@ Sandbox Bypassed!
 Process 2517 exited with status = 0 (0x00000000)
 ```
 
-> [!WARNING] > **Even with the Sandbox bypassed TCC** will ask the user if he wants to allow the process to read files from desktop
+> \[!WARNING] > **Even with the Sandbox bypassed TCC** will ask the user if he wants to allow the process to read files from desktop
 
 ## References
 
-- [http://newosxbook.com/files/HITSB.pdf](http://newosxbook.com/files/HITSB.pdf)
-- [https://saagarjha.com/blog/2020/05/20/mac-app-store-sandbox-escape/](https://saagarjha.com/blog/2020/05/20/mac-app-store-sandbox-escape/)
-- [https://www.youtube.com/watch?v=mG715HcDgO8](https://www.youtube.com/watch?v=mG715HcDgO8)
+* [http://newosxbook.com/files/HITSB.pdf](http://newosxbook.com/files/HITSB.pdf)
+* [https://saagarjha.com/blog/2020/05/20/mac-app-store-sandbox-escape/](https://saagarjha.com/blog/2020/05/20/mac-app-store-sandbox-escape/)
+* [https://www.youtube.com/watch?v=mG715HcDgO8](https://www.youtube.com/watch?v=mG715HcDgO8)
 
-{{#include ../../../../../banners/hacktricks-training.md}}
-
-
+\{{#include ../../../../../banners/hacktricks-training.md\}}

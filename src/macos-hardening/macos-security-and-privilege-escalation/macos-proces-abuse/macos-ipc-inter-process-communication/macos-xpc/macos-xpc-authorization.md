@@ -1,6 +1,6 @@
 # macOS XPC Authorization
 
-{{#include ../../../../../banners/hacktricks-training.md}}
+\{{#include ../../../../../banners/hacktricks-training.md\}}
 
 ## XPC Authorization
 
@@ -31,10 +31,7 @@ An example could be found in [EvenBetterAuthorizationSample](https://github.com/
 
 For more information about how to properly configure this check:
 
-
-{{#ref}}
-macos-xpc-connecting-process-check/
-{{#endref}}
+\{{#ref\}} macos-xpc-connecting-process-check/ \{{#endref\}}
 
 ### Application rights
 
@@ -264,14 +261,14 @@ security authorizationdb read com.apple.safaridriver.allow
 You can find **all the permissions configurations** [**in here**](https://www.dssw.co.uk/reference/authorization-rights/), but the combinations that won't require user interaction would be:
 
 1. **'authenticate-user': 'false'**
-   - This is the most direct key. If set to `false`, it specifies that a user does not need to provide authentication to gain this right.
-   - This is used in **combination with one of the 2 below or indicating a group** the user must belong to.
+   * This is the most direct key. If set to `false`, it specifies that a user does not need to provide authentication to gain this right.
+   * This is used in **combination with one of the 2 below or indicating a group** the user must belong to.
 2. **'allow-root': 'true'**
-   - If a user is operating as the root user (which has elevated permissions), and this key is set to `true`, the root user could potentially gain this right without further authentication. However, typically, getting to a root user status already requires authentication, so this isn't a "no authentication" scenario for most users.
+   * If a user is operating as the root user (which has elevated permissions), and this key is set to `true`, the root user could potentially gain this right without further authentication. However, typically, getting to a root user status already requires authentication, so this isn't a "no authentication" scenario for most users.
 3. **'session-owner': 'true'**
-   - If set to `true`, the owner of the session (the currently logged-in user) would automatically get this right. This might bypass additional authentication if the user is already logged in.
+   * If set to `true`, the owner of the session (the currently logged-in user) would automatically get this right. This might bypass additional authentication if the user is already logged in.
 4. **'shared': 'true'**
-   - This key doesn't grant rights without authentication. Instead, if set to `true`, it means that once the right has been authenticated, it can be shared among multiple processes without each one needing to re-authenticate. But the initial granting of the right would still require authentication unless combined with other keys like `'authenticate-user': 'false'`.
+   * This key doesn't grant rights without authentication. Instead, if set to `true`, it means that once the right has been authenticated, it can be shared among multiple processes without each one needing to re-authenticate. But the initial granting of the right would still require authentication unless combined with other keys like `'authenticate-user': 'false'`.
 
 You can [**use this script**](https://gist.github.com/carlospolop/96ecb9e385a4667b9e40b24e878652f9) to get the interesting rights:
 
@@ -292,7 +289,7 @@ authenticate-session-owner, authenticate-session-owner-or-admin, authenticate-se
 
 If you find the function: **`[HelperTool checkAuthorization:command:]`** it's probably the the process is using the previously mentioned schema for authorization:
 
-<figure><img src="../../../../../images/image (42).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../../../.gitbook/assets/image (42).png" alt=""><figcaption></figcaption></figure>
 
 Thisn, if this function is calling functions such as `AuthorizationCreateFromExternalForm`, `authorizationRightForCommand`, `AuthorizationCopyRights`, `AuhtorizationFree`, it's using [**EvenBetterAuthorizationSample**](https://github.com/brenwell/EvenBetterAuthorizationSample/blob/e1052a1855d3a5e56db71df5f04e790bfd4389c4/HelperTool/HelperTool.m#L101-L154).
 
@@ -304,7 +301,7 @@ Then, you need to find the protocol schema in order to be able to establish a co
 
 The function **`shouldAcceptNewConnection`** indicates the protocol being exported:
 
-<figure><img src="../../../../../images/image (44).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../../../.gitbook/assets/image (44).png" alt=""><figcaption></figcaption></figure>
 
 In this case, we have the same as in EvenBetterAuthorizationSample, [**check this line**](https://github.com/brenwell/EvenBetterAuthorizationSample/blob/e1052a1855d3a5e56db71df5f04e790bfd4389c4/HelperTool/HelperTool.m#L94).
 
@@ -326,11 +323,11 @@ class-dump /Library/PrivilegedHelperTools/com.example.HelperTool
 
 Lastly, we just need to know the **name of the exposed Mach Service** in order to stablish a communication with it. There are several ways to find this:
 
-- In the **`[HelperTool init]`** where you can see the Mach Service being used:
+* In the **`[HelperTool init]`** where you can see the Mach Service being used:
 
-<figure><img src="../../../../../images/image (41).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../../../.gitbook/assets/image (41).png" alt=""><figcaption></figcaption></figure>
 
-- In the launchd plist:
+* In the launchd plist:
 
 ```xml
 cat /Library/LaunchDaemons/com.example.HelperTool.plist
@@ -349,10 +346,10 @@ cat /Library/LaunchDaemons/com.example.HelperTool.plist
 
 In this example is created:
 
-- The definition of the protocol with the functions
-- An empty auth to use to to ask for access
-- A connection to the XPC service
-- A call to the function if the connection was successful
+* The definition of the protocol with the functions
+* An empty auth to use to to ask for access
+* A connection to the XPC service
+* A call to the function if the connection was successful
 
 ```objectivec
 // gcc -framework Foundation -framework Security expl.m -o expl
@@ -434,12 +431,10 @@ int main(void) {
 
 ## Other XPC privilege helpers abused
 
-- [https://blog.securelayer7.net/applied-endpointsecurity-framework-previlege-escalation/?utm_source=pocket_shared](https://blog.securelayer7.net/applied-endpointsecurity-framework-previlege-escalation/?utm_source=pocket_shared)
+* [https://blog.securelayer7.net/applied-endpointsecurity-framework-previlege-escalation/?utm\_source=pocket\_shared](https://blog.securelayer7.net/applied-endpointsecurity-framework-previlege-escalation/?utm_source=pocket_shared)
 
 ## References
 
-- [https://theevilbit.github.io/posts/secure_coding_xpc_part1/](https://theevilbit.github.io/posts/secure_coding_xpc_part1/)
+* [https://theevilbit.github.io/posts/secure\_coding\_xpc\_part1/](https://theevilbit.github.io/posts/secure_coding_xpc_part1/)
 
-{{#include ../../../../../banners/hacktricks-training.md}}
-
-
+\{{#include ../../../../../banners/hacktricks-training.md\}}

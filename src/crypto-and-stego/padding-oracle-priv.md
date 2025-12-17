@@ -1,16 +1,16 @@
 # Padding Oracle
 
-{{#include ../banners/hacktricks-training.md}}
+\{{#include ../banners/hacktricks-training.md\}}
 
 ## CBC - Cipher Block Chaining
 
 In CBC mode the **previous encrypted block is used as IV** to XOR with the next block:
 
-![https://defuse.ca/images/cbc_encryption.png](https://defuse.ca/images/cbc_encryption.png)
+![https://defuse.ca/images/cbc\_encryption.png](https://defuse.ca/images/cbc_encryption.png)
 
 To decrypt CBC the **opposite** **operations** are done:
 
-![https://defuse.ca/images/cbc_decryption.png](https://defuse.ca/images/cbc_decryption.png)
+![https://defuse.ca/images/cbc\_decryption.png](https://defuse.ca/images/cbc_decryption.png)
 
 Notice how it's needed to use an **encryption** **key** and an **IV**.
 
@@ -68,17 +68,17 @@ perl ./padBuster.pl http://10.10.10.10/index.php "" 8 -encoding 0 -cookies "hcon
 
 In **summary**, you can start decrypting the encrypted data by guessing the correct values that can be used to create all the **different paddings**. Then, the padding oracle attack will start decrypting bytes from the end to the start by guessing which will be the correct value that **creates a padding of 1, 2, 3, etc**.
 
-![](<../images/image (561).png>)
+![](<../../.gitbook/assets/image (561).png>)
 
 Imagine you have some encrypted text that occupies **2 blocks** formed by the bytes from **E0 to E15**.\
 In order to **decrypt** the **last** **block** (**E8** to **E15**), the whole block passes through the "block cipher decryption" generating the **intermediary bytes I0 to I15**.\
 Finally, each intermediary byte is **XORed** with the previous encrypted bytes (E0 to E7). So:
 
-- `C15 = D(E15) ^ E7 = I15 ^ E7`
-- `C14 = I14 ^ E6`
-- `C13 = I13 ^ E5`
-- `C12 = I12 ^ E4`
-- ...
+* `C15 = D(E15) ^ E7 = I15 ^ E7`
+* `C14 = I14 ^ E6`
+* `C13 = I13 ^ E5`
+* `C12 = I12 ^ E4`
+* ...
 
 Now, It's possible to **modify `E7` until `C15` is `0x01`**, which will also be a correct padding. So, in this case: `\x01 = I15 ^ E'7`
 
@@ -103,10 +103,6 @@ But if you BF the padding (using padbuster for example) you manage to get anothe
 
 ### References
 
-- [https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation)
+* [https://en.wikipedia.org/wiki/Block\_cipher\_mode\_of\_operation](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation)
 
-
-{{#include ../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../banners/hacktricks-training.md\}}

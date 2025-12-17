@@ -1,6 +1,6 @@
 # File/Data Carving & Recovery Tools
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 ## Carving & Recovery tools
 
@@ -10,7 +10,7 @@ More tools in [https://github.com/Claudio-C/awesome-datarecovery](https://github
 
 The most common tool used in forensics to extract files from images is [**Autopsy**](https://www.autopsy.com/download/). Download it, install it and make it ingest the file to find "hidden" files. Note that Autopsy is built to support disk images and other kinds of images, but not simple files.
 
-> **2024-2025 update** – Version **4.21** (released February 2025) added a rebuilt **carving module based on SleuthKit v4.13** that is noticeably quicker when dealing with multi-terabyte images and supports parallel extraction on multi-core systems.¹  A small CLI wrapper (`autopsycli ingest <case> <image>`) was also introduced, making it possible to script carving inside CI/CD or large-scale lab environments.
+> **2024-2025 update** – Version **4.21** (released February 2025) added a rebuilt **carving module based on SleuthKit v4.13** that is noticeably quicker when dealing with multi-terabyte images and supports parallel extraction on multi-core systems.¹ A small CLI wrapper (`autopsycli ingest <case> <image>`) was also introduced, making it possible to script carving inside CI/CD or large-scale lab environments.
 
 ```bash
 # Create a case and ingest an evidence image from the CLI (Autopsy ≥4.21)
@@ -32,7 +32,7 @@ binwalk -e firmware.bin          # Extract recognised objects (safe-default)
 binwalk --dd " .* " firmware.bin  # Extract *everything* (use with care)
 ```
 
-⚠️  **Security note** – Versions **≤2.3.3** are affected by a **Path Traversal** vulnerability (CVE-2022-4510). Upgrade (or isolate with a container/non-privileged UID) before carving untrusted samples.
+⚠️ **Security note** – Versions **≤2.3.3** are affected by a **Path Traversal** vulnerability (CVE-2022-4510). Upgrade (or isolate with a container/non-privileged UID) before carving untrusted samples.
 
 ### Foremost
 
@@ -53,9 +53,9 @@ sudo apt-get install scalpel
 scalpel file.img -o output
 ```
 
-### Bulk Extractor 2.x   
+### Bulk Extractor 2.x
 
-This tool comes inside kali but you can find it here: <https://github.com/simsong/bulk_extractor>
+This tool comes inside kali but you can find it here: [https://github.com/simsong/bulk\_extractor](https://github.com/simsong/bulk_extractor)
 
 Bulk Extractor can scan an evidence image and carve **pcap fragments**, **network artefacts (URLs, domains, IPs, MACs, e-mails)** and many other objects **in parallel using multiple scanners**.
 
@@ -72,15 +72,15 @@ Useful post-processing scripts (`bulk_diff`, `bulk_extractor_reader.py`) can de-
 
 ### PhotoRec
 
-You can find it in <https://www.cgsecurity.org/wiki/TestDisk_Download>
+You can find it in [https://www.cgsecurity.org/wiki/TestDisk\_Download](https://www.cgsecurity.org/wiki/TestDisk_Download)
 
 It comes with GUI and CLI versions. You can select the **file-types** you want PhotoRec to search for.
 
-![](<../../../images/image (242).png>)
+![](<../../../../.gitbook/assets/image (242).png>)
 
 ### ddrescue + ddrescueview (imaging failing drives)
 
-When a physical drive is unstable, it is best practice to **image it first** and only run carving tools against the image.  `ddrescue` (GNU project) focuses on reliably copying bad disks while keeping a log of unreadable sectors.
+When a physical drive is unstable, it is best practice to **image it first** and only run carving tools against the image. `ddrescue` (GNU project) focuses on reliably copying bad disks while keeping a log of unreadable sectors.
 
 ```bash
 sudo apt install gddrescue ddrescueview   # On Debian-based systems
@@ -115,14 +115,14 @@ Check the [code](https://code.google.com/archive/p/binvis/) and the [web page to
 
 #### Features of BinVis
 
-- Visual and active **structure viewer**
-- Multiple plots for different focus points
-- Focusing on portions of a sample
-- **Seeing stings and resources**, in PE or ELF executables e. g.
-- Getting **patterns** for cryptanalysis on files
-- **Spotting** packer or encoder algorithms
-- **Identify** Steganography by patterns
-- **Visual** binary-diffing
+* Visual and active **structure viewer**
+* Multiple plots for different focus points
+* Focusing on portions of a sample
+* **Seeing stings and resources**, in PE or ELF executables e. g.
+* Getting **patterns** for cryptanalysis on files
+* **Spotting** packer or encoder algorithms
+* **Identify** Steganography by patterns
+* **Visual** binary-diffing
 
 BinVis is a great **start-point to get familiar with an unknown target** in a black-boxing scenario.
 
@@ -136,7 +136,7 @@ Download [here](https://sourceforge.net/projects/findaes/).
 
 ### YARA-X (triaging carved artefacts)
 
-[YARA-X](https://github.com/VirusTotal/yara-x) is a Rust rewrite of YARA released in 2024.  It is **10-30× faster** than classic YARA and can be used to classify thousands of carved objects very quickly:
+[YARA-X](https://github.com/VirusTotal/yara-x) is a Rust rewrite of YARA released in 2024. It is **10-30× faster** than classic YARA and can be used to classify thousands of carved objects very quickly:
 
 ```bash
 # Scan every carved object produced by bulk_extractor
@@ -147,12 +147,9 @@ The speed‐up makes it realistic to **auto-tag** all carved files in large-scal
 
 ## Complementary tools
 
-You can use [**viu** ](https://github.com/atanunq/viu)to see images from the terminal.  \
+You can use [**viu** ](https://github.com/atanunq/viu)to see images from the terminal.\
 You can use the linux command line tool **pdftotext** to transform a pdf into text and read it.
-
-
 
 ## References
 
-1. Autopsy 4.21 release notes – <https://github.com/sleuthkit/autopsy/releases/tag/autopsy-4.21>
-{{#include ../../../banners/hacktricks-training.md}}
+1. Autopsy 4.21 release notes – [https://github.com/sleuthkit/autopsy/releases/tag/autopsy-4.21](https://github.com/sleuthkit/autopsy/releases/tag/autopsy-4.21) \{{#include ../../../banners/hacktricks-training.md\}}

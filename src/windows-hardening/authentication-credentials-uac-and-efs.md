@@ -1,6 +1,6 @@
 # Windows Security Controls
 
-{{#include ../banners/hacktricks-training.md}}
+\{{#include ../banners/hacktricks-training.md\}}
 
 ## AppLocker Policy
 
@@ -24,11 +24,11 @@ $a.rulecollections
 
 This registry path contains the configurations and policies applied by AppLocker, providing a way to review the current set of rules enforced on the system:
 
-- `HKLM\Software\Policies\Microsoft\Windows\SrpV2`
+* `HKLM\Software\Policies\Microsoft\Windows\SrpV2`
 
 ### Bypass
 
-- Useful **Writable folders** to bypass AppLocker Policy: If AppLocker is allowing to execute anything inside `C:\Windows\System32` or `C:\Windows` there are **writable folders** you can use to **bypass this**.
+* Useful **Writable folders** to bypass AppLocker Policy: If AppLocker is allowing to execute anything inside `C:\Windows\System32` or `C:\Windows` there are **writable folders** you can use to **bypass this**.
 
 ```
 C:\Windows\System32\Microsoft\Crypto\RSA\MachineKeys
@@ -37,12 +37,12 @@ C:\Windows\Tasks
 C:\windows\tracing
 ```
 
-- Commonly **trusted** [**"LOLBAS's"**](https://lolbas-project.github.io/) binaries can be also useful to bypass AppLocker.
-- **Poorly written rules could also be bypassed**
-  - For example, **`<FilePathCondition Path="%OSDRIVE%*\allowed*"/>`**, you can create a **folder called `allowed`** anywhere and it will be allowed.
-  - Organizations also often focus on **blocking the `%System32%\WindowsPowerShell\v1.0\powershell.exe` executable**, but forget about the **other** [**PowerShell executable locations**](https://www.powershelladmin.com/wiki/PowerShell_Executables_File_System_Locations) such as `%SystemRoot%\SysWOW64\WindowsPowerShell\v1.0\powershell.exe` or `PowerShell_ISE.exe`.
-- **DLL enforcement very rarely enabled** due to the additional load it can put on a system, and the amount of testing required to ensure nothing will break. So using **DLLs as backdoors will help bypassing AppLocker**.
-- You can use [**ReflectivePick**](https://github.com/PowerShellEmpire/PowerTools/tree/master/PowerPick) or [**SharpPick**](https://github.com/PowerShellEmpire/PowerTools/tree/master/PowerPick) to **execute Powershell** code in any process and bypass AppLocker. For more info check: [https://hunter2.gitbook.io/darthsidious/defense-evasion/bypassing-applocker-and-powershell-contstrained-language-mode](https://hunter2.gitbook.io/darthsidious/defense-evasion/bypassing-applocker-and-powershell-contstrained-language-mode).
+* Commonly **trusted** [**"LOLBAS's"**](https://lolbas-project.github.io/) binaries can be also useful to bypass AppLocker.
+* **Poorly written rules could also be bypassed**
+  * For example, **`<FilePathCondition Path="%OSDRIVE%*\allowed*"/>`**, you can create a **folder called `allowed`** anywhere and it will be allowed.
+  * Organizations also often focus on **blocking the `%System32%\WindowsPowerShell\v1.0\powershell.exe` executable**, but forget about the **other** [**PowerShell executable locations**](https://www.powershelladmin.com/wiki/PowerShell_Executables_File_System_Locations) such as `%SystemRoot%\SysWOW64\WindowsPowerShell\v1.0\powershell.exe` or `PowerShell_ISE.exe`.
+* **DLL enforcement very rarely enabled** due to the additional load it can put on a system, and the amount of testing required to ensure nothing will break. So using **DLLs as backdoors will help bypassing AppLocker**.
+* You can use [**ReflectivePick**](https://github.com/PowerShellEmpire/PowerTools/tree/master/PowerPick) or [**SharpPick**](https://github.com/PowerShellEmpire/PowerTools/tree/master/PowerPick) to **execute Powershell** code in any process and bypass AppLocker. For more info check: [https://hunter2.gitbook.io/darthsidious/defense-evasion/bypassing-applocker-and-powershell-contstrained-language-mode](https://hunter2.gitbook.io/darthsidious/defense-evasion/bypassing-applocker-and-powershell-contstrained-language-mode).
 
 ## Credentials Storage
 
@@ -62,10 +62,10 @@ The **credentials** are **saved** inside the **process LSASS**: Kerberos tickets
 
 LSA could save in disk some credentials:
 
-- Password of the computer account of the Active Directory (unreachable domain controller).
-- Passwords of the accounts of Windows services
-- Passwords for scheduled tasks
-- More (password of IIS applications...)
+* Password of the computer account of the Active Directory (unreachable domain controller).
+* Passwords of the accounts of Windows services
+* Passwords for scheduled tasks
+* More (password of IIS applications...)
 
 ### NTDS.dit
 
@@ -113,17 +113,17 @@ EFS secures files through encryption, utilizing a **symmetric key** known as the
 
 **Decryption scenarios without user initiation** include:
 
-- When files or folders are moved to a non-EFS file system, like [FAT32](https://en.wikipedia.org/wiki/File_Allocation_Table), they are automatically decrypted.
-- Encrypted files sent over the network via SMB/CIFS protocol are decrypted prior to transmission.
+* When files or folders are moved to a non-EFS file system, like [FAT32](https://en.wikipedia.org/wiki/File_Allocation_Table), they are automatically decrypted.
+* Encrypted files sent over the network via SMB/CIFS protocol are decrypted prior to transmission.
 
 This encryption method allows **transparent access** to encrypted files for the owner. However, simply changing the owner's password and logging in will not permit decryption.
 
 **Key Takeaways**:
 
-- EFS uses a symmetric FEK, encrypted with the user's public key.
-- Decryption employs the user's private key to access the FEK.
-- Automatic decryption occurs under specific conditions, like copying to FAT32 or network transmission.
-- Encrypted files are accessible to the owner without additional steps.
+* EFS uses a symmetric FEK, encrypted with the user's public key.
+* Decryption employs the user's private key to access the FEK.
+* Automatic decryption occurs under specific conditions, like copying to FAT32 or network transmission.
+* Encrypted files are accessible to the owner without additional steps.
 
 ### Check EFS info
 
@@ -140,24 +140,21 @@ This way requires the **victim user** to be **running** a **process** inside the
 
 #### Knowing the users password
 
-
-{{#ref}}
-https://github.com/gentilkiwi/mimikatz/wiki/howto-~-decrypt-EFS-files
-{{#endref}}
+\{{#ref\}} https://github.com/gentilkiwi/mimikatz/wiki/howto-\~-decrypt-EFS-files \{{#endref\}}
 
 ## Group Managed Service Accounts (gMSA)
 
 Microsoft developed **Group Managed Service Accounts (gMSA)** to simplify the management of service accounts in IT infrastructures. Unlike traditional service accounts that often have the "**Password never expire**" setting enabled, gMSAs offer a more secure and manageable solution:
 
-- **Automatic Password Management**: gMSAs use a complex, 240-character password that automatically changes according to domain or computer policy. This process is handled by Microsoft's Key Distribution Service (KDC), eliminating the need for manual password updates.
-- **Enhanced Security**: These accounts are immune to lockouts and cannot be used for interactive logins, enhancing their security.
-- **Multiple Host Support**: gMSAs can be shared across multiple hosts, making them ideal for services running on multiple servers.
-- **Scheduled Task Capability**: Unlike managed service accounts, gMSAs support running scheduled tasks.
-- **Simplified SPN Management**: The system automatically updates the Service Principal Name (SPN) when there are changes to the computer's sAMaccount details or DNS name, simplifying SPN management.
+* **Automatic Password Management**: gMSAs use a complex, 240-character password that automatically changes according to domain or computer policy. This process is handled by Microsoft's Key Distribution Service (KDC), eliminating the need for manual password updates.
+* **Enhanced Security**: These accounts are immune to lockouts and cannot be used for interactive logins, enhancing their security.
+* **Multiple Host Support**: gMSAs can be shared across multiple hosts, making them ideal for services running on multiple servers.
+* **Scheduled Task Capability**: Unlike managed service accounts, gMSAs support running scheduled tasks.
+* **Simplified SPN Management**: The system automatically updates the Service Principal Name (SPN) when there are changes to the computer's sAMaccount details or DNS name, simplifying SPN management.
 
-The passwords for gMSAs are stored in the LDAP property _**msDS-ManagedPassword**_ and are automatically reset every 30 days by Domain Controllers (DCs). This password, an encrypted data blob known as [MSDS-MANAGEDPASSWORD_BLOB](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/a9019740-3d73-46ef-a9ae-3ea8eb86ac2e), can only be retrieved by authorized administrators and the servers on which the gMSAs are installed, ensuring a secure environment. To access this information, a secured connection such as LDAPS is required, or the connection must be authenticated with 'Sealing & Secure'.
+The passwords for gMSAs are stored in the LDAP property _**msDS-ManagedPassword**_ and are automatically reset every 30 days by Domain Controllers (DCs). This password, an encrypted data blob known as [MSDS-MANAGEDPASSWORD\_BLOB](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/a9019740-3d73-46ef-a9ae-3ea8eb86ac2e), can only be retrieved by authorized administrators and the servers on which the gMSAs are installed, ensuring a secure environment. To access this information, a secured connection such as LDAPS is required, or the connection must be authenticated with 'Sealing & Secure'.
 
-![https://cube0x0.github.io/Relaying-for-gMSA/](../images/asd1.png)
+![https://cube0x0.github.io/Relaying-for-gMSA/](../../.gitbook/assets/asd1.png)
 
 You can read this password with [**GMSAPasswordReader**](https://github.com/rvazarkar/GMSAPasswordReader)**:**
 
@@ -173,10 +170,7 @@ Also, check this [web page](https://cube0x0.github.io/Relaying-for-gMSA/) about 
 
 The **Local Administrator Password Solution (LAPS)**, available for download from [Microsoft](https://www.microsoft.com/en-us/download/details.aspx?id=46899), enables the management of local Administrator passwords. These passwords, which are **randomized**, unique, and **regularly changed**, are stored centrally in Active Directory. Access to these passwords is restricted through ACLs to authorized users. With sufficient permissions granted, the ability to read local admin passwords is provided.
 
-
-{{#ref}}
-active-directory-methodology/laps.md
-{{#endref}}
+\{{#ref\}} active-directory-methodology/laps.md \{{#endref\}}
 
 ## PS Constrained Language Mode
 
@@ -247,16 +241,16 @@ The SSPI will be in charge of finding the adequate protocol for two machines tha
 
 ### Main SSPs
 
-- **Kerberos**: The preferred one
-  - %windir%\Windows\System32\kerberos.dll
-- **NTLMv1** and **NTLMv2**: Compatibility reasons
-  - %windir%\Windows\System32\msv1_0.dll
-- **Digest**: Web servers and LDAP, password in form of a MD5 hash
-  - %windir%\Windows\System32\Wdigest.dll
-- **Schannel**: SSL and TLS
-  - %windir%\Windows\System32\Schannel.dll
-- **Negotiate**: It is used to negotiate the protocol to use (Kerberos or NTLM being Kerberos the default one)
-  - %windir%\Windows\System32\lsasrv.dll
+* **Kerberos**: The preferred one
+  * %windir%\Windows\System32\kerberos.dll
+* **NTLMv1** and **NTLMv2**: Compatibility reasons
+  * %windir%\Windows\System32\msv1\_0.dll
+* **Digest**: Web servers and LDAP, password in form of a MD5 hash
+  * %windir%\Windows\System32\Wdigest.dll
+* **Schannel**: SSL and TLS
+  * %windir%\Windows\System32\Schannel.dll
+* **Negotiate**: It is used to negotiate the protocol to use (Kerberos or NTLM being Kerberos the default one)
+  * %windir%\Windows\System32\lsasrv.dll
 
 #### The negotiation could offer several methods or only one.
 
@@ -264,9 +258,6 @@ The SSPI will be in charge of finding the adequate protocol for two machines tha
 
 [User Account Control (UAC)](https://docs.microsoft.com/en-us/windows/security/identity-protection/user-account-control/how-user-account-control-works) is a feature that enables a **consent prompt for elevated activities**.
 
+\{{#ref\}} authentication-credentials-uac-and-efs/uac-user-account-control.md \{{#endref\}}
 
-{{#ref}}
-authentication-credentials-uac-and-efs/uac-user-account-control.md
-{{#endref}}
-
-{{#include ../banners/hacktricks-training.md}}
+\{{#include ../banners/hacktricks-training.md\}}

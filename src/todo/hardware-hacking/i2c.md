@@ -1,6 +1,6 @@
 # I2C
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## Bus Pirate
 
@@ -49,11 +49,11 @@ As you can see in the previous command line it said that it found 0 errors. This
 
 To connect with the bus pirate you can follow the docs:
 
-![](<../../images/image (484).png>)
+![](<../../../.gitbook/assets/image (484).png>)
 
 In this case I'm going to connect to an EPROM: ATMEL901 24C256 PU27:
 
-![](<../../images/image (964).png>)
+![](<../../../.gitbook/assets/image (964).png>)
 
 To talk with bus pirate I used Tera Term connected to the pirate bus COM port with a Setup --> Serial Port --> Speed of 115200.\
 In the following communication you can find how to prepare the bus pirate to talk I2C and how to write and read from the memory (Comments appear using "#", don't expect that part in the communication):
@@ -161,7 +161,7 @@ NACK
 
 In this scenario we are going to sniff the I2C communication between the arduino and the previous EPROM, you just need to communicate both devices and then connect the bus pirate to the SCL, SDA and GND pins:
 
-![](<../../images/image (166).png>)
+![](<../../../.gitbook/assets/image (166).png>)
 
 ```bash
 I2C>m
@@ -209,7 +209,4 @@ Any key to exit
 [0xA0+0x00+0x69+0x41+0x41+0x41+0x20+0x48+0x69+0x20+0x44+0x72+0x65+0x67+0x21+0x20+0x41+0x41+0x41+0x00+]
 ```
 
-{{#include ../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../banners/hacktricks-training.md\}}

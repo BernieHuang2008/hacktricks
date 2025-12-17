@@ -1,25 +1,25 @@
 # Reversing Tools & Basic Methods
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## ImGui Based Reversing tools
 
 Software:
 
-- ReverseKit: [https://github.com/zer0condition/ReverseKit](https://github.com/zer0condition/ReverseKit)
+* ReverseKit: [https://github.com/zer0condition/ReverseKit](https://github.com/zer0condition/ReverseKit)
 
 ## Wasm decompiler / Wat compiler
 
 Online:
 
-- Use [https://webassembly.github.io/wabt/demo/wasm2wat/index.html](https://webassembly.github.io/wabt/demo/wasm2wat/index.html) to **decompile** from wasm (binary) to wat (clear text)
-- Use [https://webassembly.github.io/wabt/demo/wat2wasm/](https://webassembly.github.io/wabt/demo/wat2wasm/) to **compile** from wat to wasm
-- you can also try to use [https://wwwg.github.io/web-wasmdec/](https://wwwg.github.io/web-wasmdec/) to decompile
+* Use [https://webassembly.github.io/wabt/demo/wasm2wat/index.html](https://webassembly.github.io/wabt/demo/wasm2wat/index.html) to **decompile** from wasm (binary) to wat (clear text)
+* Use [https://webassembly.github.io/wabt/demo/wat2wasm/](https://webassembly.github.io/wabt/demo/wat2wasm/) to **compile** from wat to wasm
+* you can also try to use [https://wwwg.github.io/web-wasmdec/](https://wwwg.github.io/web-wasmdec/) to decompile
 
 Software:
 
-- [https://www.pnfsoftware.com/jeb/demo](https://www.pnfsoftware.com/jeb/demo)
-- [https://github.com/wwwg/wasmdec](https://github.com/wwwg/wasmdec)
+* [https://www.pnfsoftware.com/jeb/demo](https://www.pnfsoftware.com/jeb/demo)
+* [https://github.com/wwwg/wasmdec](https://github.com/wwwg/wasmdec)
 
 ## .NET decompiler
 
@@ -33,12 +33,12 @@ The merit here is that if a lost source code requires restoration from a legacy 
 
 With a comprehensive add-in model and an API that extends the tool to suit your exact needs, .NET reflector saves time and simplifies development. Let's take a look at the plethora of reverse engineering services this tool provides:
 
-- Provides an insight into how the data flows through a library or component
-- Provides insight into the implementation and usage of .NET languages and frameworks
-- Finds undocumented and unexposed functionality to get more out of the APIs and technologies used.
-- Finds dependencies and different assemblies
-- Tracks down the exact location of errors in your code, third-party components, and libraries.
-- Debugs into the source of all the .NET code you work with.
+* Provides an insight into how the data flows through a library or component
+* Provides insight into the implementation and usage of .NET languages and frameworks
+* Finds undocumented and unexposed functionality to get more out of the APIs and technologies used.
+* Finds dependencies and different assemblies
+* Tracks down the exact location of errors in your code, third-party components, and libraries.
+* Debugs into the source of all the .NET code you work with.
 
 ### [ILSpy](https://github.com/icsharpcode/ILSpy) & [dnSpy](https://github.com/dnSpy/dnSpy/releases)
 
@@ -61,7 +61,7 @@ In order to debug code using DNSpy you need to:
 
 First, change the **Assembly attributes** related to **debugging**:
 
-![](<../../images/image (973).png>)
+![](<../../../.gitbook/assets/image (973).png>)
 
 From:
 
@@ -80,11 +80,11 @@ DebuggableAttribute.DebuggingModes.EnableEditAndContinue)]
 
 And click on **compile**:
 
-![](<../../images/image (314) (1).png>)
+![](<../../../.gitbook/assets/image (314) (1).png>)
 
 Then save the new file via _**File >> Save module...**_:
 
-![](<../../images/image (602).png>)
+![](<../../../.gitbook/assets/image (602).png>)
 
 This is necessary because if you don't do this, at **runtime** several **optimisations** will be applied to the code and it could be possible that while debugging a **break-point is never hit** or some **variables don't exist**.
 
@@ -96,25 +96,25 @@ iisreset /noforce
 
 Then, in order to start debugging you should close all the opened files and inside the **Debug Tab** select **Attach to Process...**:
 
-![](<../../images/image (318).png>)
+![](<../../../.gitbook/assets/image (318).png>)
 
 Then select **w3wp.exe** to attach to the **IIS server** and click **attach**:
 
-![](<../../images/image (113).png>)
+![](<../../../.gitbook/assets/image (113).png>)
 
 Now that we are debugging the process, it's time to stop it and load all the modules. First click on _Debug >> Break All_ and then click on _**Debug >> Windows >> Modules**_:
 
-![](<../../images/image (132).png>)
+![](<../../../.gitbook/assets/image (132).png>)
 
-![](<../../images/image (834).png>)
+![](<../../../.gitbook/assets/image (834).png>)
 
 Click any module on **Modules** and select **Open All Modules**:
 
-![](<../../images/image (922).png>)
+![](<../../../.gitbook/assets/image (922).png>)
 
 Right click any module in **Assembly Explorer** and click **Sort Assemblies**:
 
-![](<../../images/image (339).png>)
+![](<../../../.gitbook/assets/image (339).png>)
 
 ## Java decompiler
 
@@ -125,15 +125,15 @@ Right click any module in **Assembly Explorer** and click **Sort Assemblies**:
 
 ### Using IDA
 
-- **Load rundll32** (64bits in C:\Windows\System32\rundll32.exe and 32 bits in C:\Windows\SysWOW64\rundll32.exe)
-- Select **Windbg** debugger
-- Select "**Suspend on library load/unload**"
+* **Load rundll32** (64bits in C:\Windows\System32\rundll32.exe and 32 bits in C:\Windows\SysWOW64\rundll32.exe)
+* Select **Windbg** debugger
+* Select "**Suspend on library load/unload**"
 
-![](<../../images/image (868).png>)
+![](<../../../.gitbook/assets/image (868).png>)
 
-- Configure the **parameters** of the execution putting the **path to the DLL** and the function that you want to call:
+* Configure the **parameters** of the execution putting the **path to the DLL** and the function that you want to call:
 
-![](<../../images/image (704).png>)
+![](<../../../.gitbook/assets/image (704).png>)
 
 Then, when you start debugging **the execution will be stopped when each DLL is loaded**, then, when rundll32 load your DLL the execution will be stopped.
 
@@ -141,14 +141,14 @@ But, how can you get to the code of the DLL that was lodaded? Using this method,
 
 ### Using x64dbg/x32dbg
 
-- **Load rundll32** (64bits in C:\Windows\System32\rundll32.exe and 32 bits in C:\Windows\SysWOW64\rundll32.exe)
-- **Change the Command Line** ( _File --> Change Command Line_ ) and set the path of the dll and the function that you want to call, for example: "C:\Windows\SysWOW64\rundll32.exe" "Z:\shared\Cybercamp\rev2\\\14.ridii_2.dll",DLLMain
-- Change _Options --> Settings_ and select "**DLL Entry**".
-- Then **start the execution**, the debugger will stop at each dll main, at some point you will **stop in the dll Entry of your dll**. From there, just search for the points where you want to put a breakpoint.
+* **Load rundll32** (64bits in C:\Windows\System32\rundll32.exe and 32 bits in C:\Windows\SysWOW64\rundll32.exe)
+* **Change the Command Line** ( _File --> Change Command Line_ ) and set the path of the dll and the function that you want to call, for example: "C:\Windows\SysWOW64\rundll32.exe" "Z:\shared\Cybercamp\rev2\\\14.ridii\_2.dll",DLLMain
+* Change _Options --> Settings_ and select "**DLL Entry**".
+* Then **start the execution**, the debugger will stop at each dll main, at some point you will **stop in the dll Entry of your dll**. From there, just search for the points where you want to put a breakpoint.
 
 Notice that when the execution is stopped by any reason in win64dbg you can see **in which code you are** looking in the **top of the win64dbg window**:
 
-![](<../../images/image (842).png>)
+![](<../../../.gitbook/assets/image (842).png>)
 
 Then, looking to this ca see when the execution was stopped in the dll you want to debug.
 
@@ -156,10 +156,7 @@ Then, looking to this ca see when the execution was stopped in the dll you want 
 
 [**Cheat Engine**](https://www.cheatengine.org/downloads.php) is a useful program to find where important values are saved inside the memory of a running game and change them. More info in:
 
-
-{{#ref}}
-cheat-engine.md
-{{#endref}}
+\{{#ref\}} cheat-engine.md \{{#endref\}}
 
 [**PiNCE**](https://github.com/korcankaraokcu/PINCE) is a front-end/reverse engineering tool for the GNU Project Debugger (GDB), focused on games. However, it can be used for any reverse-engineering related stuff
 
@@ -167,10 +164,7 @@ cheat-engine.md
 
 ## ARM & MIPS
 
-
-{{#ref}}
-https://github.com/nongiach/arm_now
-{{#endref}}
+\{{#ref\}} https://github.com/nongiach/arm\_now \{{#endref\}}
 
 ## Shellcodes
 
@@ -182,16 +176,13 @@ Then, you need to **attach a debugger** (Ida or x64dbg) to the process and put a
 The releases github page contains zips containing the compiled releases: [https://github.com/OALabs/BlobRunner/releases/tag/v0.0.5](https://github.com/OALabs/BlobRunner/releases/tag/v0.0.5)\
 You can find a slightly modified version of Blobrunner in the following link. In order to compile it just **create a C/C++ project in Visual Studio Code, copy and paste the code and build it**.
 
-
-{{#ref}}
-blobrunner.md
-{{#endref}}
+\{{#ref\}} blobrunner.md \{{#endref\}}
 
 ### Debugging a shellcode with jmp2it
 
 [**jmp2it** ](https://github.com/adamkramer/jmp2it/releases/tag/v1.4)is very similar to blobrunner. It will **allocate** the **shellcode** inside a space of memory, and start an **eternal loop**. You then need to **attach the debugger** to the process, **play start wait 2-5 secs and press stop** and you will find yourself inside the **eternal loop**. Jump to the next instruction of the eternal loop as it will be a call to the shellcode, and finally you will find yourself executing the shellcode.
 
-![](<../../images/image (509).png>)
+![](<../../../.gitbook/assets/image (509).png>)
 
 You can download a compiled version of [jmp2it inside the releases page](https://github.com/adamkramer/jmp2it/releases/).
 
@@ -201,21 +192,21 @@ You can download a compiled version of [jmp2it inside the releases page](https:/
 
 Note that Cutter allows you to "Open File" and "Open Shellcode". In my case when I opened the shellcode as a file it decompiled it correctly, but when I opened it as a shellcode it didn't:
 
-![](<../../images/image (562).png>)
+![](<../../../.gitbook/assets/image (562).png>)
 
 In order to start the emulation in the place you want to, set a bp there and apparently cutter will automatically start the emulation from there:
 
-![](<../../images/image (589).png>)
+![](<../../../.gitbook/assets/image (589).png>)
 
-![](<../../images/image (387).png>)
+![](<../../../.gitbook/assets/image (387).png>)
 
 You can see the stack for example inside a hex dump:
 
-![](<../../images/image (186).png>)
+![](<../../../.gitbook/assets/image (186).png>)
 
 ### Deobfuscating shellcode and getting executed functions
 
-You should try [**scdbg**](http://sandsprite.com/blogs/index.php?uid=7&pid=152).\
+You should try [**scdbg**](http://sandsprite.com/blogs/index.php?uid=7\&pid=152).\
 It will tell you things like **which functions** is the shellcode using and if the shellcode is **decoding** itself in memory.
 
 ```bash
@@ -229,20 +220,20 @@ scdbg.exe -f shellcode /foff 0x0000004D #Start the executing in that offset
 
 scDbg also counts with a graphical launcher where you can select the options you want and execute the shellcode
 
-![](<../../images/image (258).png>)
+![](<../../../.gitbook/assets/image (258).png>)
 
 The **Create Dump** option will dump the final shellcode if any change is done to the shellcode dynamically in memory (useful to download the decoded shellcode). The **start offset** can be useful to start the shellcode at a specific offset. The **Debug Shell** option is useful to debug the shellcode using the scDbg terminal (however I find any of the options explained before better for this matter as you will be able to use Ida or x64dbg).
 
 ### Disassembling using CyberChef
 
-Upload your shellcode file as input and use the following recipe to decompile it: [https://gchq.github.io/CyberChef/#recipe=To_Hex('Space',0)Disassemble_x86('32','Full%20x86%20architecture',16,0,true,true)](<https://gchq.github.io/CyberChef/index.html#recipe=To_Hex('Space',0)Disassemble_x86('32','Full%20x86%20architecture',16,0,true,true)>)
+Upload your shellcode file as input and use the following recipe to decompile it: [https://gchq.github.io/CyberChef/#recipe=To\_Hex('Space',0)Disassemble\_x86('32','Full%20x86%20architecture',16,0,true,true)](https://gchq.github.io/CyberChef/index.html#recipe=To_Hex\('Space',0\)Disassemble_x86\('32','Full%20x86%20architecture',16,0,true,true\))
 
 ## [Movfuscator](https://github.com/xoreaxeaxeax/movfuscator)
 
 This obfuscator **modifies all the instructions for `mov`**(yeah, really cool). It also uses interruptions to change executions flows. For more information about how does it works:
 
-- [https://www.youtube.com/watch?v=2VF_wPkiBJY](https://www.youtube.com/watch?v=2VF_wPkiBJY)
-- [https://github.com/xoreaxeaxeax/movfuscator/blob/master/slides/domas_2015_the_movfuscator.pdf](https://github.com/xoreaxeaxeax/movfuscator/blob/master/slides/domas_2015_the_movfuscator.pdf)
+* [https://www.youtube.com/watch?v=2VF\_wPkiBJY](https://www.youtube.com/watch?v=2VF_wPkiBJY)
+* [https://github.com/xoreaxeaxeax/movfuscator/blob/master/slides/domas\_2015\_the\_movfuscator.pdf](https://github.com/xoreaxeaxeax/movfuscator/blob/master/slides/domas_2015_the_movfuscator.pdf)
 
 If you are lucky [demovfuscator](https://github.com/kirschju/demovfuscator) will deofuscate the binary. It has several dependencies
 
@@ -259,7 +250,7 @@ If you are playing a **CTF, this workaround to find the flag** could be very use
 
 To find the **entry point** search the functions by `::main` like in:
 
-![](<../../images/image (1080).png>)
+![](<../../../.gitbook/assets/image (1080).png>)
 
 In this case the binary was called authenticator, so it's pretty obvious that this is the interesting main function.\
 Having the **name** of the **functions** being called, search for them on the **Internet** to learn about their **inputs** and **outputs**.
@@ -288,23 +279,20 @@ This will resolve the names of the functions.
 
 In this page you can find how to get the python code from an ELF/EXE python compiled binary:
 
-
-{{#ref}}
-../../generic-methodologies-and-resources/basic-forensic-methodology/specific-software-file-type-tricks/.pyc.md
-{{#endref}}
+\{{#ref\}} ../../generic-methodologies-and-resources/basic-forensic-methodology/specific-software-file-type-tricks/.pyc.md \{{#endref\}}
 
 ## GBA - Game Body Advance
 
 If you get the **binary** of a GBA game you can use different tools to **emulate** and **debug** it:
 
-- [**no$gba**](https://problemkaputt.de/gba.htm) (_Download the debug version_) - Contains a debugger with interface
-- [**mgba** ](https://mgba.io)- Contains a CLI debugger
-- [**gba-ghidra-loader**](https://github.com/pudii/gba-ghidra-loader) - Ghidra plugin
-- [**GhidraGBA**](https://github.com/SiD3W4y/GhidraGBA) - Ghidra plugin
+* [**no$gba**](https://problemkaputt.de/gba.htm) (_Download the debug version_) - Contains a debugger with interface
+* [**mgba** ](https://mgba.io)- Contains a CLI debugger
+* [**gba-ghidra-loader**](https://github.com/pudii/gba-ghidra-loader) - Ghidra plugin
+* [**GhidraGBA**](https://github.com/SiD3W4y/GhidraGBA) - Ghidra plugin
 
-In [**no$gba**](https://problemkaputt.de/gba.htm), in _**Options --> Emulation Setup --> Controls**_** ** you can see how to press the Game Boy Advance **buttons**
+In [**no$gba**](https://problemkaputt.de/gba.htm), in _**Options --> Emulation Setup --> Controls**_\*\* \*\* you can see how to press the Game Boy Advance **buttons**
 
-![](<../../images/image (581).png>)
+![](<../../../.gitbook/assets/image (581).png>)
 
 When pressed, each **key has a value** to identify it:
 
@@ -323,9 +311,9 @@ L = 256
 
 So, in this kind of program, the interesting part will be **how the program treats the user input**. In the address **0x4000130** you will find the commonly found function: **KEYINPUT**.
 
-![](<../../images/image (447).png>)
+![](<../../../.gitbook/assets/image (447).png>)
 
-In the previous image you can find that the function is called from **FUN_080015a8** (addresses: _0x080015fa_ and _0x080017ac_).
+In the previous image you can find that the function is called from **FUN\_080015a8** (addresses: _0x080015fa_ and _0x080017ac_).
 
 In that function, after some init operations (without any importance):
 
@@ -396,10 +384,10 @@ The last if is checking **`uVar4`** is in the **last Keys** and not is the curre
 
 In the previous code you can see that we are comparing **uVar1** (the place where the **value of the pressed button** is) with some values:
 
-- First, it's compared with the **value 4** (**SELECT** button): In the challenge this button clears the screen
-- Then, it's comparing it with the **value 8** (**START** button): In the challenge this checks is the code is valid to get the flag.
-  - In this case the var **`DAT_030000d8`** is compared with 0xf3 and if the value is the same some code is executed.
-- In any other cases, some cont (`DAT_030000d4`) is checked. It's a cont because it's adding 1 right after entering in the code.\
+* First, it's compared with the **value 4** (**SELECT** button): In the challenge this button clears the screen
+* Then, it's comparing it with the **value 8** (**START** button): In the challenge this checks is the code is valid to get the flag.
+  * In this case the var **`DAT_030000d8`** is compared with 0xf3 and if the value is the same some code is executed.
+* In any other cases, some cont (`DAT_030000d4`) is checked. It's a cont because it's adding 1 right after entering in the code.\
   **I**f less than 8 something that involves **adding** values to **`DAT_030000d8`** is done (basically it's adding the values of the keys pressed in this variable as long as the cont is less than 8).
 
 So, in this challenge, knowing the values of the buttons, you needed to **press a combination with a length smaller than 8 that the resulting addition is 0xf3.**
@@ -408,14 +396,11 @@ So, in this challenge, knowing the values of the buttons, you needed to **press 
 
 ## Game Boy
 
-
-{{#ref}}
-https://www.youtube.com/watch?v=VVbRe7wr3G4
-{{#endref}}
+\{{#ref\}} https://www.youtube.com/watch?v=VVbRe7wr3G4 \{{#endref\}}
 
 ## Courses
 
-- [https://github.com/0xZ0F/Z0FCourse_ReverseEngineering](https://github.com/0xZ0F/Z0FCourse_ReverseEngineering)
-- [https://github.com/malrev/ABD](https://github.com/malrev/ABD) (Binary deobfuscation)
+* [https://github.com/0xZ0F/Z0FCourse\_ReverseEngineering](https://github.com/0xZ0F/Z0FCourse_ReverseEngineering)
+* [https://github.com/malrev/ABD](https://github.com/malrev/ABD) (Binary deobfuscation)
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}

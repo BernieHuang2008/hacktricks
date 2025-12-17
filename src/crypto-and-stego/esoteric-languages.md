@@ -1,6 +1,6 @@
 # Esoteric languages
 
-{{#include ../banners/hacktricks-training.md}}
+\{{#include ../banners/hacktricks-training.md\}}
 
 ## [Esolangs Wiki](https://esolangs.org/wiki/Main_Page)
 
@@ -17,7 +17,7 @@ Check that wiki to search more esotreic languages
 
 ## npiet
 
-![](<../images/image (691).png>)
+![](<../../.gitbook/assets/image (691).png>)
 
 [https://www.bertnase.de/npiet/npiet-execute.php](https://www.bertnase.de/npiet/npiet-execute.php)
 
@@ -52,10 +52,7 @@ Take it to the top
 Whisper my world
 ```
 
-
-{{#ref}}
-https://codewithrockstar.com/
-{{#endref}}
+\{{#ref\}} https://codewithrockstar.com/ \{{#endref\}}
 
 ## PETOOH
 
@@ -69,4 +66,4 @@ kOkOkOkOkO Kukarek Kukarek kOkOkOkOkOkOkO
 Kukarek
 ```
 
-{{#include ../banners/hacktricks-training.md}}
+\{{#include ../banners/hacktricks-training.md\}}

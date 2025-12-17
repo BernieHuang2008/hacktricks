@@ -1,6 +1,6 @@
 # External Recon Methodology
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## Assets discoveries
 
@@ -91,13 +91,13 @@ You can also use a online tool for this info: [http://ptrarchive.com/](http://pt
 Inside a **whois** you can find a lot of interesting **information** like **organisation name**, **address**, **emails**, phone numbers... But which is even more interesting is that you can find **more assets related to the company** if you perform **reverse whois lookups by any of those fields** (for example other whois registries where the same email appears).\
 You can use online tools like:
 
-- [https://viewdns.info/reversewhois/](https://viewdns.info/reversewhois/) - **Free**
-- [https://domaineye.com/reverse-whois](https://domaineye.com/reverse-whois) - **Free**
-- [https://www.reversewhois.io/](https://www.reversewhois.io) - **Free**
-- [https://www.whoxy.com/](https://www.whoxy.com) - **Free** web, not free API.
-- [http://reversewhois.domaintools.com/](http://reversewhois.domaintools.com) - Not free
-- [https://drs.whoisxmlapi.com/reverse-whois-search](https://drs.whoisxmlapi.com/reverse-whois-search) - Not Free (only **100 free** searches)
-- [https://www.domainiq.com/](https://www.domainiq.com) - Not Free
+* [https://viewdns.info/reversewhois/](https://viewdns.info/reversewhois/) - **Free**
+* [https://domaineye.com/reverse-whois](https://domaineye.com/reverse-whois) - **Free**
+* [https://www.reversewhois.io/](https://www.reversewhois.io) - **Free**
+* [https://www.whoxy.com/](https://www.whoxy.com) - **Free** web, not free API.
+* [http://reversewhois.domaintools.com/](http://reversewhois.domaintools.com) - Not free
+* [https://drs.whoisxmlapi.com/reverse-whois-search](https://drs.whoisxmlapi.com/reverse-whois-search) - Not Free (only **100 free** searches)
+* [https://www.domainiq.com/](https://www.domainiq.com) - Not Free
 
 You can automate this task using [**DomLink** ](https://github.com/vysecurity/DomLink)(requires a whoxy API key).\
 You can also perform some automatic reverse whois discovery with [amass](https://github.com/OWASP/Amass): `amass intel -d tesla.com -whois`
@@ -111,11 +111,11 @@ For example, if you see the same **Google Analytics ID** or the same **Adsense I
 
 There are some pages and tools that let you search by these trackers and more:
 
-- [**Udon**](https://github.com/dhn/udon)
-- [**BuiltWith**](https://builtwith.com)
-- [**Sitesleuth**](https://www.sitesleuth.io)
-- [**Publicwww**](https://publicwww.com)
-- [**SpyOnWeb**](http://spyonweb.com)
+* [**Udon**](https://github.com/dhn/udon)
+* [**BuiltWith**](https://builtwith.com)
+* [**Sitesleuth**](https://www.sitesleuth.io)
+* [**Publicwww**](https://publicwww.com)
+* [**SpyOnWeb**](http://spyonweb.com)
 
 ### **Favicon**
 
@@ -196,7 +196,7 @@ You could access the **TLS certificate** of the main web page, obtain the **Orga
 Check for some [domain takeover](../../pentesting-web/domain-subdomain-takeover.md#domain-takeover). Maybe some company is **using some a domain** but they **lost the ownership**. Just register it (if cheap enough) and let know the company.
 
 If you find any **domain with an IP different** from the ones you already found in the assets discovery, you should perform a **basic vulnerability scan** (using Nessus or OpenVAS) and some [**port scan**](../pentesting-network/index.html#discovering-hosts-from-the-outside) with **nmap/masscan/shodan**. Depending on which services are running you can find in **this book some tricks to "attack" them**.\
-_Note that sometimes the domain is hosted inside an IP that is not controlled by the client, so it's not in the scope, be careful._
+&#xNAN;_&#x4E;ote that sometimes the domain is hosted inside an IP that is not controlled by the client, so it's not in the scope, be careful._
 
 ## Subdomains
 
@@ -204,8 +204,7 @@ _Note that sometimes the domain is hosted inside an IP that is not controlled by
 
 It's time to find all the possible subdomains of each found domain.
 
-> [!TIP]
-> Note that some of the tools and techniques to find domains can also help to find subdomains
+> \[!TIP] Note that some of the tools and techniques to find domains can also help to find subdomains
 
 ### **DNS**
 
@@ -219,7 +218,7 @@ dnsrecon -a -d tesla.com
 
 The fastest way to obtain a lot of subdomains is search in external sources. The most used **tools** are the following ones (for better results configure the API keys):
 
-- [**BBOT**](https://github.com/blacklanternsecurity/bbot)
+* [**BBOT**](https://github.com/blacklanternsecurity/bbot)
 
 ```bash
 # subdomains
@@ -232,53 +231,53 @@ bbot -t tesla.com -f subdomain-enum -rf passive
 bbot -t tesla.com -f subdomain-enum -m naabu gowitness -n my_scan -o .
 ```
 
-- [**Amass**](https://github.com/OWASP/Amass)
+* [**Amass**](https://github.com/OWASP/Amass)
 
 ```bash
 amass enum [-active] [-ip] -d tesla.com
 amass enum -d tesla.com | grep tesla.com # To just list subdomains
 ```
 
-- [**subfinder**](https://github.com/projectdiscovery/subfinder)
+* [**subfinder**](https://github.com/projectdiscovery/subfinder)
 
 ```bash
 # Subfinder, use -silent to only have subdomains in the output
 ./subfinder-linux-amd64 -d tesla.com [-silent]
 ```
 
-- [**findomain**](https://github.com/Edu4rdSHL/findomain/)
+* [**findomain**](https://github.com/Edu4rdSHL/findomain/)
 
 ```bash
 # findomain, use -silent to only have subdomains in the output
 ./findomain-linux -t tesla.com [--quiet]
 ```
 
-- [**OneForAll**](https://github.com/shmilylty/OneForAll/tree/master/docs/en-us)
+* [**OneForAll**](https://github.com/shmilylty/OneForAll/tree/master/docs/en-us)
 
 ```bash
 python3 oneforall.py --target tesla.com [--dns False] [--req False] [--brute False] run
 ```
 
-- [**assetfinder**](https://github.com/tomnomnom/assetfinder)
+* [**assetfinder**](https://github.com/tomnomnom/assetfinder)
 
 ```bash
 assetfinder --subs-only <domain>
 ```
 
-- [**Sudomy**](https://github.com/Screetsec/Sudomy)
+* [**Sudomy**](https://github.com/Screetsec/Sudomy)
 
 ```bash
 # It requires that you create a sudomy.api file with API keys
 sudomy -d tesla.com
 ```
 
-- [**vita**](https://github.com/junnlikestea/vita)
+* [**vita**](https://github.com/junnlikestea/vita)
 
 ```
 vita -d tesla.com
 ```
 
-- [**theHarvester**](https://github.com/laramies/theHarvester)
+* [**theHarvester**](https://github.com/laramies/theHarvester)
 
 ```bash
 theHarvester -d tesla.com -b "anubis, baidu, bing, binaryedge, bingapi, bufferoverun, censys, certspotter, crtsh, dnsdumpster, duckduckgo, fullhunt, github-code, google, hackertarget, hunter, intelx, linkedin, linkedin_links, n45ht, omnisint, otx, pentesttools, projectdiscovery, qwant, rapiddns, rocketreach, securityTrails, spyse, sublist3r, threatcrowd, threatminer, trello, twitter, urlscan, virustotal, yahoo, zoomeye"
@@ -286,7 +285,7 @@ theHarvester -d tesla.com -b "anubis, baidu, bing, binaryedge, bingapi, bufferov
 
 There are **other interesting tools/APIs** that even if not directly specialised in finding subdomains could be useful to find subdomains, like:
 
-- [**Crobat**](https://github.com/cgboal/sonarsearch)**:** Uses the API [https://sonar.omnisint.io](https://sonar.omnisint.io) to obtain subdomains
+* [**Crobat**](https://github.com/cgboal/sonarsearch)**:** Uses the API [https://sonar.omnisint.io](https://sonar.omnisint.io) to obtain subdomains
 
 ```bash
 # Get list of subdomains in output from the API
@@ -294,13 +293,13 @@ There are **other interesting tools/APIs** that even if not directly specialised
 curl https://sonar.omnisint.io/subdomains/tesla.com | jq -r ".[]"
 ```
 
-- [**JLDC free API**](https://jldc.me/anubis/subdomains/google.com)
+* [**JLDC free API**](https://jldc.me/anubis/subdomains/google.com)
 
 ```bash
 curl https://jldc.me/anubis/subdomains/tesla.com | jq -r ".[]"
 ```
 
-- [**RapidDNS**](https://rapiddns.io) free API
+* [**RapidDNS**](https://rapiddns.io) free API
 
 ```bash
 # Get Domains from rapiddns free API
@@ -312,7 +311,7 @@ rapiddns(){
 rapiddns tesla.com
 ```
 
-- [**https://crt.sh/**](https://crt.sh)
+* [**https://crt.sh/**](https://crt.sh)
 
 ```bash
 # Get Domains from crt free API
@@ -324,14 +323,14 @@ crt(){
 crt tesla.com
 ```
 
-- [**gau**](https://github.com/lc/gau)**:** fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, and Common Crawl for any given domain.
+* [**gau**](https://github.com/lc/gau)**:** fetches known URLs from AlienVault's Open Threat Exchange, the Wayback Machine, and Common Crawl for any given domain.
 
 ```bash
 # Get subdomains from GAUs found URLs
 gau --subs tesla.com | cut -d "/" -f 3 | sort -u
 ```
 
-- [**SubDomainizer**](https://github.com/nsonaniya2010/SubDomainizer) **&** [**subscraper**](https://github.com/Cillian-Collins/subscraper): They scrap the web looking for JS files and extract subdomains from there.
+* [**SubDomainizer**](https://github.com/nsonaniya2010/SubDomainizer) **&** [**subscraper**](https://github.com/Cillian-Collins/subscraper): They scrap the web looking for JS files and extract subdomains from there.
 
 ```bash
 # Get only subdomains from SubDomainizer
@@ -341,7 +340,7 @@ python3 SubDomainizer.py -u https://tesla.com | grep tesla.com
 python subscraper.py -u tesla.com | grep tesla.com | cut -d " " -f
 ```
 
-- [**Shodan**](https://www.shodan.io/)
+* [**Shodan**](https://www.shodan.io/)
 
 ```bash
 # Get info about the domain
@@ -350,7 +349,7 @@ shodan domain <domain>
 shodan search "http.html:help.domain.com"
 ```
 
-- [**Censys subdomain finder**](https://github.com/christophetd/censys-subdomain-finder)
+* [**Censys subdomain finder**](https://github.com/christophetd/censys-subdomain-finder)
 
 ```bash
 export CENSYS_API_ID=...
@@ -358,14 +357,14 @@ export CENSYS_API_SECRET=...
 python3 censys-subdomain-finder.py tesla.com
 ```
 
-- [**DomainTrail.py**](https://github.com/gatete/DomainTrail)
+* [**DomainTrail.py**](https://github.com/gatete/DomainTrail)
 
 ```bash
 python3 DomainTrail.py -d example.com
 ```
 
-- [**securitytrails.com**](https://securitytrails.com/) has a free API to search for subdomains and IP history
-- [**chaos.projectdiscovery.io**](https://chaos.projectdiscovery.io/#/)
+* [**securitytrails.com**](https://securitytrails.com/) has a free API to search for subdomains and IP history
+* [**chaos.projectdiscovery.io**](https://chaos.projectdiscovery.io/#/)
 
 This project offers for **free all the subdomains related to bug-bounty programs**. You can access this data also using [chaospy](https://github.com/dr-0x0x/chaospy) or even access the scope used by this project [https://github.com/projectdiscovery/chaos-public-program-list](https://github.com/projectdiscovery/chaos-public-program-list)
 
@@ -377,17 +376,17 @@ Let's try to find new **subdomains** brute-forcing DNS servers using possible su
 
 For this action you will need some **common subdomains wordlists like**:
 
-- [https://gist.github.com/jhaddix/86a06c5dc309d08580a018c66354a056](https://gist.github.com/jhaddix/86a06c5dc309d08580a018c66354a056)
-- [https://wordlists-cdn.assetnote.io/data/manual/best-dns-wordlist.txt](https://wordlists-cdn.assetnote.io/data/manual/best-dns-wordlist.txt)
-- [https://localdomain.pw/subdomain-bruteforce-list/all.txt.zip](https://localdomain.pw/subdomain-bruteforce-list/all.txt.zip)
-- [https://github.com/pentester-io/commonspeak](https://github.com/pentester-io/commonspeak)
-- [https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS](https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS)
+* [https://gist.github.com/jhaddix/86a06c5dc309d08580a018c66354a056](https://gist.github.com/jhaddix/86a06c5dc309d08580a018c66354a056)
+* [https://wordlists-cdn.assetnote.io/data/manual/best-dns-wordlist.txt](https://wordlists-cdn.assetnote.io/data/manual/best-dns-wordlist.txt)
+* [https://localdomain.pw/subdomain-bruteforce-list/all.txt.zip](https://localdomain.pw/subdomain-bruteforce-list/all.txt.zip)
+* [https://github.com/pentester-io/commonspeak](https://github.com/pentester-io/commonspeak)
+* [https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS](https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS)
 
 And also IPs of good DNS resolvers. In order to generate a list of trusted DNS resolvers you can download the resolvers from [https://public-dns.info/nameservers-all.txt](https://public-dns.info/nameservers-all.txt) and use [**dnsvalidator**](https://github.com/vortexau/dnsvalidator) to filter them. Or you could use: [https://raw.githubusercontent.com/trickest/resolvers/main/resolvers-trusted.txt](https://raw.githubusercontent.com/trickest/resolvers/main/resolvers-trusted.txt)
 
 The most recommended tools for DNS brute-force are:
 
-- [**massdns**](https://github.com/blechschmidt/massdns): This was the first tool that performed an effective DNS brute-force. It's very fast however it's prone to false positives.
+* [**massdns**](https://github.com/blechschmidt/massdns): This was the first tool that performed an effective DNS brute-force. It's very fast however it's prone to false positives.
 
 ```bash
 sed 's/$/.domain.com/' subdomains.txt > bf-subdomains.txt
@@ -395,25 +394,25 @@ sed 's/$/.domain.com/' subdomains.txt > bf-subdomains.txt
 grep -E "tesla.com. [0-9]+ IN A .+" /tmp/results.txt
 ```
 
-- [**gobuster**](https://github.com/OJ/gobuster): This one I think just uses 1 resolver
+* [**gobuster**](https://github.com/OJ/gobuster): This one I think just uses 1 resolver
 
 ```
 gobuster dns -d mysite.com -t 50 -w subdomains.txt
 ```
 
-- [**shuffledns**](https://github.com/projectdiscovery/shuffledns) is a wrapper around `massdns`, written in go, that allows you to enumerate valid subdomains using active bruteforce, as well as resolve subdomains with wildcard handling and easy input-output support.
+* [**shuffledns**](https://github.com/projectdiscovery/shuffledns) is a wrapper around `massdns`, written in go, that allows you to enumerate valid subdomains using active bruteforce, as well as resolve subdomains with wildcard handling and easy input-output support.
 
 ```
 shuffledns -d example.com -list example-subdomains.txt -r resolvers.txt
 ```
 
-- [**puredns**](https://github.com/d3mondev/puredns): It also uses `massdns`.
+* [**puredns**](https://github.com/d3mondev/puredns): It also uses `massdns`.
 
 ```
 puredns bruteforce all.txt domain.com
 ```
 
-- [**aiodnsbrute**](https://github.com/blark/aiodnsbrute) uses asyncio to brute force domain names asynchronously.
+* [**aiodnsbrute**](https://github.com/blark/aiodnsbrute) uses asyncio to brute force domain names asynchronously.
 
 ```
 aiodnsbrute -r resolvers -w wordlist.txt -vv -t 1024 domain.com
@@ -423,45 +422,45 @@ aiodnsbrute -r resolvers -w wordlist.txt -vv -t 1024 domain.com
 
 After having found subdomains using open sources and brute-forcing, you could generate alterations of the subdomains found to try to find even more. Several tools are useful for this purpose:
 
-- [**dnsgen**](https://github.com/ProjectAnte/dnsgen)**:** Given the domains and subdomains generate permutations.
+* [**dnsgen**](https://github.com/ProjectAnte/dnsgen)**:** Given the domains and subdomains generate permutations.
 
 ```bash
 cat subdomains.txt | dnsgen -
 ```
 
-- [**goaltdns**](https://github.com/subfinder/goaltdns): Given the domains and subdomains generate permutations.
-  - You can get goaltdns permutations **wordlist** in [**here**](https://github.com/subfinder/goaltdns/blob/master/words.txt).
+* [**goaltdns**](https://github.com/subfinder/goaltdns): Given the domains and subdomains generate permutations.
+  * You can get goaltdns permutations **wordlist** in [**here**](https://github.com/subfinder/goaltdns/blob/master/words.txt).
 
 ```bash
 goaltdns -l subdomains.txt -w /tmp/words-permutations.txt -o /tmp/final-words-s3.txt
 ```
 
-- [**gotator**](https://github.com/Josue87/gotator)**:** Given the domains and subdomains generate permutations. If not permutations file is indicated gotator will use its own one.
+* [**gotator**](https://github.com/Josue87/gotator)**:** Given the domains and subdomains generate permutations. If not permutations file is indicated gotator will use its own one.
 
 ```
 gotator -sub subdomains.txt -silent [-perm /tmp/words-permutations.txt]
 ```
 
-- [**altdns**](https://github.com/infosec-au/altdns): Apart from generating subdomains permutations, it can also try to resolve them (but it's better to use the previous commented tools).
-  - You can get altdns permutations **wordlist** in [**here**](https://github.com/infosec-au/altdns/blob/master/words.txt).
+* [**altdns**](https://github.com/infosec-au/altdns): Apart from generating subdomains permutations, it can also try to resolve them (but it's better to use the previous commented tools).
+  * You can get altdns permutations **wordlist** in [**here**](https://github.com/infosec-au/altdns/blob/master/words.txt).
 
 ```
 altdns -i subdomains.txt -w /tmp/words-permutations.txt -o /tmp/asd3
 ```
 
-- [**dmut**](https://github.com/bp0lr/dmut): Another tool to perform permutations, mutations and alteration of subdomains. This tool will brute force the result (it doesn't support dns wild card).
-  - You can get dmut permutations wordlist in [**here**](https://raw.githubusercontent.com/bp0lr/dmut/main/words.txt).
+* [**dmut**](https://github.com/bp0lr/dmut): Another tool to perform permutations, mutations and alteration of subdomains. This tool will brute force the result (it doesn't support dns wild card).
+  * You can get dmut permutations wordlist in [**here**](https://raw.githubusercontent.com/bp0lr/dmut/main/words.txt).
 
 ```bash
 cat subdomains.txt | dmut -d /tmp/words-permutations.txt -w 100 \
     --dns-errorLimit 10 --use-pb --verbose -s /tmp/resolvers-trusted.txt
 ```
 
-- [**alterx**](https://github.com/projectdiscovery/alterx)**:** Based on a domain it **generates new potential subdomains names** based on indicated patterns to try to discover more subdomains.
+* [**alterx**](https://github.com/projectdiscovery/alterx)**:** Based on a domain it **generates new potential subdomains names** based on indicated patterns to try to discover more subdomains.
 
 #### Smart permutations generation
 
-- [**regulator**](https://github.com/cramppet/regulator): For more info read this [**post**](https://cramppet.github.io/regulator/index.html) but it will basically get the **main parts** from the **discovered subdomains** and will mix them to find more subdomains.
+* [**regulator**](https://github.com/cramppet/regulator): For more info read this [**post**](https://cramppet.github.io/regulator/index.html) but it will basically get the **main parts** from the **discovered subdomains** and will mix them to find more subdomains.
 
 ```bash
 python3 main.py adobe.com adobe adobe.rules
@@ -469,7 +468,7 @@ make_brute_list.sh adobe.rules adobe.brute
 puredns resolve adobe.brute --write adobe.valid
 ```
 
-- [**subzuf**](https://github.com/elceef/subzuf)**:** _subzuf_ is a subdomain brute-force fuzzer coupled with an immensly simple but effective DNS reponse-guided algorithm. It utilizes a provided set of input data, like a tailored wordlist or historical DNS/TLS records, to accurately synthesize more corresponding domain names and expand them even further in a loop based on information gathered during DNS scan.
+* [**subzuf**](https://github.com/elceef/subzuf)**:** _subzuf_ is a subdomain brute-force fuzzer coupled with an immensly simple but effective DNS reponse-guided algorithm. It utilizes a provided set of input data, like a tailored wordlist or historical DNS/TLS records, to accurately synthesize more corresponding domain names and expand them even further in a loop based on information gathered during DNS scan.
 
 ```
 echo www | subzuf facebook.com
@@ -479,15 +478,9 @@ echo www | subzuf facebook.com
 
 Check this blog post I wrote about how to **automate the subdomain discovery** from a domain using **Trickest workflows** so I don't need to launch manually a bunch of tools in my computer:
 
+\{{#ref\}} https://trickest.com/blog/full-subdomain-discovery-using-workflow/ \{{#endref\}}
 
-{{#ref}}
-https://trickest.com/blog/full-subdomain-discovery-using-workflow/
-{{#endref}}
-
-
-{{#ref}}
-https://trickest.com/blog/full-subdomain-brute-force-discovery-using-workflow/
-{{#endref}}
+\{{#ref\}} https://trickest.com/blog/full-subdomain-brute-force-discovery-using-workflow/ \{{#endref\}}
 
 ### **VHosts / Virtual Hosts**
 
@@ -515,8 +508,7 @@ vhostbrute.py --url="example.com" --remoteip="10.1.1.15" --base="www.example.com
 VHostScan -t example.com
 ```
 
-> [!TIP]
-> With this technique you may even be able to access internal/hidden endpoints.
+> \[!TIP] With this technique you may even be able to access internal/hidden endpoints.
 
 ### **CORS Brute Force**
 
@@ -541,7 +533,7 @@ Check for possible [**subdomain takeovers**](../../pentesting-web/domain-subdoma
 If the **subdomain** is pointing to some **S3 bucket**, [**check the permissions**](../../network-services-pentesting/pentesting-web/buckets/index.html).
 
 If you find any **subdomain with an IP different** from the ones you already found in the assets discovery, you should perform a **basic vulnerability scan** (using Nessus or OpenVAS) and some [**port scan**](../pentesting-network/index.html#discovering-hosts-from-the-outside) with **nmap/masscan/shodan**. Depending on which services are running you can find in **this book some tricks to "attack" them**.\
-_Note that sometimes the subdomain is hosted inside an IP that is not controlled by the client, so it's not in the scope, be careful._
+&#xNAN;_&#x4E;ote that sometimes the subdomain is hosted inside an IP that is not controlled by the client, so it's not in the scope, be careful._
 
 ## IPs
 
@@ -550,7 +542,7 @@ It’s time to **recollect all the IPs from those ranges** and for the **domains
 
 Using services from the following **free apis** you can also find **previous IPs used by domains and subdomains**. These IPs might still be owned by the client (and might allow you to find [**CloudFlare bypasses**](../../network-services-pentesting/pentesting-web/uncovering-cloudflare.md))
 
-- [**https://securitytrails.com/**](https://securitytrails.com/)
+* [**https://securitytrails.com/**](https://securitytrails.com/)
 
 You can also check for domains pointing a specific IP address using the tool [**hakip2host**](https://github.com/hakluke/hakip2host)
 
@@ -590,13 +582,13 @@ In order to find potential cloud assets belonging to a company you should **star
 
 You will also need wordlists of **common words used in buckets**:
 
-- [https://raw.githubusercontent.com/cujanovic/goaltdns/master/words.txt](https://raw.githubusercontent.com/cujanovic/goaltdns/master/words.txt)
-- [https://raw.githubusercontent.com/infosec-au/altdns/master/words.txt](https://raw.githubusercontent.com/infosec-au/altdns/master/words.txt)
-- [https://raw.githubusercontent.com/jordanpotti/AWSBucketDump/master/BucketNames.txt](https://raw.githubusercontent.com/jordanpotti/AWSBucketDump/master/BucketNames.txt)
+* [https://raw.githubusercontent.com/cujanovic/goaltdns/master/words.txt](https://raw.githubusercontent.com/cujanovic/goaltdns/master/words.txt)
+* [https://raw.githubusercontent.com/infosec-au/altdns/master/words.txt](https://raw.githubusercontent.com/infosec-au/altdns/master/words.txt)
+* [https://raw.githubusercontent.com/jordanpotti/AWSBucketDump/master/BucketNames.txt](https://raw.githubusercontent.com/jordanpotti/AWSBucketDump/master/BucketNames.txt)
 
-Then, with those words you should generate **permutations** (check the [**Second Round DNS Brute-Force**](#second-dns-bruteforce-round) for more info).
+Then, with those words you should generate **permutations** (check the [**Second Round DNS Brute-Force**](./#second-dns-bruteforce-round) for more info).
 
-With the resulting wordlists you could use tools such as [**cloud_enum**](https://github.com/initstring/cloud_enum)**,** [**CloudScraper**](https://github.com/jordanpotti/CloudScraper)**,** [**cloudlist**](https://github.com/projectdiscovery/cloudlist) **or** [**S3Scanner**](https://github.com/sa7mon/S3Scanner)**.**
+With the resulting wordlists you could use tools such as [**cloud\_enum**](https://github.com/initstring/cloud_enum)**,** [**CloudScraper**](https://github.com/jordanpotti/CloudScraper)**,** [**cloudlist**](https://github.com/projectdiscovery/cloudlist) **or** [**S3Scanner**](https://github.com/sa7mon/S3Scanner)**.**
 
 Remember that when looking for Cloud Assets you should l**ook for more than just buckets in AWS**.
 
@@ -608,10 +600,10 @@ If you find things such as **open buckets or cloud functions exposed** you shoul
 
 With the **domains** and **subdomains** inside the scope you basically have all what you **need to start searching for emails**. These are the **APIs** and **tools** that have worked the best for me to find emails of a company:
 
-- [**theHarvester**](https://github.com/laramies/theHarvester) - with APIs
-- API of [**https://hunter.io/**](https://hunter.io/) (free version)
-- API of [**https://app.snov.io/**](https://app.snov.io/) (free version)
-- API of [**https://minelead.io/**](https://minelead.io/) (free version)
+* [**theHarvester**](https://github.com/laramies/theHarvester) - with APIs
+* API of [**https://hunter.io/**](https://hunter.io/) (free version)
+* API of [**https://app.snov.io/**](https://app.snov.io/) (free version)
+* API of [**https://minelead.io/**](https://minelead.io/) (free version)
 
 ### **Looking for vulnerabilities**
 
@@ -621,8 +613,8 @@ Emails will come handy later to **brute-force web logins and auth services** (su
 
 With the **domains,** **subdomains**, and **emails** you can start looking for credentials leaked in the past belonging to those emails:
 
-- [https://leak-lookup.com](https://leak-lookup.com/account/login)
-- [https://www.dehashed.com/](https://www.dehashed.com/)
+* [https://leak-lookup.com](https://leak-lookup.com/account/login)
+* [https://www.dehashed.com/](https://www.dehashed.com/)
 
 ### **Looking for vulnerabilities**
 
@@ -643,10 +635,7 @@ You can use the **tool** [**Leakos**](https://github.com/carlospolop/Leakos) to 
 
 Check also this **page** for potential **github dorks** you could also search for in the organization you are attacking:
 
-
-{{#ref}}
-github-leaked-secrets.md
-{{#endref}}
+\{{#ref\}} github-leaked-secrets.md \{{#endref\}}
 
 ### Pastes Leaks
 
@@ -669,14 +658,11 @@ If you found that the company has **open-source code** you can **analyse** it an
 
 **Depending on the language** there are different **tools** you can use:
 
-
-{{#ref}}
-../../network-services-pentesting/pentesting-web/code-review-tools.md
-{{#endref}}
+\{{#ref\}} ../../network-services-pentesting/pentesting-web/code-review-tools.md \{{#endref\}}
 
 There are also free services that allow you to **scan public repositories**, such as:
 
-- [**Snyk**](https://app.snyk.io/)
+* [**Snyk**](https://app.snyk.io/)
 
 ## [**Pentesting Web Methodology**](../../network-services-pentesting/pentesting-web/index.html)
 
@@ -704,13 +690,13 @@ So you have already:
 
 There are several tools out there that will perform part of the proposed actions against a given scope.
 
-- [**https://github.com/yogeshojha/rengine**](https://github.com/yogeshojha/rengine)
-- [**https://github.com/j3ssie/Osmedeus**](https://github.com/j3ssie/Osmedeus)
-- [**https://github.com/six2dez/reconftw**](https://github.com/six2dez/reconftw)
-- [**https://github.com/hackerspider1/EchoPwn**](https://github.com/hackerspider1/EchoPwn) - A little old and not updated
+* [**https://github.com/yogeshojha/rengine**](https://github.com/yogeshojha/rengine)
+* [**https://github.com/j3ssie/Osmedeus**](https://github.com/j3ssie/Osmedeus)
+* [**https://github.com/six2dez/reconftw**](https://github.com/six2dez/reconftw)
+* [**https://github.com/hackerspider1/EchoPwn**](https://github.com/hackerspider1/EchoPwn) - A little old and not updated
 
 ## **References**
 
-- All free courses of [**@Jhaddix**](https://twitter.com/Jhaddix) like [**The Bug Hunter's Methodology v4.0 - Recon Edition**](https://www.youtube.com/watch?v=p4JgIu1mceI)
+* All free courses of [**@Jhaddix**](https://twitter.com/Jhaddix) like [**The Bug Hunter's Methodology v4.0 - Recon Edition**](https://www.youtube.com/watch?v=p4JgIu1mceI)
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}

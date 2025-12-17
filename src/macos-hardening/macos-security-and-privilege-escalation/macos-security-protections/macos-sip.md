@@ -1,15 +1,15 @@
 # macOS SIP
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 ## **Basic Information**
 
 **System Integrity Protection (SIP)** in macOS is a mechanism designed to prevent even the most privileged users from making unauthorized changes to key system folders. This feature plays a crucial role in maintaining the integrity of the system by restricting actions like adding, modifying, or deleting files in protected areas. The primary folders shielded by SIP include:
 
-- **/System**
-- **/bin**
-- **/sbin**
-- **/usr**
+* **/System**
+* **/bin**
+* **/sbin**
+* **/usr**
 
 The rules that govern SIP's behavior are defined in the configuration file located at **`/System/Library/Sandbox/rootless.conf`**. Within this file, paths that are prefixed with an asterisk (\*) are denoted as exceptions to the otherwise stringent SIP restrictions.
 
@@ -44,19 +44,18 @@ Here, the **`restricted`** flag indicates that the `/usr/libexec` directory is p
 
 Moreover, if a file contains the attribute **`com.apple.rootless`** extended **attribute**, that file will also be **protected by SIP**.
 
-> [!TIP]
-> Note that **Sandbox** hook **`hook_vnode_check_setextattr`** prevents any attempt to modify the extended attribute **`com.apple.rootless`.**
+> \[!TIP] Note that **Sandbox** hook **`hook_vnode_check_setextattr`** prevents any attempt to modify the extended attribute **`com.apple.rootless`.**
 
 **SIP also limits other root actions** like:
 
-- Loading untrusted kernel extensions
-- Getting task-ports for Apple-signed processes
-- Modifying NVRAM variables
-- Allowing kernel debugging
+* Loading untrusted kernel extensions
+* Getting task-ports for Apple-signed processes
+* Modifying NVRAM variables
+* Allowing kernel debugging
 
 Options are maintained in nvram variable as a bitflag (`csr-active-config` on Intel and `lp-sip0` is read from the booted Device Tree for ARM). You can find the flags in the XNU source code in `csr.sh`:
 
-<figure><img src="../../../images/image (1192).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1192).png" alt=""><figcaption></figcaption></figure>
 
 ### SIP Status
 
@@ -80,34 +79,34 @@ csrutil enable --without debug
 
 ### Other Restrictions
 
-- **Disallows loading of unsigned kernel extensions** (kexts), ensuring only verified extensions interact with the system kernel.
-- **Prevents the debugging** of macOS system processes, safeguarding core system components from unauthorized access and modification.
-- **Inhibits tools** like dtrace from inspecting system processes, further protecting the integrity of the system's operation.
+* **Disallows loading of unsigned kernel extensions** (kexts), ensuring only verified extensions interact with the system kernel.
+* **Prevents the debugging** of macOS system processes, safeguarding core system components from unauthorized access and modification.
+* **Inhibits tools** like dtrace from inspecting system processes, further protecting the integrity of the system's operation.
 
 [**Learn more about SIP info in this talk**](https://www.slideshare.net/i0n1c/syscan360-stefan-esser-os-x-el-capitan-sinking-the-ship)**.**
 
 ### **SIP related Entitlements**
 
-- `com.apple.rootless.xpc.bootstrap`: Control launchd
-- `com.apple.rootless.install[.heritable]`: Access file system
-- `com.apple.rootless.kext-management`: `kext_request`
-- `com.apple.rootless.datavault.controller`: Manage UF_DATAVAULT
-- `com.apple.rootless.xpc.bootstrap`: XPC setup capabilities
-- `com.apple.rootless.xpc.effective-root`: Root via launchd XPC
-- `com.apple.rootless.restricted-block-devices`: Access to raw block devices
-- `com.apple.rootless.internal.installer-equivalent`: Unfettered filesystem access
-- `com.apple.rootless.restricted-nvram-variables[.heritable]`: Full access to NVRAM
-- `com.apple.rootless.storage.label`: Modify files restricted by com.apple.rootless xattr with the corresponding label
-- `com.apple.rootless.volume.VM.label`: Maintain VM swap on volume
+* `com.apple.rootless.xpc.bootstrap`: Control launchd
+* `com.apple.rootless.install[.heritable]`: Access file system
+* `com.apple.rootless.kext-management`: `kext_request`
+* `com.apple.rootless.datavault.controller`: Manage UF\_DATAVAULT
+* `com.apple.rootless.xpc.bootstrap`: XPC setup capabilities
+* `com.apple.rootless.xpc.effective-root`: Root via launchd XPC
+* `com.apple.rootless.restricted-block-devices`: Access to raw block devices
+* `com.apple.rootless.internal.installer-equivalent`: Unfettered filesystem access
+* `com.apple.rootless.restricted-nvram-variables[.heritable]`: Full access to NVRAM
+* `com.apple.rootless.storage.label`: Modify files restricted by com.apple.rootless xattr with the corresponding label
+* `com.apple.rootless.volume.VM.label`: Maintain VM swap on volume
 
 ## SIP Bypasses
 
 Bypassing SIP enables an attacker to:
 
-- **Access User Data**: Read sensitive user data like mail, messages, and Safari history from all user accounts.
-- **TCC Bypass**: Directly manipulate the TCC (Transparency, Consent, and Control) database to grant unauthorized access to the webcam, microphone, and other resources.
-- **Establish Persistence**: Place malware in SIP-protected locations, making it resistant to removal, even by root privileges. This also includes the potential to tamper with the Malware Removal Tool (MRT).
-- **Load Kernel Extensions**: Although there are additional safeguards, bypassing SIP simplifies the process of loading unsigned kernel extensions.
+* **Access User Data**: Read sensitive user data like mail, messages, and Safari history from all user accounts.
+* **TCC Bypass**: Directly manipulate the TCC (Transparency, Consent, and Control) database to grant unauthorized access to the webcam, microphone, and other resources.
+* **Establish Persistence**: Place malware in SIP-protected locations, making it resistant to removal, even by root privileges. This also includes the potential to tamper with the Malware Removal Tool (MRT).
+* **Load Kernel Extensions**: Although there are additional safeguards, bypassing SIP simplifies the process of loading unsigned kernel extensions.
 
 ### Installer Packages
 
@@ -119,8 +118,7 @@ One potential loophole is that if a file is specified in **`rootless.conf` but d
 
 ### com.apple.rootless.install.heritable
 
-> [!CAUTION]
-> The entitlement **`com.apple.rootless.install.heritable`** allows to bypass SIP
+> \[!CAUTION] The entitlement **`com.apple.rootless.install.heritable`** allows to bypass SIP
 
 #### [CVE-2019-8561](https://objective-see.org/blog/blog_0x42.html) <a href="#cve" id="cve"></a>
 
@@ -144,7 +142,7 @@ Moreover, it was discovered that **`/etc/zshenv` could be used as a general atta
 
 In [**CVE-2022-22583**](https://perception-point.io/blog/technical-analysis-cve-2022-22583/) it was discovered that the same **`system_installd`** process could still be abused because it was putting the **post-install script inside a random named folder protected by SIP inside `/tmp`**. The thing is that **`/tmp` itself isn't protected by SIP**, so it was possible to **mount** a **virtual image on it**, then the **installer** would put in there the **post-install script**, **unmount** the virtual image, **recreate** all the **folders** and **add** the **post installation** script with the **payload** to execute.
 
-#### [fsck_cs utility](https://www.theregister.com/2016/03/30/apple_os_x_rootless/)
+#### [fsck\_cs utility](https://www.theregister.com/2016/03/30/apple_os_x_rootless/)
 
 A vulnerability was identified where **`fsck_cs`** was misled into corrupting a crucial file, due to its ability to follow **symbolic links**. Specifically, attackers crafted a link from _`/dev/diskX`_ to the file `/System/Library/Extensions/AppleKextExcludeList.kext/Contents/Info.plist`. Executing **`fsck_cs`** on _`/dev/diskX`_ led to the corruption of `Info.plist`. This file's integrity is vital for the operating system's SIP (System Integrity Protection), which controls the loading of kernel extensions. Once corrupted, SIP's ability to manage kernel exclusions is compromised.
 
@@ -200,8 +198,7 @@ and it was possible to crate a symlink in `${SHARED_SUPPORT_PATH}/SharedSupport.
 
 ### **com.apple.rootless.install**
 
-> [!CAUTION]
-> The entitlement **`com.apple.rootless.install`** allows to bypass SIP
+> \[!CAUTION] The entitlement **`com.apple.rootless.install`** allows to bypass SIP
 
 The entitlement `com.apple.rootless.install` is known to bypass System Integrity Protection (SIP) on macOS. This was notably mentioned in relation to [**CVE-2022-26712**](https://jhftss.github.io/CVE-2022-26712-The-POC-For-SIP-Bypass-Is-Even-Tweetable/).
 
@@ -230,7 +227,7 @@ The command **`diskutil apfs list`** lists the **details of the APFS volumes** a
 |   Capacity In Use By Volumes:   219214536704 B (219.2 GB) (44.3% used)
 |   Capacity Not Allocated:       275170258944 B (275.2 GB) (55.7% free)
 |   |
-|   +-< Physical Store disk0s2 86D4B7EC-6FA5-4042-93A7-D3766A222EBE
+|   +-&#x3C; Physical Store disk0s2 86D4B7EC-6FA5-4042-93A7-D3766A222EBE
 |   |   -----------------------------------------------------------
 |   |   APFS Physical Store Disk:   disk0s2
 |   |   Size:                       494384795648 B (494.4 GB)
@@ -278,7 +275,4 @@ mount
 /dev/disk3s1s1 on / (apfs, sealed, local, read-only, journaled)
 ```
 
-{{#include ../../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../../banners/hacktricks-training.md\}}

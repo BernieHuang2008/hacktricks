@@ -1,11 +1,10 @@
 # Angr - Examples
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
-> [!TIP]
-> If the program is using `scanf` to get **several values at once from stdin** you need to generate a state that starts after the **`scanf`**.
+> \[!TIP] If the program is using `scanf` to get **several values at once from stdin** you need to generate a state that starts after the **`scanf`**.
 
-Codes taken from [https://github.com/jakespringer/angr_ctf](https://github.com/jakespringer/angr_ctf)
+Codes taken from [https://github.com/jakespringer/angr\_ctf](https://github.com/jakespringer/angr_ctf)
 
 ### Input to reach address (indicating the address)
 
@@ -211,7 +210,7 @@ if __name__ == '__main__':
 
 In this scenario, the input was taken with `scanf("%u %u")` and the value `"1 1"` was given, so the values **`0x00000001`** of the stack come from the **user input**. You can see how this values starts in `$ebp - 8`. Therefore, in the code we have **subtracted 8 bytes to `$esp` (as in that moment `$ebp` and `$esp` had the same value)** and then we have pushed the BVS.
 
-![](<../../../images/image (136).png>)
+![](<../../../../.gitbook/assets/image (136).png>)
 
 ### Static Memory values (Global variables)
 
@@ -394,8 +393,7 @@ if __name__ == '__main__':
   main(sys.argv)
 ```
 
-> [!TIP]
-> Note that the symbolic file could also contain constant data merged with symbolic data:
+> \[!TIP] Note that the symbolic file could also contain constant data merged with symbolic data:
 >
 > ```python
 >  # Hello world, my name is John.
@@ -420,8 +418,7 @@ if __name__ == '__main__':
 
 ### Applying Constrains
 
-> [!TIP]
-> Sometimes simple human operations like compare 2 words of length 16 **char by char** (loop), **cost** a lot to a **angr** because it needs to generate branches **exponentially** because it generates 1 branch per if: `2^16`\
+> \[!TIP] Sometimes simple human operations like compare 2 words of length 16 **char by char** (loop), **cost** a lot to a **angr** because it needs to generate branches **exponentially** because it generates 1 branch per if: `2^16`\
 > Therefore, it's easier to **ask angr get to a previous point** (where the real difficult part was already done) and **set those constrains manually**.
 
 ```python
@@ -495,11 +492,9 @@ if __name__ == '__main__':
   main(sys.argv)
 ```
 
-> [!CAUTION]
-> In some scenarios you can activate **veritesting**, which will merge similar status, in order to save useless branches and find the solution: `simulation = project.factory.simgr(initial_state, veritesting=True)`
+> \[!CAUTION] In some scenarios you can activate **veritesting**, which will merge similar status, in order to save useless branches and find the solution: `simulation = project.factory.simgr(initial_state, veritesting=True)`
 
-> [!TIP]
-> Another thing you can do in these scenarios is to **hook the function giving angr something it can understand** more easily.
+> \[!TIP] Another thing you can do in these scenarios is to **hook the function giving angr something it can understand** more easily.
 
 ### Simulation Managers
 
@@ -833,7 +828,4 @@ if __name__ == '__main__':
   main(sys.argv)
 ```
 
-{{#include ../../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../../banners/hacktricks-training.md\}}

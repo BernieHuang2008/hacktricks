@@ -1,6 +1,6 @@
 # macOS PID Reuse
 
-{{#include ../../../../../../banners/hacktricks-training.md}}
+\{{#include ../../../../../../banners/hacktricks-training.md\}}
 
 ## PID Reuse
 
@@ -13,15 +13,14 @@ This function will make the **allowed binary own the PID** but the **malicious X
 If you find the function **`shouldAcceptNewConnection`** or a function called by it **calling** **`processIdentifier`** and not calling **`auditToken`**. It highly probable means that it's **verifying the process PID** and not the audit token.\
 Like for example in this image (taken from the reference):
 
-<figure><img src="../../../../../../images/image (306).png" alt="https://wojciechregula.blog/images/2020/04/pid.png"><figcaption></figcaption></figure>
+<figure><img src="../../../../../../../.gitbook/assets/image (306).png" alt="https://wojciechregula.blog/images/2020/04/pid.png"><figcaption></figcaption></figure>
 
 Check this example exploit (again, taken from the reference) to see the 2 parts of the exploit:
 
-- One that **generates several forks**
-- **Each fork** will **send** the **payload** to the XPC service while executing **`posix_spawn`** just after sending the message.
+* One that **generates several forks**
+* **Each fork** will **send** the **payload** to the XPC service while executing **`posix_spawn`** just after sending the message.
 
-> [!CAUTION]
-> For the exploit to work it's important to ` export`` `` `**`OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES`** or to put inside the exploit:
+> \[!CAUTION] For the exploit to work it's important to ` export`` `` `**`OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES`** or to put inside the exploit:
 >
 > ```objectivec
 > asm(".section __DATA,__objc_fork_ok\n"
@@ -29,9 +28,7 @@ Check this example exploit (again, taken from the reference) to see the 2 parts 
 > ".no_dead_strip empty\n");
 > ```
 
-{{#tabs}}
-{{#tab name="NSTasks"}}
-First option using **`NSTasks`** and argument to launch the children to exploit the RC
+\{{#tabs\}} \{{#tab name="NSTasks"\}} First option using **`NSTasks`** and argument to launch the children to exploit the RC
 
 ```objectivec
 // Code from https://wojciechregula.blog/post/learn-xpc-exploitation-part-2-say-no-to-the-pid/
@@ -139,10 +136,9 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-{{#endtab}}
+\{{#endtab\}}
 
-{{#tab name="fork"}}
-This example uses a raw **`fork`** to launch **children that will exploit the PID race condition** and then exploit **another race condition via a Hard link:**
+\{{#tab name="fork"\}} This example uses a raw **`fork`** to launch **children that will exploit the PID race condition** and then exploit **another race condition via a Hard link:**
 
 ```objectivec
 // export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
@@ -277,19 +273,15 @@ int main(int argc, const char * argv[]) {
 }
 ```
 
-{{#endtab}}
-{{#endtabs}}
+\{{#endtab\}} \{{#endtabs\}}
 
 ## Other examples
 
-- [https://gergelykalman.com/why-you-shouldnt-use-a-commercial-vpn-amateur-hour-with-windscribe.html](https://gergelykalman.com/why-you-shouldnt-use-a-commercial-vpn-amateur-hour-with-windscribe.html)
+* [https://gergelykalman.com/why-you-shouldnt-use-a-commercial-vpn-amateur-hour-with-windscribe.html](https://gergelykalman.com/why-you-shouldnt-use-a-commercial-vpn-amateur-hour-with-windscribe.html)
 
 ## Refereces
 
-- [https://wojciechregula.blog/post/learn-xpc-exploitation-part-2-say-no-to-the-pid/](https://wojciechregula.blog/post/learn-xpc-exploitation-part-2-say-no-to-the-pid/)
-- [https://saelo.github.io/presentations/warcon18_dont_trust_the_pid.pdf](https://saelo.github.io/presentations/warcon18_dont_trust_the_pid.pdf)
+* [https://wojciechregula.blog/post/learn-xpc-exploitation-part-2-say-no-to-the-pid/](https://wojciechregula.blog/post/learn-xpc-exploitation-part-2-say-no-to-the-pid/)
+* [https://saelo.github.io/presentations/warcon18\_dont\_trust\_the\_pid.pdf](https://saelo.github.io/presentations/warcon18_dont_trust_the_pid.pdf)
 
-{{#include ../../../../../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../../../../../banners/hacktricks-training.md\}}

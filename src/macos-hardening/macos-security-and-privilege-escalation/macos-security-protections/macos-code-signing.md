@@ -1,17 +1,14 @@
 # macOS Code Signing
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 ## Basic Information
 
-{{#ref}}
-../../../generic-methodologies-and-resources/basic-forensic-methodology/specific-software-file-type-tricks/mach-o-entitlements-and-ipsw-indexing.md
-{{#endref}}
-
+\{{#ref\}} ../../../generic-methodologies-and-resources/basic-forensic-methodology/specific-software-file-type-tricks/mach-o-entitlements-and-ipsw-indexing.md \{{#endref\}}
 
 Mach-o binaries contains a load command called **`LC_CODE_SIGNATURE`** that indicates the **offset** and **size** of the signatures inside the binary. Actually, using the GUI tool MachOView, it's possible to find at the end of the binary a section called **Code Signature** with this information:
 
-<figure><img src="../../../images/image (1) (1) (1) (1).png" alt="" width="431"><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (1) (1) (1) (1).png" alt="" width="431"><figcaption></figcaption></figure>
 
 The magic header of the Code Signature is **`0xFADE0CC0`** (embedded code signature) or **`0xFADE0CC1`** (detached code signature). Then you have information such as the length and the number of blobs of the superBlob that contains them.\
 It's possible to find this information in the [source code here](https://github.com/apple-oss-distributions/xnu/blob/94d3b452840153a99b38a3a9659680b2a006908e/osfmk/kern/cs_blobs.h#L276):
@@ -198,13 +195,13 @@ MacOS applications doesn't have everything they need to execute inside the binar
 
 Actually, it's possible to see in the Code Directory structs a parameter called **`nSpecialSlots`** indicating the number of the special slots. The there isn't a special slot 0 and the most common ones (from -1 to -6 are):
 
-- Hash of `info.plist` (or the one inside `__TEXT.__info__plist`).
-- Has of the Requirements
-- Hash of the Resource Directory (hash of `_CodeSignature/CodeResources` file inside the bundle).
-- Application specific (unused)
-- Hash of the entitlements
-- DMG code signatures only
-- DER Entitlements
+* Hash of `info.plist` (or the one inside `__TEXT.__info__plist`).
+* Has of the Requirements
+* Hash of the Resource Directory (hash of `_CodeSignature/CodeResources` file inside the bundle).
+* Application specific (unused)
+* Hash of the entitlements
+* DMG code signatures only
+* DER Entitlements
 
 ## Code Signing Flags
 
@@ -255,7 +252,7 @@ Every process has related a bitmask known as the `status` which is started by th
 #define CS_ENTITLEMENT_FLAGS        (CS_GET_TASK_ALLOW | CS_INSTALLER | CS_DATAVAULT_CONTROLLER | CS_NVRAM_UNRESTRICTED)
 ```
 
-Note that the function [**exec_mach_imgact**](https://github.com/apple-oss-distributions/xnu/blob/94d3b452840153a99b38a3a9659680b2a006908e/bsd/kern/kern_exec.c#L1420) can also add the `CS_EXEC_*` flags dynamically when starting the execution.
+Note that the function [**exec\_mach\_imgact**](https://github.com/apple-oss-distributions/xnu/blob/94d3b452840153a99b38a3a9659680b2a006908e/bsd/kern/kern_exec.c#L1420) can also add the `CS_EXEC_*` flags dynamically when starting the execution.
 
 ## Code Signature Requirements
 
@@ -275,8 +272,7 @@ Executable=/Applications/Signal.app/Contents/MacOS/Signal
 designated => identifier "org.whispersystems.signal-desktop" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U68MSDN6DR
 ```
 
-> [!TIP]
-> Note how this signatures can check things like certification information, TeamID, IDs, entitlements and many other data.
+> \[!TIP] Note how this signatures can check things like certification information, TeamID, IDs, entitlements and many other data.
 
 Moreover, it's possible to generate some compiled requirements using the `csreq` tool:
 
@@ -296,45 +292,45 @@ It's possible to access this information and create or modify requirements with 
 
 #### **Checking Validity**
 
-- **`Sec[Static]CodeCheckValidity`**: Check the validity of SecCodeRef per Requirement.
-- **`SecRequirementEvaluate`**: Validate requirement in certificate context
-- **`SecTaskValidateForRequirement`**: Validate a running SecTask against `CFString` requirement.
+* **`Sec[Static]CodeCheckValidity`**: Check the validity of SecCodeRef per Requirement.
+* **`SecRequirementEvaluate`**: Validate requirement in certificate context
+* **`SecTaskValidateForRequirement`**: Validate a running SecTask against `CFString` requirement.
 
 #### **Creating and Managing Code Requirements**
 
-- **`SecRequirementCreateWithData`:** Creates a `SecRequirementRef` from binary data representing the requirement.
-- **`SecRequirementCreateWithString`:** Creates a `SecRequirementRef` from a string expression of the requirement.
-- **`SecRequirementCopy[Data/String]`**: Retrieves the binary data representation of a `SecRequirementRef`.
-- **`SecRequirementCreateGroup`**: Create a requirement for app-group membership
+* **`SecRequirementCreateWithData`:** Creates a `SecRequirementRef` from binary data representing the requirement.
+* **`SecRequirementCreateWithString`:** Creates a `SecRequirementRef` from a string expression of the requirement.
+* **`SecRequirementCopy[Data/String]`**: Retrieves the binary data representation of a `SecRequirementRef`.
+* **`SecRequirementCreateGroup`**: Create a requirement for app-group membership
 
 #### **Accessing Code Signing Information**
 
-- **`SecStaticCodeCreateWithPath`**: Initializes a `SecStaticCodeRef` object from a file system path for inspecting code signatures.
-- **`SecCodeCopySigningInformation`**: Obtains signing information from a `SecCodeRef` or `SecStaticCodeRef`.
+* **`SecStaticCodeCreateWithPath`**: Initializes a `SecStaticCodeRef` object from a file system path for inspecting code signatures.
+* **`SecCodeCopySigningInformation`**: Obtains signing information from a `SecCodeRef` or `SecStaticCodeRef`.
 
 #### **Modifying Code Requirements**
 
-- **`SecCodeSignerCreate`**: Creates a `SecCodeSignerRef` object for performing code signing operations.
-- **`SecCodeSignerSetRequirement`**: Sets a new requirement for the code signer to apply during signing.
-- **`SecCodeSignerAddSignature`**: Adds a signature to the code being signed with the specified signer.
+* **`SecCodeSignerCreate`**: Creates a `SecCodeSignerRef` object for performing code signing operations.
+* **`SecCodeSignerSetRequirement`**: Sets a new requirement for the code signer to apply during signing.
+* **`SecCodeSignerAddSignature`**: Adds a signature to the code being signed with the specified signer.
 
 #### **Validating Code with Requirements**
 
-- **`SecStaticCodeCheckValidity`**: Validates a static code object against specified requirements.
+* **`SecStaticCodeCheckValidity`**: Validates a static code object against specified requirements.
 
 #### **Additional Useful APIs**
 
-- **`SecCodeCopy[Internal/Designated]Requirement`: Get SecRequirementRef from SecCodeRef**
-- **`SecCodeCopyGuestWithAttributes`**: Creates a `SecCodeRef` representing a code object based on specific attributes, useful for sandboxing.
-- **`SecCodeCopyPath`**: Retrieves the file system path associated with a `SecCodeRef`.
-- **`SecCodeCopySigningIdentifier`**: Obtains the signing identifier (e.g., Team ID) from a `SecCodeRef`.
-- **`SecCodeGetTypeID`**: Returns the type identifier for `SecCodeRef` objects.
-- **`SecRequirementGetTypeID`**: Gets a CFTypeID of a `SecRequirementRef`
+* **`SecCodeCopy[Internal/Designated]Requirement`: Get SecRequirementRef from SecCodeRef**
+* **`SecCodeCopyGuestWithAttributes`**: Creates a `SecCodeRef` representing a code object based on specific attributes, useful for sandboxing.
+* **`SecCodeCopyPath`**: Retrieves the file system path associated with a `SecCodeRef`.
+* **`SecCodeCopySigningIdentifier`**: Obtains the signing identifier (e.g., Team ID) from a `SecCodeRef`.
+* **`SecCodeGetTypeID`**: Returns the type identifier for `SecCodeRef` objects.
+* **`SecRequirementGetTypeID`**: Gets a CFTypeID of a `SecRequirementRef`
 
 #### **Code Signing Flags and Constants**
 
-- **`kSecCSDefaultFlags`**: Default flags used in many Security.framework functions for code signing operations.
-- **`kSecCSSigningInformation`**: Flag used to specify that signing information should be retrieved.
+* **`kSecCSDefaultFlags`**: Default flags used in many Security.framework functions for code signing operations.
+* **`kSecCSSigningInformation`**: Flag used to specify that signing information should be retrieved.
 
 ## Code Signature Enforcement
 
@@ -342,10 +338,9 @@ The **kernel** is the one that **checks the code signature** before allowing the
 
 ## `cs_blobs` & `cs_blob`
 
-[**cs_blob**](https://github.com/apple-oss-distributions/xnu/blob/94d3b452840153a99b38a3a9659680b2a006908e/bsd/sys/ubc_internal.h#L106) struct contains the information about the entitlement of the running process on it. `csb_platform_binary` also informs if the application is a **platform binary** (which is checked in different moments by the OS to apply security mechanisms like to protect the SEND rights to the task ports of these processes).
+[**cs\_blob**](https://github.com/apple-oss-distributions/xnu/blob/94d3b452840153a99b38a3a9659680b2a006908e/bsd/sys/ubc_internal.h#L106) struct contains the information about the entitlement of the running process on it. `csb_platform_binary` also informs if the application is a **platform binary** (which is checked in different moments by the OS to apply security mechanisms like to protect the SEND rights to the task ports of these processes).
 
-> [!WARNING]
-> Note that several security measures depend on the binary being a platform binary, so way to escalate privileges is to **make the binary a platform binary** (for example, by re-signing it with a certificate that allows it).
+> \[!WARNING] Note that several security measures depend on the binary being a platform binary, so way to escalate privileges is to **make the binary a platform binary** (for example, by re-signing it with a certificate that allows it).
 
 ```c
 struct cs_blob {
@@ -408,6 +403,6 @@ struct cs_blob {
 
 ## References
 
-- [**\*OS Internals Volume III**](https://newosxbook.com/home.html)
+* [**\*OS Internals Volume III**](https://newosxbook.com/home.html)
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}

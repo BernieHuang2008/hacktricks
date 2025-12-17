@@ -1,6 +1,6 @@
 # Linux Environment Variables
 
-{{#include ../banners/hacktricks-training.md}}
+\{{#include ../banners/hacktricks-training.md\}}
 
 ## Global variables
 
@@ -45,29 +45,29 @@ cat /proc/`python -c "import os; print(os.getppid())"`/environ
 
 From: [https://geek-university.com/linux/common-environment-variables/](https://geek-university.com/linux/common-environment-variables/)
 
-- **DISPLAY** – the display used by **X**. This variable is usually set to **:0.0**, which means the first display on the current computer.
-- **EDITOR** – the user’s preferred text editor.
-- **HISTFILESIZE** – the maximum number of lines contained in the history file.
-- **HISTSIZE** – Number of lines added to the history file when the user finish his session
-- **HOME** – your home directory.
-- **HOSTNAME** – the hostname of the computer.
-- **LANG** – your current language.
-- **MAIL** – the location of the user’s mail spool. Usually **/var/spool/mail/USER**.
-- **MANPATH** – the list of directories to search for manual pages.
-- **OSTYPE** – the type of operating system.
-- **PS1** – the default prompt in bash.
-- **PATH** – stores the path of all the directories which holds binary files you want to execute just by specifying the name of the file and not by relative or absolute path.
-- **PWD** – the current working directory.
-- **SHELL** – the path to the current command shell (for example, **/bin/bash**).
-- **TERM** – the current terminal type (for example, **xterm**).
-- **TZ** – your time zone.
-- **USER** – your current username.
+* **DISPLAY** – the display used by **X**. This variable is usually set to **:0.0**, which means the first display on the current computer.
+* **EDITOR** – the user’s preferred text editor.
+* **HISTFILESIZE** – the maximum number of lines contained in the history file.
+* **HISTSIZE** – Number of lines added to the history file when the user finish his session
+* **HOME** – your home directory.
+* **HOSTNAME** – the hostname of the computer.
+* **LANG** – your current language.
+* **MAIL** – the location of the user’s mail spool. Usually **/var/spool/mail/USER**.
+* **MANPATH** – the list of directories to search for manual pages.
+* **OSTYPE** – the type of operating system.
+* **PS1** – the default prompt in bash.
+* **PATH** – stores the path of all the directories which holds binary files you want to execute just by specifying the name of the file and not by relative or absolute path.
+* **PWD** – the current working directory.
+* **SHELL** – the path to the current command shell (for example, **/bin/bash**).
+* **TERM** – the current terminal type (for example, **xterm**).
+* **TZ** – your time zone.
+* **USER** – your current username.
 
 ## Interesting variables for hacking
 
 ### **HISTFILESIZE**
 
-Change the **value of this variable to 0**, so when you **end your session** the **history file** (\~/.bash_history) **will be deleted**.
+Change the **value of this variable to 0**, so when you **end your session** the **history file** (\~/.bash\_history) **will be deleted**.
 
 ```bash
 export HISTFILESIZE=0
@@ -75,13 +75,13 @@ export HISTFILESIZE=0
 
 ### **HISTSIZE**
 
-Change the **value of this variable to 0**, so when you **end your session** any command will be added to the **history file** (\~/.bash_history).
+Change the **value of this variable to 0**, so when you **end your session** any command will be added to the **history file** (\~/.bash\_history).
 
 ```bash
 export HISTSIZE=0
 ```
 
-### http_proxy & https_proxy
+### http\_proxy & https\_proxy
 
 The processes will use the **proxy** declared here to connect to internet through **http or https**.
 
@@ -90,7 +90,7 @@ export http_proxy="http://10.10.10.10:8080"
 export https_proxy="http://10.10.10.10:8080"
 ```
 
-### SSL_CERT_FILE & SSL_CERT_DIR
+### SSL\_CERT\_FILE & SSL\_CERT\_DIR
 
 The processes will trust the certificates indicated in **these env variables**.
 
@@ -107,21 +107,18 @@ Change how your prompt looks.
 
 Root:
 
-![](<../images/image (897).png>)
+![](<../../.gitbook/assets/image (897).png>)
 
 Regular user:
 
-![](<../images/image (740).png>)
+![](<../../.gitbook/assets/image (740).png>)
 
 One, two and three backgrounded jobs:
 
-![](<../images/image (145).png>)
+![](<../../.gitbook/assets/image (145).png>)
 
 One background job, one stopped and last command didn't finish correctly:
 
-![](<../images/image (715).png>)
+![](<../../.gitbook/assets/image (715).png>)
 
-{{#include ../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../banners/hacktricks-training.md\}}

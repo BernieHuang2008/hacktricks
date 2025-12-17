@@ -1,6 +1,6 @@
 # Detecting Phishing
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## Introduction
 
@@ -17,8 +17,8 @@ It's enough to **generate a list of the most probable phishing names** that an a
 
 For this purpose, you can use any of the following tools. Note that these tools will also perform DNS requests automatically to check if the domain has any IP assigned to it:
 
-- [**dnstwist**](https://github.com/elceef/dnstwist)
-- [**urlcrazy**](https://github.com/urbanadventurer/urlcrazy)
+* [**dnstwist**](https://github.com/elceef/dnstwist)
+* [**urlcrazy**](https://github.com/urbanadventurer/urlcrazy)
 
 Tip: If you generate a candidate list, also feed it into your DNS resolver logs to detect **NXDOMAIN lookups from inside your org** (users trying to reach a typo before the attacker actually registers it). Sinkhole or pre-block these domains if policy allows.
 
@@ -33,9 +33,7 @@ For example, a 1 bit modification in the domain microsoft.com can transform it i
 
 If you also need to consider homoglyph/IDN lookalikes (e.g., mixing Latin/Cyrillic characters), check:
 
-{{#ref}}
-homograph-attacks.md
-{{#endref}}
+\{{#ref\}} homograph-attacks.md \{{#endref\}}
 
 ### Basic checks
 
@@ -50,7 +48,7 @@ If you want to go one step further I would recommend you to **monitor those susp
 In order to **automate this** I would recommend having a list of login forms of the victim's domains, spider the suspicious web pages and comparing each login form found inside the suspicious domains with each login form of the victim's domain using something like `ssdeep`.\
 If you have located the login forms of the suspicious domains, you can try to **send junk credentials** and **check if it's redirecting you to the victim's domain**.
 
----
+***
 
 ### Hunting by favicon and web fingerprints (Shodan/ZoomEye/Censys)
 
@@ -65,21 +63,23 @@ b64 = base64.encodebytes(requests.get(url, timeout=10).content)
 print(mmh3.hash(b64))  # e.g., 309020573
 ```
 
-- Query Shodan: `http.favicon.hash:309020573`
-- With tooling: look at community tools like favfreak to generate hashes and dorks for Shodan/ZoomEye/Censys.
+* Query Shodan: `http.favicon.hash:309020573`
+* With tooling: look at community tools like favfreak to generate hashes and dorks for Shodan/ZoomEye/Censys.
 
 Notes
-- Favicons are reused; treat matches as leads and validate content and certs before acting.
-- Combine with domain-age and keyword heuristics for better precision.
+
+* Favicons are reused; treat matches as leads and validate content and certs before acting.
+* Combine with domain-age and keyword heuristics for better precision.
 
 ### URL telemetry hunting (urlscan.io)
 
 `urlscan.io` stores historical screenshots, DOM, requests and TLS metadata of submitted URLs. You can hunt for brand abuse and clones:
 
 Example queries (UI or API):
-- Find lookalikes excluding your legit domains: `page.domain:(/.*yourbrand.*/ AND NOT yourbrand.com AND NOT www.yourbrand.com)`
-- Find sites hotlinking your assets: `domain:yourbrand.com AND NOT page.domain:yourbrand.com`
-- Restrict to recent results: append `AND date:>now-7d`
+
+* Find lookalikes excluding your legit domains: `page.domain:(/.*yourbrand.*/ AND NOT yourbrand.com AND NOT www.yourbrand.com)`
+* Find sites hotlinking your assets: `domain:yourbrand.com AND NOT page.domain:yourbrand.com`
+* Restrict to recent results: append `AND date:>now-7d`
 
 API example:
 
@@ -90,8 +90,9 @@ curl -s 'https://urlscan.io/api/v1/search/?q=page.domain:(/.*yourbrand.*/%20AND%
 ```
 
 From the JSON, pivot on:
-- `page.tlsIssuer`, `page.tlsValidFrom`, `page.tlsAgeDays` to spot very new certs for lookalikes
-- `task.source` values like `certstream-suspicious` to tie findings to CT monitoring
+
+* `page.tlsIssuer`, `page.tlsValidFrom`, `page.tlsAgeDays` to spot very new certs for lookalikes
+* `task.source` values like `certstream-suspicious` to tie findings to CT monitoring
 
 ### Domain age via RDAP (scriptable)
 
@@ -112,8 +113,8 @@ Enrich your pipeline by tagging domains with registration age buckets (e.g., <7 
 
 Modern credential-phishing increasingly uses **Adversary-in-the-Middle (AiTM)** reverse proxies (e.g., Evilginx) to steal session tokens. You can add network-side detections:
 
-- Log TLS/HTTP fingerprints (JA3/JA4/JA4S/JA4H) at egress. Some Evilginx builds have been observed with stable JA4 client/server values. Alert on known-bad fingerprints only as a weak signal and always confirm with content and domain intel.
-- Proactively record TLS certificate metadata (issuer, SAN count, wildcard use, validity) for lookalike hosts discovered via CT or urlscan and correlate with DNS age and geolocation.
+* Log TLS/HTTP fingerprints (JA3/JA4/JA4S/JA4H) at egress. Some Evilginx builds have been observed with stable JA4 client/server values. Alert on known-bad fingerprints only as a weak signal and always confirm with content and domain intel.
+* Proactively record TLS certificate metadata (issuer, SAN count, wildcard use, validity) for lookalike hosts discovered via CT or urlscan and correlate with DNS age and geolocation.
 
 > Note: Treat fingerprints as enrichment, not as sole blockers; frameworks evolve and may randomise or obfuscate.
 
@@ -127,15 +128,15 @@ It's not possible to take the previous "Brute-Force" approach but it's actually 
 
 The post [https://0xpatrik.com/phishing-domains/](https://0xpatrik.com/phishing-domains/) suggests that you can use Censys to search for certificates affecting a specific keyword and filter by date (only "new" certificates) and by the CA issuer "Let's Encrypt":
 
-![https://0xpatrik.com/content/images/2018/07/cert_listing.png](<../../images/image (1115).png>)
+![https://0xpatrik.com/content/images/2018/07/cert\_listing.png](<../../../.gitbook/assets/image (1115).png>)
 
 However, you can do "the same" using the free web [**crt.sh**](https://crt.sh). You can **search for the keyword** and the **filter** the results **by date and CA** if you wish.
 
-![](<../../images/image (519).png>)
+![](<../../../.gitbook/assets/image (519).png>)
 
 Using this last option you can even use the field Matching Identities to see if any identity from the real domain matches any of the suspicious domains (note that a suspicious domain can be a false positive).
 
-**Another alternative** is the fantastic project called [**CertStream**](https://medium.com/cali-dog-security/introducing-certstream-3fc13bb98067). CertStream provides a real-time stream of newly generated certificates which you can use to detect specified keywords in (near) real-time. In fact, there is a project called [**phishing_catcher**](https://github.com/x0rz/phishing_catcher) that does just that.
+**Another alternative** is the fantastic project called [**CertStream**](https://medium.com/cali-dog-security/introducing-certstream-3fc13bb98067). CertStream provides a real-time stream of newly generated certificates which you can use to detect specified keywords in (near) real-time. In fact, there is a project called [**phishing\_catcher**](https://github.com/x0rz/phishing_catcher) that does just that.
 
 Practical tip: when triaging CT hits, prioritise NRDs, untrusted/unknown registrars, privacy-proxy WHOIS, and certs with very recent `NotBefore` times. Maintain an allowlist of your owned domains/brands to reduce noise.
 
@@ -147,7 +148,7 @@ Additional heuristic: treat certain **file-extension TLDs** (e.g., `.zip`, `.mov
 
 ## References
 
-- urlscan.io – Search API reference: https://urlscan.io/docs/search/ 
-- APNIC Blog – JA4+ network fingerprinting (includes Evilginx example): https://blog.apnic.net/2023/11/22/ja4-network-fingerprinting/
+* urlscan.io – Search API reference: https://urlscan.io/docs/search/
+* APNIC Blog – JA4+ network fingerprinting (includes Evilginx example): https://blog.apnic.net/2023/11/22/ja4-network-fingerprinting/
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}

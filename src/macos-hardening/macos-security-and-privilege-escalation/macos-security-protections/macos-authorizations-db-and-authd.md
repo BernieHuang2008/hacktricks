@@ -1,6 +1,6 @@
 # macOS Authorizations DB & Authd
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 ## **Athorizarions DB**
 
@@ -10,23 +10,23 @@ Initially this database is created from the content of `/System/Library/Security
 
 The rules are stored in the `rules` table inside the database and contains the folliwing colmns:
 
-- **id**: A unique identifier for each rule, automatically incremented and serving as the primary key.
-- **name**: The unique name of the rule used to identify and reference it within the authorization system.
-- **type**: Specifies the type of the rule, restricted to values 1 or 2 to define its authorization logic.
-- **class**: Categorizes the rule into a specific class, ensuring it is a positive integer.
-  - "allow" for allow, "deny" for deny, "user" if the group property indicated a group which membership allows the access, "rule" indicates in an array a rule to be fulfilled, "evaluate-mechanisms" followed by a `mechanisms` array which are either builtins or a name of a bundle inside `/System/Library/CoreServices/SecurityAgentPlugins/` or /Library/Security//SecurityAgentPlugins
-- **group**: Indicates the user group associated with the rule for group-based authorization.
-- **kofn**: Represents the "k-of-n" parameter, determining how many subrules must be satisfied out of a total number.
-- **timeout**: Defines the duration in seconds before the authorization granted by the rule expires.
-- **flags**: Contains various flags that modify the behavior and characteristics of the rule.
-- **tries**: Limits the number of allowed authorization attempts to enhance security.
-- **version**: Tracks the version of the rule for version control and updates.
-- **created**: Records the timestamp when the rule was created for auditing purposes.
-- **modified**: Stores the timestamp of the last modification made to the rule.
-- **hash**: Holds a hash value of the rule to ensure its integrity and detect tampering.
-- **identifier**: Provides a unique string identifier, such as a UUID, for external references to the rule.
-- **requirement**: Contains serialized data defining the rule's specific authorization requirements and mechanisms.
-- **comment**: Offers a human-readable description or comment about the rule for documentation and clarity.
+* **id**: A unique identifier for each rule, automatically incremented and serving as the primary key.
+* **name**: The unique name of the rule used to identify and reference it within the authorization system.
+* **type**: Specifies the type of the rule, restricted to values 1 or 2 to define its authorization logic.
+* **class**: Categorizes the rule into a specific class, ensuring it is a positive integer.
+  * "allow" for allow, "deny" for deny, "user" if the group property indicated a group which membership allows the access, "rule" indicates in an array a rule to be fulfilled, "evaluate-mechanisms" followed by a `mechanisms` array which are either builtins or a name of a bundle inside `/System/Library/CoreServices/SecurityAgentPlugins/` or /Library/Security//SecurityAgentPlugins
+* **group**: Indicates the user group associated with the rule for group-based authorization.
+* **kofn**: Represents the "k-of-n" parameter, determining how many subrules must be satisfied out of a total number.
+* **timeout**: Defines the duration in seconds before the authorization granted by the rule expires.
+* **flags**: Contains various flags that modify the behavior and characteristics of the rule.
+* **tries**: Limits the number of allowed authorization attempts to enhance security.
+* **version**: Tracks the version of the rule for version control and updates.
+* **created**: Records the timestamp when the rule was created for auditing purposes.
+* **modified**: Stores the timestamp of the last modification made to the rule.
+* **hash**: Holds a hash value of the rule to ensure its integrity and detect tampering.
+* **identifier**: Provides a unique string identifier, such as a UUID, for external references to the rule.
+* **requirement**: Contains serialized data defining the rule's specific authorization requirements and mechanisms.
+* **comment**: Offers a human-readable description or comment about the rule for documentation and clarity.
 
 ### Example
 
@@ -83,9 +83,6 @@ Moreover using the security tool it's possible to test many `Security.framework`
 
 That will fork and exec `/usr/libexec/security_authtrampoline /bin/ls` as root, which will ask for permissions in a prompt to execute ls as root:
 
-<figure><img src="../../../images/image (10).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
 
-{{#include ../../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../../banners/hacktricks-training.md\}}

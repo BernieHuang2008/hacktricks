@@ -1,6 +1,6 @@
 # CGroups
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 ## Basic Information
 
@@ -31,25 +31,25 @@ $ cat /proc/self/cgroup
 
 The output structure is as follows:
 
-- **Numbers 2–12**: cgroups v1, with each line representing a different cgroup. Controllers for these are specified adjacent to the number.
-- **Number 1**: Also cgroups v1, but solely for management purposes (set by, e.g., systemd), and lacks a controller.
-- **Number 0**: Represents cgroups v2. No controllers are listed, and this line is exclusive on systems only running cgroups v2.
-- The **names are hierarchical**, resembling file paths, indicating the structure and relationship between different cgroups.
-- **Names like /user.slice or /system.slice** specify the categorization of cgroups, with user.slice typically for login sessions managed by systemd and system.slice for system services.
+* **Numbers 2–12**: cgroups v1, with each line representing a different cgroup. Controllers for these are specified adjacent to the number.
+* **Number 1**: Also cgroups v1, but solely for management purposes (set by, e.g., systemd), and lacks a controller.
+* **Number 0**: Represents cgroups v2. No controllers are listed, and this line is exclusive on systems only running cgroups v2.
+* The **names are hierarchical**, resembling file paths, indicating the structure and relationship between different cgroups.
+* **Names like /user.slice or /system.slice** specify the categorization of cgroups, with user.slice typically for login sessions managed by systemd and system.slice for system services.
 
 ### Viewing cgroups
 
 The filesystem is typically utilized for accessing **cgroups**, diverging from the Unix system call interface traditionally used for kernel interactions. To investigate a shell's cgroup configuration, one should examine the **/proc/self/cgroup** file, which reveals the shell's cgroup. Then, by navigating to the **/sys/fs/cgroup** (or **`/sys/fs/cgroup/unified`**) directory and locating a directory that shares the cgroup's name, one can observe various settings and resource usage information pertinent to the cgroup.
 
-![Cgroup Filesystem](<../../../images/image (1128).png>)
+![Cgroup Filesystem](<../../../../.gitbook/assets/image (1128).png>)
 
 The key interface files for cgroups are prefixed with **cgroup**. The **cgroup.procs** file, which can be viewed with standard commands like cat, lists the processes within the cgroup. Another file, **cgroup.threads**, includes thread information.
 
-![Cgroup Procs](<../../../images/image (281).png>)
+![Cgroup Procs](<../../../../.gitbook/assets/image (281).png>)
 
 Cgroups managing shells typically encompass two controllers that regulate memory usage and process count. To interact with a controller, files bearing the controller's prefix should be consulted. For instance, **pids.current** would be referenced to ascertain the count of threads in the cgroup.
 
-![Cgroup Memory](<../../../images/image (677).png>)
+![Cgroup Memory](<../../../../.gitbook/assets/image (677).png>)
 
 The indication of **max** in a value suggests the absence of a specific limit for the cgroup. However, due to the hierarchical nature of cgroups, limits might be imposed by a cgroup at a lower level in the directory hierarchy.
 
@@ -69,9 +69,9 @@ echo 3000 > pids.max
 
 **Creating new cgroups** involves making a new subdirectory within the cgroup hierarchy, which prompts the kernel to automatically generate necessary interface files. Though cgroups without active processes can be removed with `rmdir`, be aware of certain constraints:
 
-- **Processes can only be placed in leaf cgroups** (i.e., the most nested ones in a hierarchy).
-- **A cgroup cannot possess a controller absent in its parent**.
-- **Controllers for child cgroups must be explicitly declared** in the `cgroup.subtree_control` file. For example, to enable CPU and PID controllers in a child cgroup:
+* **Processes can only be placed in leaf cgroups** (i.e., the most nested ones in a hierarchy).
+* **A cgroup cannot possess a controller absent in its parent**.
+* **Controllers for child cgroups must be explicitly declared** in the `cgroup.subtree_control` file. For example, to enable CPU and PID controllers in a child cgroup:
 
 ```bash
 echo "+cpu +pids" > cgroup.subtree_control
@@ -81,13 +81,10 @@ The **root cgroup** is an exception to these rules, allowing direct process plac
 
 **Monitoring CPU usage** within a cgroup is possible through the `cpu.stat` file, displaying total CPU time consumed, helpful for tracking usage across a service's subprocesses:
 
-<figure><img src="../../../images/image (908).png" alt=""><figcaption><p>CPU usage statistics as shown in the cpu.stat file</p></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (908).png" alt=""><figcaption><p>CPU usage statistics as shown in the cpu.stat file</p></figcaption></figure>
 
 ## References
 
-- **Book: How Linux Works, 3rd Edition: What Every Superuser Should Know By Brian Ward**
+* **Book: How Linux Works, 3rd Edition: What Every Superuser Should Know By Brian Ward**
 
-{{#include ../../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../../banners/hacktricks-training.md\}}

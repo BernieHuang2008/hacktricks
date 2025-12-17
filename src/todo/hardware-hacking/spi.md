@@ -1,6 +1,6 @@
 # SPI
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## Basic Information
 
@@ -22,15 +22,15 @@ Also, during red reaming and getting physical access to devices, dumping the fir
 
 This device is an inexpensive tool for dumping firmwares from EEPROMs and also reflashing them with firmware files. This has been a popular choice for working with computer BIOS chips (which are just EEPROMs). This device connects over USB and needs minimal tools to get started. Also, it usually gets the task done quickly, so can be helpful in physical device access too.
 
-![drawing](../../images/board_image_ch341a.jpg)
+![drawing](../../../.gitbook/assets/board_image_ch341a.jpg)
 
 Connect the EEPROM memory with the CH341a Programmer and plug the device into the computer. Incase the device is not getting detected, try installing drivers into the computer. Also, make sure that the EEPROM is connected in proper orientation (usually, place the VCC Pin in reverse orientation to the USB connector) or else, the software would not be able to detect the chip. Refer to the diagram if required:
 
-![drawing](../../images/connect_wires_ch341a.jpg) ![drawing](../../images/eeprom_plugged_ch341a.jpg)
+![drawing](../../../.gitbook/assets/connect_wires_ch341a.jpg) ![drawing](../../../.gitbook/assets/eeprom_plugged_ch341a.jpg)
 
 Finally, use softwares like flashrom, G-Flash (GUI), etc. for dumping the firmware. G-Flash is a minimal GUI tool is fast and detects the EEPROM automatically. This can be helpful in the firmware needs to be extracted quickly, without much tinkering with the documentation.
 
-![drawing](../../images/connected_status_ch341a.jpg)
+![drawing](../../../.gitbook/assets/connected_status_ch341a.jpg)
 
 After dumping the firmware, the analysis can be done on the binary files. Tools like strings, hexdump, xxd, binwalk, etc. can be used to extract a lot of information about the firmware as well as the whole file system too.
 
@@ -42,16 +42,15 @@ binwalk -e <filename>
 
 The can be .bin or .rom as per the tools and configurations used.
 
-> [!CAUTION]
-> Note that firmware extraction is a delicate process and requires a lot of patience. Any mishandling can potentially corrupt the firmware or even erase it completely and make the device unusable. It is recommended to study the specific device before attempting to extract the firmware.
+> \[!CAUTION] Note that firmware extraction is a delicate process and requires a lot of patience. Any mishandling can potentially corrupt the firmware or even erase it completely and make the device unusable. It is recommended to study the specific device before attempting to extract the firmware.
 
 ### Bus Pirate + flashrom
 
-![](<../../images/image (910).png>)
+![](<../../../.gitbook/assets/image (910).png>)
 
 Note that even if the PINOUT of the Pirate Bus indicates pins for **MOSI** and **MISO** to connect to SPI however some SPIs may indicate pins as DI and DO. **MOSI -> DI, MISO -> DO**
 
-![](<../../images/image (360).png>)
+![](<../../../.gitbook/assets/image (360).png>)
 
 In Windows or Linux you can use the program [**`flashrom`**](https://www.flashrom.org/Flashrom) to dump the content of the flash memory running something like:
 
@@ -64,7 +63,4 @@ In Windows or Linux you can use the program [**`flashrom`**](https://www.flashro
 flashrom -VV -c "W25Q64.V" -p buspirate_spi:dev=COM3 -r flash_content.img
 ```
 
-{{#include ../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../banners/hacktricks-training.md\}}

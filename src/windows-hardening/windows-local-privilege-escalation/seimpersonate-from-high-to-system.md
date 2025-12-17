@@ -1,6 +1,6 @@
 # SeImpersonate from High To System
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ### Code
 
@@ -167,17 +167,14 @@ Let's check current Administrator permissions over `svchost.exe` processes with 
 5. Select "Administrators" and click on "Edit"
 6. Click on "Show advanced permissions"
 
-![](<../../images/image (437).png>)
+![](<../../../.gitbook/assets/image (437).png>)
 
 The previous image contains all the privileges that "Administrators" have over the selected process (as you can see in case of `svchost.exe` they only have "Query" privileges)
 
 See the privileges "Administrators" have over `winlogon.exe`:
 
-![](<../../images/image (1102).png>)
+![](<../../../.gitbook/assets/image (1102).png>)
 
 Inside that process "Administrators" can "Read Memory" and "Read Permissions" which probably allows Administrators to impersonate the token used by this process.
 
-{{#include ../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../banners/hacktricks-training.md\}}

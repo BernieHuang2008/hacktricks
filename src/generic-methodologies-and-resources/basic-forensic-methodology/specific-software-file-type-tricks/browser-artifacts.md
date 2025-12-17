@@ -1,6 +1,6 @@
 # Browser Artifacts
 
-{{#include ../../../banners/hacktricks-training.md}}
+\{{#include ../../../banners/hacktricks-training.md\}}
 
 ## Browsers Artifacts <a href="#id-3def" id="id-3def"></a>
 
@@ -8,50 +8,50 @@ Browser artifacts include various types of data stored by web browsers, such as 
 
 Here's a summary of the most common browser artifacts:
 
-- **Navigation History**: Tracks user visits to websites, useful for identifying visits to malicious sites.
-- **Autocomplete Data**: Suggestions based on frequent searches, offering insights when combined with navigation history.
-- **Bookmarks**: Sites saved by the user for quick access.
-- **Extensions and Add-ons**: Browser extensions or add-ons installed by the user.
-- **Cache**: Stores web content (e.g., images, JavaScript files) to improve website loading times, valuable for forensic analysis.
-- **Logins**: Stored login credentials.
-- **Favicons**: Icons associated with websites, appearing in tabs and bookmarks, useful for additional information on user visits.
-- **Browser Sessions**: Data related to open browser sessions.
-- **Downloads**: Records of files downloaded through the browser.
-- **Form Data**: Information entered in web forms, saved for future autofill suggestions.
-- **Thumbnails**: Preview images of websites.
-- **Custom Dictionary.txt**: Words added by the user to the browser's dictionary.
+* **Navigation History**: Tracks user visits to websites, useful for identifying visits to malicious sites.
+* **Autocomplete Data**: Suggestions based on frequent searches, offering insights when combined with navigation history.
+* **Bookmarks**: Sites saved by the user for quick access.
+* **Extensions and Add-ons**: Browser extensions or add-ons installed by the user.
+* **Cache**: Stores web content (e.g., images, JavaScript files) to improve website loading times, valuable for forensic analysis.
+* **Logins**: Stored login credentials.
+* **Favicons**: Icons associated with websites, appearing in tabs and bookmarks, useful for additional information on user visits.
+* **Browser Sessions**: Data related to open browser sessions.
+* **Downloads**: Records of files downloaded through the browser.
+* **Form Data**: Information entered in web forms, saved for future autofill suggestions.
+* **Thumbnails**: Preview images of websites.
+* **Custom Dictionary.txt**: Words added by the user to the browser's dictionary.
 
 ## Firefox
 
 Firefox organizes user data within profiles, stored in specific locations based on the operating system:
 
-- **Linux**: `~/.mozilla/firefox/`
-- **MacOS**: `/Users/$USER/Library/Application Support/Firefox/Profiles/`
-- **Windows**: `%userprofile%\AppData\Roaming\Mozilla\Firefox\Profiles\`
+* **Linux**: `~/.mozilla/firefox/`
+* **MacOS**: `/Users/$USER/Library/Application Support/Firefox/Profiles/`
+* **Windows**: `%userprofile%\AppData\Roaming\Mozilla\Firefox\Profiles\`
 
 A `profiles.ini` file within these directories lists the user profiles. Each profile's data is stored in a folder named in the `Path` variable within `profiles.ini`, located in the same directory as `profiles.ini` itself. If a profile's folder is missing, it may have been deleted.
 
 Within each profile folder, you can find several important files:
 
-- **places.sqlite**: Stores history, bookmarks, and downloads. Tools like [BrowsingHistoryView](https://www.nirsoft.net/utils/browsing_history_view.html) on Windows can access the history data.
-  - Use specific SQL queries to extract history and downloads information.
-- **bookmarkbackups**: Contains backups of bookmarks.
-- **formhistory.sqlite**: Stores web form data.
-- **handlers.json**: Manages protocol handlers.
-- **persdict.dat**: Custom dictionary words.
-- **addons.json** and **extensions.sqlite**: Information on installed add-ons and extensions.
-- **cookies.sqlite**: Cookie storage, with [MZCookiesView](https://www.nirsoft.net/utils/mzcv.html) available for inspection on Windows.
-- **cache2/entries** or **startupCache**: Cache data, accessible through tools like [MozillaCacheView](https://www.nirsoft.net/utils/mozilla_cache_viewer.html).
-- **favicons.sqlite**: Stores favicons.
-- **prefs.js**: User settings and preferences.
-- **downloads.sqlite**: Older downloads database, now integrated into places.sqlite.
-- **thumbnails**: Website thumbnails.
-- **logins.json**: Encrypted login information.
-- **key4.db** or **key3.db**: Stores encryption keys for securing sensitive information.
+* **places.sqlite**: Stores history, bookmarks, and downloads. Tools like [BrowsingHistoryView](https://www.nirsoft.net/utils/browsing_history_view.html) on Windows can access the history data.
+  * Use specific SQL queries to extract history and downloads information.
+* **bookmarkbackups**: Contains backups of bookmarks.
+* **formhistory.sqlite**: Stores web form data.
+* **handlers.json**: Manages protocol handlers.
+* **persdict.dat**: Custom dictionary words.
+* **addons.json** and **extensions.sqlite**: Information on installed add-ons and extensions.
+* **cookies.sqlite**: Cookie storage, with [MZCookiesView](https://www.nirsoft.net/utils/mzcv.html) available for inspection on Windows.
+* **cache2/entries** or **startupCache**: Cache data, accessible through tools like [MozillaCacheView](https://www.nirsoft.net/utils/mozilla_cache_viewer.html).
+* **favicons.sqlite**: Stores favicons.
+* **prefs.js**: User settings and preferences.
+* **downloads.sqlite**: Older downloads database, now integrated into places.sqlite.
+* **thumbnails**: Website thumbnails.
+* **logins.json**: Encrypted login information.
+* **key4.db** or **key3.db**: Stores encryption keys for securing sensitive information.
 
 Additionally, checking the browser’s anti-phishing settings can be done by searching for `browser.safebrowsing` entries in `prefs.js`, indicating whether safe browsing features are enabled or disabled.
 
-To try to decrypt the master password, you can use [https://github.com/unode/firefox_decrypt](https://github.com/unode/firefox_decrypt)\
+To try to decrypt the master password, you can use [https://github.com/unode/firefox\_decrypt](https://github.com/unode/firefox_decrypt)\
 With the following script and call you can specify a password file to brute force:
 
 ```bash:brute.sh
@@ -65,41 +65,39 @@ while read pass; do
 done < $passfile
 ```
 
-![](<../../../images/image (692).png>)
+![](<../../../../.gitbook/assets/image (692).png>)
 
 ## Google Chrome
 
 Google Chrome stores user profiles in specific locations based on the operating system:
 
-- **Linux**: `~/.config/google-chrome/`
-- **Windows**: `C:\Users\XXX\AppData\Local\Google\Chrome\User Data\`
-- **MacOS**: `/Users/$USER/Library/Application Support/Google/Chrome/`
+* **Linux**: `~/.config/google-chrome/`
+* **Windows**: `C:\Users\XXX\AppData\Local\Google\Chrome\User Data\`
+* **MacOS**: `/Users/$USER/Library/Application Support/Google/Chrome/`
 
 Within these directories, most user data can be found in the **Default/** or **ChromeDefaultData/** folders. The following files hold significant data:
 
-- **History**: Contains URLs, downloads, and search keywords. On Windows, [ChromeHistoryView](https://www.nirsoft.net/utils/chrome_history_view.html) can be used to read the history. The "Transition Type" column has various meanings, including user clicks on links, typed URLs, form submissions, and page reloads.
-- **Cookies**: Stores cookies. For inspection, [ChromeCookiesView](https://www.nirsoft.net/utils/chrome_cookies_view.html) is available.
-- **Cache**: Holds cached data. To inspect, Windows users can utilize [ChromeCacheView](https://www.nirsoft.net/utils/chrome_cache_view.html).
+* **History**: Contains URLs, downloads, and search keywords. On Windows, [ChromeHistoryView](https://www.nirsoft.net/utils/chrome_history_view.html) can be used to read the history. The "Transition Type" column has various meanings, including user clicks on links, typed URLs, form submissions, and page reloads.
+* **Cookies**: Stores cookies. For inspection, [ChromeCookiesView](https://www.nirsoft.net/utils/chrome_cookies_view.html) is available.
+*   **Cache**: Holds cached data. To inspect, Windows users can utilize [ChromeCacheView](https://www.nirsoft.net/utils/chrome_cache_view.html).
 
-  Electron-based desktop apps (e.g., Discord) also use Chromium Simple Cache and leave rich on-disk artifacts. See:
+    Electron-based desktop apps (e.g., Discord) also use Chromium Simple Cache and leave rich on-disk artifacts. See:
 
-  {{#ref}}
-  discord-cache-forensics.md
-  {{#endref}}
-- **Bookmarks**: User bookmarks.
-- **Web Data**: Contains form history.
-- **Favicons**: Stores website favicons.
-- **Login Data**: Includes login credentials like usernames and passwords.
-- **Current Session**/**Current Tabs**: Data about the current browsing session and open tabs.
-- **Last Session**/**Last Tabs**: Information about the sites active during the last session before Chrome was closed.
-- **Extensions**: Directories for browser extensions and addons.
-- **Thumbnails**: Stores website thumbnails.
-- **Preferences**: A file rich in information, including settings for plugins, extensions, pop-ups, notifications, and more.
-- **Browser’s built-in anti-phishing**: To check if anti-phishing and malware protection are enabled, run `grep 'safebrowsing' ~/Library/Application Support/Google/Chrome/Default/Preferences`. Look for `{"enabled: true,"}` in the output.
+    \{{#ref\}} discord-cache-forensics.md \{{#endref\}}
+* **Bookmarks**: User bookmarks.
+* **Web Data**: Contains form history.
+* **Favicons**: Stores website favicons.
+* **Login Data**: Includes login credentials like usernames and passwords.
+* **Current Session**/**Current Tabs**: Data about the current browsing session and open tabs.
+* **Last Session**/**Last Tabs**: Information about the sites active during the last session before Chrome was closed.
+* **Extensions**: Directories for browser extensions and addons.
+* **Thumbnails**: Stores website thumbnails.
+* **Preferences**: A file rich in information, including settings for plugins, extensions, pop-ups, notifications, and more.
+* **Browser’s built-in anti-phishing**: To check if anti-phishing and malware protection are enabled, run `grep 'safebrowsing' ~/Library/Application Support/Google/Chrome/Default/Preferences`. Look for `{"enabled: true,"}` in the output.
 
 ## **SQLite DB Data Recovery**
 
-As you can observe in the previous sections, both Chrome and Firefox use **SQLite** databases to store the data. It's possible to **recover deleted entries using the tool** [**sqlparse**](https://github.com/padfoot999/sqlparse) **or** [**sqlparse_gui**](https://github.com/mdegrazia/SQLite-Deleted-Records-Parser/releases).
+As you can observe in the previous sections, both Chrome and Firefox use **SQLite** databases to store the data. It's possible to **recover deleted entries using the tool** [**sqlparse**](https://github.com/padfoot999/sqlparse) **or** [**sqlparse\_gui**](https://github.com/mdegrazia/SQLite-Deleted-Records-Parser/releases).
 
 ## **Internet Explorer 11**
 
@@ -133,42 +131,38 @@ Typed URLs and their usage timings are stored within the registry under `NTUSER.
 
 Microsoft Edge stores user data in `%userprofile%\Appdata\Local\Packages`. The paths for various data types are:
 
-- **Profile Path**: `C:\Users\XX\AppData\Local\Packages\Microsoft.MicrosoftEdge_XXX\AC`
-- **History, Cookies, and Downloads**: `C:\Users\XX\AppData\Local\Microsoft\Windows\WebCache\WebCacheV01.dat`
-- **Settings, Bookmarks, and Reading List**: `C:\Users\XX\AppData\Local\Packages\Microsoft.MicrosoftEdge_XXX\AC\MicrosoftEdge\User\Default\DataStore\Data\nouser1\XXX\DBStore\spartan.edb`
-- **Cache**: `C:\Users\XXX\AppData\Local\Packages\Microsoft.MicrosoftEdge_XXX\AC#!XXX\MicrosoftEdge\Cache`
-- **Last Active Sessions**: `C:\Users\XX\AppData\Local\Packages\Microsoft.MicrosoftEdge_XXX\AC\MicrosoftEdge\User\Default\Recovery\Active`
+* **Profile Path**: `C:\Users\XX\AppData\Local\Packages\Microsoft.MicrosoftEdge_XXX\AC`
+* **History, Cookies, and Downloads**: `C:\Users\XX\AppData\Local\Microsoft\Windows\WebCache\WebCacheV01.dat`
+* **Settings, Bookmarks, and Reading List**: `C:\Users\XX\AppData\Local\Packages\Microsoft.MicrosoftEdge_XXX\AC\MicrosoftEdge\User\Default\DataStore\Data\nouser1\XXX\DBStore\spartan.edb`
+* **Cache**: `C:\Users\XXX\AppData\Local\Packages\Microsoft.MicrosoftEdge_XXX\AC#!XXX\MicrosoftEdge\Cache`
+* **Last Active Sessions**: `C:\Users\XX\AppData\Local\Packages\Microsoft.MicrosoftEdge_XXX\AC\MicrosoftEdge\User\Default\Recovery\Active`
 
 ## Safari
 
 Safari data is stored at `/Users/$User/Library/Safari`. Key files include:
 
-- **History.db**: Contains `history_visits` and `history_items` tables with URLs and visit timestamps. Use `sqlite3` to query.
-- **Downloads.plist**: Information about downloaded files.
-- **Bookmarks.plist**: Stores bookmarked URLs.
-- **TopSites.plist**: Most frequently visited sites.
-- **Extensions.plist**: List of Safari browser extensions. Use `plutil` or `pluginkit` to retrieve.
-- **UserNotificationPermissions.plist**: Domains permitted to push notifications. Use `plutil` to parse.
-- **LastSession.plist**: Tabs from the last session. Use `plutil` to parse.
-- **Browser’s built-in anti-phishing**: Check using `defaults read com.apple.Safari WarnAboutFraudulentWebsites`. A response of 1 indicates the feature is active.
+* **History.db**: Contains `history_visits` and `history_items` tables with URLs and visit timestamps. Use `sqlite3` to query.
+* **Downloads.plist**: Information about downloaded files.
+* **Bookmarks.plist**: Stores bookmarked URLs.
+* **TopSites.plist**: Most frequently visited sites.
+* **Extensions.plist**: List of Safari browser extensions. Use `plutil` or `pluginkit` to retrieve.
+* **UserNotificationPermissions.plist**: Domains permitted to push notifications. Use `plutil` to parse.
+* **LastSession.plist**: Tabs from the last session. Use `plutil` to parse.
+* **Browser’s built-in anti-phishing**: Check using `defaults read com.apple.Safari WarnAboutFraudulentWebsites`. A response of 1 indicates the feature is active.
 
 ## Opera
 
 Opera's data resides in `/Users/$USER/Library/Application Support/com.operasoftware.Opera` and shares Chrome's format for history and downloads.
 
-- **Browser’s built-in anti-phishing**: Verify by checking if `fraud_protection_enabled` in the Preferences file is set to `true` using `grep`.
+* **Browser’s built-in anti-phishing**: Verify by checking if `fraud_protection_enabled` in the Preferences file is set to `true` using `grep`.
 
 These paths and commands are crucial for accessing and understanding the browsing data stored by different web browsers.
 
 ## References
 
-- [https://nasbench.medium.com/web-browsers-forensics-7e99940c579a](https://nasbench.medium.com/web-browsers-forensics-7e99940c579a)
-- [https://www.sentinelone.com/labs/macos-incident-response-part-3-system-manipulation/](https://www.sentinelone.com/labs/macos-incident-response-part-3-system-manipulation/)
-- [https://books.google.com/books?id=jfMqCgAAQBAJ\&pg=PA128\&lpg=PA128\&dq=%22This+file](https://books.google.com/books?id=jfMqCgAAQBAJ&pg=PA128&lpg=PA128&dq=%22This+file)
-- **Book: OS X Incident Response: Scripting and Analysis By Jaron Bradley pag 123**
+* [https://nasbench.medium.com/web-browsers-forensics-7e99940c579a](https://nasbench.medium.com/web-browsers-forensics-7e99940c579a)
+* [https://www.sentinelone.com/labs/macos-incident-response-part-3-system-manipulation/](https://www.sentinelone.com/labs/macos-incident-response-part-3-system-manipulation/)
+* [https://books.google.com/books?id=jfMqCgAAQBAJ\&pg=PA128\&lpg=PA128\&dq=%22This+file](https://books.google.com/books?id=jfMqCgAAQBAJ\&pg=PA128\&lpg=PA128\&dq=%22This+file)
+* **Book: OS X Incident Response: Scripting and Analysis By Jaron Bradley pag 123**
 
-
-{{#include ../../../banners/hacktricks-training.md}}
-
-
-
+\{{#include ../../../banners/hacktricks-training.md\}}

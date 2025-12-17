@@ -1,16 +1,16 @@
 # Windows Credentials Protections
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
 
 ## WDigest
 
-The [WDigest](<https://technet.microsoft.com/pt-pt/library/cc778868(v=ws.10).aspx?f=255&MSPPError=-2147217396>) protocol, introduced with Windows XP, is designed for authentication via the HTTP Protocol and is **enabled by default on Windows XP through Windows 8.0 and Windows Server 2003 to Windows Server 2012**. This default setting results in **plain-text password storage in LSASS** (Local Security Authority Subsystem Service). An attacker can use Mimikatz to **extract these credentials** by executing:
+The [WDigest](https://technet.microsoft.com/pt-pt/library/cc778868\(v=ws.10\).aspx?f=255\&MSPPError=-2147217396) protocol, introduced with Windows XP, is designed for authentication via the HTTP Protocol and is **enabled by default on Windows XP through Windows 8.0 and Windows Server 2003 to Windows Server 2012**. This default setting results in **plain-text password storage in LSASS** (Local Security Authority Subsystem Service). An attacker can use Mimikatz to **extract these credentials** by executing:
 
 ```bash
 sekurlsa::wdigest
 ```
 
-To **toggle this feature off or on**, the _**UseLogonCredential**_ and _**Negotiate**_ registry keys within _**HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest**_ must be set to "1". If these keys are **absent or set to "0"**, WDigest is **disabled**:
+To **toggle this feature off or on**, the _**UseLogonCredential**_ and _**Negotiate**_ registry keys within _**HKEY\_LOCAL\_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest**_ must be set to "1". If these keys are **absent or set to "0"**, WDigest is **disabled**:
 
 ```bash
 reg query HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential
@@ -21,23 +21,25 @@ reg query HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v Use
 **Protected Process (PP)** and **Protected Process Light (PPL)** are **Windows kernel-level protections** designed to prevent unauthorized access to sensitive processes like **LSASS**. Introduced in **Windows Vista**, the **PP model** was originally created for **DRM** enforcement and only allowed binaries signed with a **special media certificate** to be protected. A process marked as **PP** can only be accessed by other processes that are **also PP** and have an **equal or higher protection level**, and even then, **only with limited access rights** unless specifically allowed.
 
 **PPL**, introduced in **Windows 8.1**, is a more flexible version of PP. It allows **broader use cases** (e.g., LSASS, Defender) by introducing **"protection levels"** based on the **digital signature’s EKU (Enhanced Key Usage)** field. The protection level is stored in the `EPROCESS.Protection` field, which is a `PS_PROTECTION` structure with:
-- **Type** (`Protected` or `ProtectedLight`)
-- **Signer** (e.g., `WinTcb`, `Lsa`, `Antimalware`, etc.)
+
+* **Type** (`Protected` or `ProtectedLight`)
+* **Signer** (e.g., `WinTcb`, `Lsa`, `Antimalware`, etc.)
 
 This structure is packed into a single byte and determines **who can access whom**:
-- **Higher signer values can access lower ones**
-- **PPLs can’t access PPs**
-- **Unprotected processes can't access any PPL/PP**
-  
+
+* **Higher signer values can access lower ones**
+* **PPLs can’t access PPs**
+* **Unprotected processes can't access any PPL/PP**
+
 ### What you need to know from an offensive perspective
 
-- When **LSASS runs as a PPL**, attempts to open it using `OpenProcess(PROCESS_VM_READ | QUERY_INFORMATION)` from a normal admin context **fail with `0x5 (Access Denied)`**, even if `SeDebugPrivilege` is enabled.
-- You can **check LSASS protection level** using tools like Process Hacker or programmatically by reading the `EPROCESS.Protection` value.
-- LSASS will typically have `PsProtectedSignerLsa-Light` (`0x41`), which can be accessed **only by processes signed with a higher-level signer**, such as `WinTcb` (`0x61` or `0x62`).
-- PPL is a **Userland-only restriction**; **kernel-level code can fully bypass it**.
-- LSASS being PPL does **not prevent credential dumping if you can execute kernel shellcode** or **leverage a high-privileged process with proper access**.
-- **Setting or removing PPL** requires reboot or **Secure Boot/UEFI settings**, which can persist the PPL setting even after registry changes are reversed.
-  
+* When **LSASS runs as a PPL**, attempts to open it using `OpenProcess(PROCESS_VM_READ | QUERY_INFORMATION)` from a normal admin context **fail with `0x5 (Access Denied)`**, even if `SeDebugPrivilege` is enabled.
+* You can **check LSASS protection level** using tools like Process Hacker or programmatically by reading the `EPROCESS.Protection` value.
+* LSASS will typically have `PsProtectedSignerLsa-Light` (`0x41`), which can be accessed **only by processes signed with a higher-level signer**, such as `WinTcb` (`0x61` or `0x62`).
+* PPL is a **Userland-only restriction**; **kernel-level code can fully bypass it**.
+* LSASS being PPL does **not prevent credential dumping if you can execute kernel shellcode** or **leverage a high-privileged process with proper access**.
+* **Setting or removing PPL** requires reboot or **Secure Boot/UEFI settings**, which can persist the PPL setting even after registry changes are reversed.
+
 ### Create a PPL process at launch (documented API)
 
 Windows exposes a documented way to request a Protected Process Light level for a child process during creation using the extended startup attribute list. This does not bypass signing requirements — the target image must be signed for the requested signer class.
@@ -87,21 +89,24 @@ int wmain(int argc, wchar_t **argv) {
 ```
 
 Notes and constraints:
-- Use `STARTUPINFOEX` with `InitializeProcThreadAttributeList` and `UpdateProcThreadAttribute(PROC_THREAD_ATTRIBUTE_PROTECTION_LEVEL, ...)`, then pass `EXTENDED_STARTUPINFO_PRESENT` to `CreateProcess*`.
-- The protection `DWORD` can be set to constants such as `PROTECTION_LEVEL_WINTCB_LIGHT`, `PROTECTION_LEVEL_WINDOWS`, `PROTECTION_LEVEL_WINDOWS_LIGHT`, `PROTECTION_LEVEL_ANTIMALWARE_LIGHT`, or `PROTECTION_LEVEL_LSA_LIGHT`.
-- The child only starts as PPL if its image is signed for that signer class; otherwise process creation fails, commonly with `ERROR_INVALID_IMAGE_HASH (577)` / `STATUS_INVALID_IMAGE_HASH (0xC0000428)`.
-- This is not a bypass — it’s a supported API meant for appropriately signed images. Useful to harden tools or validate PPL-protected configurations.
+
+* Use `STARTUPINFOEX` with `InitializeProcThreadAttributeList` and `UpdateProcThreadAttribute(PROC_THREAD_ATTRIBUTE_PROTECTION_LEVEL, ...)`, then pass `EXTENDED_STARTUPINFO_PRESENT` to `CreateProcess*`.
+* The protection `DWORD` can be set to constants such as `PROTECTION_LEVEL_WINTCB_LIGHT`, `PROTECTION_LEVEL_WINDOWS`, `PROTECTION_LEVEL_WINDOWS_LIGHT`, `PROTECTION_LEVEL_ANTIMALWARE_LIGHT`, or `PROTECTION_LEVEL_LSA_LIGHT`.
+* The child only starts as PPL if its image is signed for that signer class; otherwise process creation fails, commonly with `ERROR_INVALID_IMAGE_HASH (577)` / `STATUS_INVALID_IMAGE_HASH (0xC0000428)`.
+* This is not a bypass — it’s a supported API meant for appropriately signed images. Useful to harden tools or validate PPL-protected configurations.
 
 Example CLI using a minimal loader:
-- Antimalware signer: `CreateProcessAsPPL.exe 3 C:\Tools\agent.exe --svc`
-- LSA-light signer: `CreateProcessAsPPL.exe 4 C:\Windows\System32\notepad.exe`
+
+* Antimalware signer: `CreateProcessAsPPL.exe 3 C:\Tools\agent.exe --svc`
+* LSA-light signer: `CreateProcessAsPPL.exe 4 C:\Windows\System32\notepad.exe`
 
 **Bypass PPL protections options:**
 
 If you want to dump LSASS despite PPL, you have 3 main options:
+
 1. **Use a signed kernel driver (e.g., Mimikatz + mimidrv.sys)** to **remove LSASS’s protection flag**:
 
-![](../../images/mimidrv.png)
+![](../../../.gitbook/assets/mimidrv.png)
 
 2. **Bring Your Own Vulnerable Driver (BYOVD)** to run custom kernel code and disable the protection. Tools like **PPLKiller**, **gdrv-loader**, or **kdmapper** make this feasible.
 3. **Steal an existing LSASS handle** from another process that has it open (e.g., an AV process), then **duplicate it** into your process. This is the basis of the `pypykatz live lsa --method handledup` technique.
@@ -115,8 +120,7 @@ reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA /v RunAsPPL
 
 When you running **`mimikatz privilege::debug sekurlsa::logonpasswords`** it'll probably fail with the error code `0x00000005` becasue of this.
 
-- For more information about this check [https://itm4n.github.io/lsass-runasppl/](https://itm4n.github.io/lsass-runasppl/)
-
+* For more information about this check [https://itm4n.github.io/lsass-runasppl/](https://itm4n.github.io/lsass-runasppl/)
 
 ## Credential Guard
 
@@ -146,7 +150,7 @@ It's important to note that in **Restricted Admin mode**, attempts to access net
 
 This feature marks a significant step forward in securing remote desktop connections and protecting sensitive information from being exposed in case of a security breach.
 
-![](../../images/RAM.png)
+![](../../../.gitbook/assets/RAM.png)
 
 For more detailed information on visit [this resource](https://blog.ahasayen.com/restricted-admin-mode-for-rdp/).
 
@@ -170,11 +174,11 @@ For further details, the original [source](http://juggernaut.wikidot.com/cached-
 
 Membership in the **Protected Users group** introduces several security enhancements for users, ensuring higher levels of protection against credential theft and misuse:
 
-- **Credential Delegation (CredSSP)**: Even if the Group Policy setting for **Allow delegating default credentials** is enabled, plain text credentials of Protected Users will not be cached.
-- **Windows Digest**: Starting from **Windows 8.1 and Windows Server 2012 R2**, the system will not cache plain text credentials of Protected Users, regardless of the Windows Digest status.
-- **NTLM**: The system will not cache Protected Users' plain text credentials or NT one-way functions (NTOWF).
-- **Kerberos**: For Protected Users, Kerberos authentication will not generate **DES** or **RC4 keys**, nor will it cache plain text credentials or long-term keys beyond the initial Ticket-Granting Ticket (TGT) acquisition.
-- **Offline Sign-In**: Protected Users will not have a cached verifier created at sign-in or unlock, meaning offline sign-in is not supported for these accounts.
+* **Credential Delegation (CredSSP)**: Even if the Group Policy setting for **Allow delegating default credentials** is enabled, plain text credentials of Protected Users will not be cached.
+* **Windows Digest**: Starting from **Windows 8.1 and Windows Server 2012 R2**, the system will not cache plain text credentials of Protected Users, regardless of the Windows Digest status.
+* **NTLM**: The system will not cache Protected Users' plain text credentials or NT one-way functions (NTOWF).
+* **Kerberos**: For Protected Users, Kerberos authentication will not generate **DES** or **RC4 keys**, nor will it cache plain text credentials or long-term keys beyond the initial Ticket-Granting Ticket (TGT) acquisition.
+* **Offline Sign-In**: Protected Users will not have a cached verifier created at sign-in or unlock, meaning offline sign-in is not supported for these accounts.
 
 These protections are activated the moment a user, who is a member of the **Protected Users group**, signs into the device. This ensures that critical security measures are in place to safeguard against various methods of credential compromise.
 
@@ -203,10 +207,10 @@ For more detailed information, consult the official [documentation](https://docs
 
 ## References
 
-- [CreateProcessAsPPL – minimal PPL process launcher](https://github.com/2x7EQ13/CreateProcessAsPPL)
-- [STARTUPINFOEX structure (Win32 API)](https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-startupinfoexw)
-- [InitializeProcThreadAttributeList (Win32 API)](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-initializeprocthreadattributelist)
-- [UpdateProcThreadAttribute (Win32 API)](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-updateprocthreadattribute)
-- [LSASS RunAsPPL – background and internals](https://itm4n.github.io/lsass-runasppl/)
+* [CreateProcessAsPPL – minimal PPL process launcher](https://github.com/2x7EQ13/CreateProcessAsPPL)
+* [STARTUPINFOEX structure (Win32 API)](https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-startupinfoexw)
+* [InitializeProcThreadAttributeList (Win32 API)](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-initializeprocthreadattributelist)
+* [UpdateProcThreadAttribute (Win32 API)](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-updateprocthreadattribute)
+* [LSASS RunAsPPL – background and internals](https://itm4n.github.io/lsass-runasppl/)
 
-{{#include ../../banners/hacktricks-training.md}}
+\{{#include ../../banners/hacktricks-training.md\}}
